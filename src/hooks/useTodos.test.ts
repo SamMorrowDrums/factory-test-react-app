@@ -115,4 +115,46 @@ describe('useTodos', () => {
     const { result } = renderHook(() => useTodos());
     expect(result.current.todos).toEqual([]);
   });
+
+  it('reorders todos by moving a todo to another position', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+      { id: '3', title: 'Third', completed: false, category: 'health', createdAt: 3 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.reorderTodos('3', '1');
+    });
+
+    expect(result.current.todos.map((t) => t.id)).toEqual(['3', '1', '2']);
+  });
+
+  it('does nothing when reordering a todo onto itself', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.reorderTodos('1', '1');
+    });
+
+    expect(result.current.todos.map((t) => t.id)).toEqual(['1', '2']);
+  });
+
+  it('does nothing when reordering with an invalid id', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.reorderTodos('999', '1');
+    });
+
+    expect(result.current.todos.map((t) => t.id)).toEqual(['1']);
+  });
 });

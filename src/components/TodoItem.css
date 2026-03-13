@@ -7,6 +7,24 @@
   border-radius: 0.375rem;
   background: #fff;
   list-style: none;
+  cursor: grab;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.todo-item:active {
+  cursor: grabbing;
+}
+
+.todo-item--drag-over {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.todo-item__drag-handle {
+  color: #9ca3af;
+  font-size: 1rem;
+  line-height: 1;
+  user-select: none;
 }
 
 .todo-item__label {
