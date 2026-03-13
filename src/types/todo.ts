@@ -1,0 +1,19 @@
+export type TodoCategory = 'work' | 'personal' | 'shopping' | 'health';
+
+export interface Todo {
+  id: string;
+  title: string;
+  completed: boolean;
+  category: TodoCategory;
+  createdAt: number;
+}
+
+export function createTodo(title: string, category: TodoCategory): Todo {
+  return {
+    id: crypto.randomUUID(),
+    title,
+    completed: false,
+    category,
+    createdAt: Date.now(),
+  };
+}
