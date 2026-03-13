@@ -1,9 +1,13 @@
 import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { useTodos } from './useTodos';
 import { Todo } from '../types/todo';
 
 describe('useTodos', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   it('starts with an empty todo list by default', () => {
     const { result } = renderHook(() => useTodos());
     expect(result.current.todos).toEqual([]);
@@ -81,5 +85,34 @@ describe('useTodos', () => {
 
     expect(result.current.todos).toHaveLength(1);
     expect(result.current.todos[0].id).toBe('2');
+  });
+
+  it('persists todos to localStorage', () => {
+    const { result } = renderHook(() => useTodos());
+
+    act(() => {
+      result.current.addTodo('Persisted', 'work');
+    });
+
+    const stored = JSON.parse(localStorage.getItem('todos')!) as Todo[];
+    expect(stored).toHaveLength(1);
+    expect(stored[0].title).toBe('Persisted');
+  });
+
+  it('loads todos from localStorage on mount', () => {
+    const saved: Todo[] = [
+      { id: '1', title: 'Saved', completed: false, category: 'work', createdAt: 1 },
+    ];
+    localStorage.setItem('todos', JSON.stringify(saved));
+
+    const { result } = renderHook(() => useTodos());
+    expect(result.current.todos).toHaveLength(1);
+    expect(result.current.todos[0].title).toBe('Saved');
+  });
+
+  it('falls back to empty array on corrupt localStorage data', () => {
+    localStorage.setItem('todos', 'not-json');
+    const { result } = renderHook(() => useTodos());
+    expect(result.current.todos).toEqual([]);
   });
 });
