@@ -12,40 +12,48 @@
 
 .todo-filter__button {
   padding: 0.5rem 1rem;
-  border: 1px solid #d1d5db;
-  background: #fff;
-  color: #374151;
+  border: 1px solid #0ff4;
+  background: transparent;
+  color: #8888aa;
   border-radius: 0.375rem;
   cursor: pointer;
   font-size: 0.875rem;
-  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
 .todo-filter__button:hover {
-  background: #f3f4f6;
+  background: #0ff1;
+  color: #e0e0f0;
 }
 
 .todo-filter__button--active {
-  background: #3b82f6;
-  color: #fff;
-  border-color: #3b82f6;
+  background: #0ff2;
+  color: #0ff;
+  border-color: #0ff;
+  box-shadow:
+    0 0 6px #0ff4,
+    0 0 14px #0ff2;
 }
 
 .todo-filter__button--active:hover {
-  background: #2563eb;
+  background: #0ff3;
 }
 
 .todo-filter__category-select {
   padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #0ff4;
   border-radius: 0.375rem;
   font-size: 0.875rem;
-  color: #374151;
-  background: #fff;
+  color: #e0e0f0;
+  background: #1a1a2e;
   cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .todo-filter__category-select:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: -1px;
+  outline: none;
+  border-color: #0ff;
+  box-shadow:
+    0 0 6px #0ff6,
+    0 0 14px #0ff3;
 }

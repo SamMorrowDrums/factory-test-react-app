@@ -19,7 +19,7 @@
   justify-content: space-between;
   padding: 0.75rem 0;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: #8888aa;
 }
 
 .todo-list__count {
@@ -28,15 +28,17 @@
 
 .todo-list__clear-completed {
   padding: 0.375rem 0.75rem;
-  border: 1px solid #d1d5db;
-  background: #fff;
-  color: #374151;
+  border: 1px solid #0ff4;
+  background: transparent;
+  color: #8888aa;
   border-radius: 0.375rem;
   cursor: pointer;
   font-size: 0.8125rem;
-  transition: background-color 0.15s, color 0.15s;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
 }
 
 .todo-list__clear-completed:hover {
-  background: #f3f4f6;
+  color: #0ff;
+  background: #0ff1;
+  box-shadow: 0 0 6px #0ff4;
 }
