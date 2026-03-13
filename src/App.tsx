@@ -1,6 +1,7 @@
 import { useTodos } from './hooks/useTodos';
 import { TodoInput } from './components/TodoInput';
 import { TodoList } from './components/TodoList';
+import { GlitchText } from './components/GlitchText';
 import './App.css';
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
   return (
     <div className="app">
       <header className="app__header">
-        <h1 className="app__title">Todo App</h1>
+        <GlitchText as="h1" className="app__title">GlitchDo</GlitchText>
       </header>
 
       <main className="app__main">
