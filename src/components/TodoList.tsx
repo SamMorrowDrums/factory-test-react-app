@@ -1,12 +1,23 @@
 import { useState } from 'react';
-import { type TodoCategory, type TodoFilter as TodoFilterType } from '../types/todo';
+import { type Todo, type TodoCategory, type TodoFilter as TodoFilterType } from '../types/todo';
 import { useTodos } from '../hooks/useTodos';
 import { TodoFilter } from './TodoFilter';
 import { TodoItem } from './TodoItem';
 import './TodoList.css';
 
-export function TodoList() {
-  const { todos, toggleTodo, deleteTodo, clearCompleted } = useTodos();
+interface TodoListProps {
+  todos?: Todo[];
+  toggleTodo?: (id: string) => void;
+  deleteTodo?: (id: string) => void;
+  clearCompleted?: () => void;
+}
+
+export function TodoList(props: TodoListProps) {
+  const internal = useTodos();
+  const todos = props.todos ?? internal.todos;
+  const toggleTodo = props.toggleTodo ?? internal.toggleTodo;
+  const deleteTodo = props.deleteTodo ?? internal.deleteTodo;
+  const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
   const [filter, setFilter] = useState<TodoFilterType>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
 
