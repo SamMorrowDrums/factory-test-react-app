@@ -9,6 +9,8 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Buy groceries',
   completed: false,
   category: 'shopping',
+  priority: 'medium',
+  dueDate: null,
   createdAt: Date.now(),
   ...overrides,
 });
@@ -85,5 +87,36 @@ describe('TodoItem', () => {
     );
     const badge = screen.getByText('work');
     expect(badge).toHaveClass('todo-item__category--work');
+  });
+
+  it('renders the priority badge', () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ priority: 'high' })} />);
+    const badge = screen.getByText('high');
+    expect(badge).toHaveClass('todo-item__priority');
+    expect(badge).toHaveClass('todo-item__priority--high');
+  });
+
+  it('renders different priority levels correctly', () => {
+    const { rerender } = render(
+      <TodoItem {...defaultProps} todo={makeTodo({ priority: 'low' })} />
+    );
+    expect(screen.getByText('low')).toHaveClass('todo-item__priority--low');
+
+    rerender(
+      <TodoItem {...defaultProps} todo={makeTodo({ priority: 'medium' })} />
+    );
+    expect(screen.getByText('medium')).toHaveClass('todo-item__priority--medium');
+  });
+
+  it('renders the due date when provided', () => {
+    render(
+      <TodoItem {...defaultProps} todo={makeTodo({ dueDate: '2026-04-15' })} />
+    );
+    expect(screen.getByText('04/15/2026')).toBeInTheDocument();
+  });
+
+  it('does not render due date when null', () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ dueDate: null })} />);
+    expect(screen.queryByText(/\d{2}\/\d{2}\/\d{4}/)).not.toBeInTheDocument();
   });
 });

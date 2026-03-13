@@ -2,10 +2,12 @@
   display: flex;
   gap: 0.5rem;
   padding: 0.75rem 0;
+  flex-wrap: wrap;
 }
 
 .todo-input__text {
   flex: 1;
+  min-width: 150px;
   padding: 0.5rem 0.75rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
@@ -29,6 +31,35 @@
 }
 
 .todo-input__category:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -1px;
+}
+
+.todo-input__priority {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  color: #374151;
+  background: #fff;
+  cursor: pointer;
+}
+
+.todo-input__priority:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -1px;
+}
+
+.todo-input__due-date {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  color: #374151;
+  background: #fff;
+}
+
+.todo-input__due-date:focus {
   outline: 2px solid #3b82f6;
   outline-offset: -1px;
 }

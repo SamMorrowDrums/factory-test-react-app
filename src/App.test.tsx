@@ -9,6 +9,8 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Test todo',
   completed: false,
   category: 'work',
+  priority: 'medium',
+  dueDate: null,
   createdAt: Date.now(),
   ...overrides,
 });
@@ -58,6 +60,6 @@ describe('App', () => {
     const input = screen.getByPlaceholderText('Add a new todo…');
     await userEvent.type(input, 'New task');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
-    expect(mockReturnValue.addTodo).toHaveBeenCalledWith('New task', 'work');
+    expect(mockReturnValue.addTodo).toHaveBeenCalledWith('New task', 'work', 'medium', null);
   });
 });
