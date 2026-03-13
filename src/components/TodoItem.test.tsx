@@ -86,4 +86,21 @@ describe('TodoItem', () => {
     const badge = screen.getByText('work');
     expect(badge).toHaveClass('todo-item__category--work');
   });
+
+  it('renders a drag handle', () => {
+    render(<TodoItem {...defaultProps} />);
+    expect(screen.getByText('⠿')).toBeInTheDocument();
+  });
+
+  it('is draggable', () => {
+    const { container } = render(<TodoItem {...defaultProps} />);
+    const li = container.querySelector('.todo-item');
+    expect(li).toHaveAttribute('draggable', 'true');
+  });
+
+  it('applies drag-over styling when isDragOver is true', () => {
+    const { container } = render(<TodoItem {...defaultProps} isDragOver={true} />);
+    const li = container.querySelector('.todo-item');
+    expect(li).toHaveClass('todo-item--drag-over');
+  });
 });

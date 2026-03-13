@@ -24,5 +24,18 @@ export function useTodos(initialTodos: Todo[] = []) {
     setTodos((prev) => prev.filter((todo) => !todo.completed));
   };
 
-  return { todos, addTodo, toggleTodo, deleteTodo, clearCompleted } as const;
+  const reorderTodos = (fromId: string, toId: string) => {
+    if (fromId === toId) return;
+    setTodos((prev) => {
+      const fromIndex = prev.findIndex((t) => t.id === fromId);
+      const toIndex = prev.findIndex((t) => t.id === toId);
+      if (fromIndex === -1 || toIndex === -1) return prev;
+      const next = [...prev];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
+      return next;
+    });
+  };
+
+  return { todos, addTodo, toggleTodo, deleteTodo, clearCompleted, reorderTodos } as const;
 }
