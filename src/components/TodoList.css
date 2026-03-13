@@ -18,25 +18,47 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 0;
-  font-size: 0.875rem;
-  color: #6b7280;
+  font-size: 0.8125rem;
+  color: rgba(0, 255, 245, 0.5);
+  border-top: 1px solid rgba(0, 255, 245, 0.1);
+  margin-top: 0.25rem;
 }
 
 .todo-list__count {
   font-weight: 500;
+  font-family: 'Share Tech Mono', monospace;
 }
 
 .todo-list__clear-completed {
   padding: 0.375rem 0.75rem;
-  border: 1px solid #d1d5db;
-  background: #fff;
-  color: #374151;
-  border-radius: 0.375rem;
+  border: 1px solid rgba(255, 0, 255, 0.3);
+  background: transparent;
+  color: #ff00ff;
+  border-radius: 2px;
   cursor: pointer;
-  font-size: 0.8125rem;
-  transition: background-color 0.15s, color 0.15s;
+  font-size: 0.75rem;
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .todo-list__clear-completed:hover {
-  background: #f3f4f6;
+  background: rgba(255, 0, 255, 0.1);
+  border-color: #ff00ff;
+  box-shadow: 0 0 8px rgba(255, 0, 255, 0.2);
+}
+
+@media (max-width: 480px) {
+  .todo-list__footer {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .todo-list__clear-completed {
+    width: 100%;
+    padding: 0.625rem;
+  }
 }
