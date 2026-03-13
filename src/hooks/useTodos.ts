@@ -1,11 +1,11 @@
-import { Todo, TodoCategory, createTodo } from '../types/todo';
+import { Todo, TodoCategory, TodoPriority, createTodo } from '../types/todo';
 import { useLocalStorage } from './useLocalStorage';
 
 export function useTodos(initialTodos: Todo[] = []) {
   const [todos, setTodos] = useLocalStorage<Todo[]>('todos', initialTodos);
 
-  const addTodo = (title: string, category: TodoCategory) => {
-    setTodos((prev) => [...prev, createTodo(title, category)]);
+  const addTodo = (title: string, category: TodoCategory, priority: TodoPriority = 'medium', dueDate: string | null = null) => {
+    setTodos((prev) => [...prev, createTodo(title, category, priority, dueDate)]);
   };
 
   const toggleTodo = (id: string) => {

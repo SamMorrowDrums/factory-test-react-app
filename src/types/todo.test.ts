@@ -38,7 +38,25 @@ describe('createTodo', () => {
     expect(todo).toHaveProperty('title');
     expect(todo).toHaveProperty('completed');
     expect(todo).toHaveProperty('category');
+    expect(todo).toHaveProperty('priority');
+    expect(todo).toHaveProperty('dueDate');
     expect(todo).toHaveProperty('createdAt');
+  });
+
+  it('defaults priority to medium and dueDate to null', () => {
+    const todo = createTodo('Task', 'work');
+    expect(todo.priority).toBe('medium');
+    expect(todo.dueDate).toBeNull();
+  });
+
+  it('accepts a custom priority', () => {
+    const todo = createTodo('Urgent task', 'work', 'high');
+    expect(todo.priority).toBe('high');
+  });
+
+  it('accepts a custom due date', () => {
+    const todo = createTodo('Task', 'work', 'low', '2026-04-01');
+    expect(todo.dueDate).toBe('2026-04-01');
   });
 });
 

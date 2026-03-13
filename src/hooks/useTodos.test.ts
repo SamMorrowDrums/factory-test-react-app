@@ -15,7 +15,7 @@ describe('useTodos', () => {
 
   it('starts with provided initial todos', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1 },
+      { id: '1', title: 'Test', completed: false, category: 'work', priority: 'medium', dueDate: null, createdAt: 1 },
     ];
     const { result } = renderHook(() => useTodos(initial));
     expect(result.current.todos).toHaveLength(1);
@@ -39,7 +39,7 @@ describe('useTodos', () => {
 
   it('toggles a todo', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1 },
+      { id: '1', title: 'Test', completed: false, category: 'work', priority: 'medium', dueDate: null, createdAt: 1 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -58,8 +58,8 @@ describe('useTodos', () => {
 
   it('deletes a todo', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
-      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+      { id: '1', title: 'First', completed: false, category: 'work', priority: 'medium', dueDate: null, createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', priority: 'low', dueDate: null, createdAt: 2 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -73,9 +73,9 @@ describe('useTodos', () => {
 
   it('clears completed todos', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'Done', completed: true, category: 'work', createdAt: 1 },
-      { id: '2', title: 'Not done', completed: false, category: 'personal', createdAt: 2 },
-      { id: '3', title: 'Also done', completed: true, category: 'health', createdAt: 3 },
+      { id: '1', title: 'Done', completed: true, category: 'work', priority: 'medium', dueDate: null, createdAt: 1 },
+      { id: '2', title: 'Not done', completed: false, category: 'personal', priority: 'high', dueDate: null, createdAt: 2 },
+      { id: '3', title: 'Also done', completed: true, category: 'health', priority: 'low', dueDate: null, createdAt: 3 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -101,7 +101,7 @@ describe('useTodos', () => {
 
   it('loads todos from localStorage on mount', () => {
     const saved: Todo[] = [
-      { id: '1', title: 'Saved', completed: false, category: 'work', createdAt: 1 },
+      { id: '1', title: 'Saved', completed: false, category: 'work', priority: 'medium', dueDate: null, createdAt: 1 },
     ];
     localStorage.setItem('todos', JSON.stringify(saved));
 

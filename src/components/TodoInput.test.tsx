@@ -4,21 +4,23 @@ import userEvent from '@testing-library/user-event';
 import { TodoInput } from './TodoInput';
 
 describe('TodoInput', () => {
-  it('renders text input, category select, and add button', () => {
+  it('renders text input, category select, priority select, due date, and add button', () => {
     render(<TodoInput onAdd={vi.fn()} />);
     expect(screen.getByLabelText('Todo title')).toBeInTheDocument();
     expect(screen.getByLabelText('Todo category')).toBeInTheDocument();
+    expect(screen.getByLabelText('Todo priority')).toBeInTheDocument();
+    expect(screen.getByLabelText('Due date')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Add' })).toBeInTheDocument();
   });
 
-  it('calls onAdd with title and category on submit', async () => {
+  it('calls onAdd with title, category, default priority, and null due date on submit', async () => {
     const onAdd = vi.fn();
     render(<TodoInput onAdd={onAdd} />);
 
     await userEvent.type(screen.getByLabelText('Todo title'), 'Buy milk');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work');
+    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', 'medium', null);
   });
 
   it('clears the input after submission', async () => {
@@ -57,7 +59,7 @@ describe('TodoInput', () => {
     await userEvent.selectOptions(screen.getByLabelText('Todo category'), 'health');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Go running', 'health');
+    expect(onAdd).toHaveBeenCalledWith('Go running', 'health', 'medium', null);
   });
 
   it('renders all four category options', () => {
@@ -72,6 +74,41 @@ describe('TodoInput', () => {
     expect(options[3]).toHaveTextContent('Health');
   });
 
+  it('renders all three priority options', () => {
+    render(<TodoInput onAdd={vi.fn()} />);
+    const select = screen.getByLabelText('Todo priority');
+    const options = select.querySelectorAll('option');
+
+    expect(options).toHaveLength(3);
+    expect(options[0]).toHaveTextContent('Low');
+    expect(options[1]).toHaveTextContent('Medium');
+    expect(options[2]).toHaveTextContent('High');
+  });
+
+  it('allows selecting a different priority', async () => {
+    const onAdd = vi.fn();
+    render(<TodoInput onAdd={onAdd} />);
+
+    await userEvent.type(screen.getByLabelText('Todo title'), 'Urgent task');
+    await userEvent.selectOptions(screen.getByLabelText('Todo priority'), 'high');
+    await userEvent.click(screen.getByRole('button', { name: 'Add' }));
+
+    expect(onAdd).toHaveBeenCalledWith('Urgent task', 'work', 'high', null);
+  });
+
+  it('allows setting a due date', async () => {
+    const onAdd = vi.fn();
+    render(<TodoInput onAdd={onAdd} />);
+
+    await userEvent.type(screen.getByLabelText('Todo title'), 'Task with date');
+    const dateInput = screen.getByLabelText('Due date');
+    await userEvent.clear(dateInput);
+    await userEvent.type(dateInput, '2026-04-01');
+    await userEvent.click(screen.getByRole('button', { name: 'Add' }));
+
+    expect(onAdd).toHaveBeenCalledWith('Task with date', 'work', 'medium', '2026-04-01');
+  });
+
   it('trims whitespace from title before calling onAdd', async () => {
     const onAdd = vi.fn();
     render(<TodoInput onAdd={onAdd} />);
@@ -79,6 +116,6 @@ describe('TodoInput', () => {
     await userEvent.type(screen.getByLabelText('Todo title'), '  Buy milk  ');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work');
+    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', 'medium', null);
   });
 });

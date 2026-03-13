@@ -9,6 +9,8 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Test todo',
   completed: false,
   category: 'work',
+  priority: 'medium',
+  dueDate: null,
   createdAt: Date.now(),
   ...overrides,
 });
