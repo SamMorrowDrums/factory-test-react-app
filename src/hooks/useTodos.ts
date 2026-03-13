@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { Todo, TodoCategory, createTodo } from '../types/todo';
+import { useLocalStorage } from './useLocalStorage';
 
 export function useTodos(initialTodos: Todo[] = []) {
-  const [todos, setTodos] = useState<Todo[]>(initialTodos);
+  const [todos, setTodos] = useLocalStorage<Todo[]>('todos', initialTodos);
 
   const addTodo = (title: string, category: TodoCategory) => {
     setTodos((prev) => [...prev, createTodo(title, category)]);
