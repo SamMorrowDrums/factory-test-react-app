@@ -30,6 +30,10 @@ vi.mock('./hooks/useTodos', () => ({
   useTodos: () => mockReturnValue,
 }));
 
+vi.mock('./hooks/useTheme', () => ({
+  useTheme: () => ({ theme: 'cyberpunk', toggleTheme: vi.fn() }),
+}));
+
 describe('App', () => {
   beforeEach(() => {
     mockReturnValue = {
