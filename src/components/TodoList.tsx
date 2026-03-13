@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { type Todo, type TodoCategory, type TodoFilter as TodoFilterType } from '../types/todo';
 import { useTodos } from '../hooks/useTodos';
 import { TodoFilter } from './TodoFilter';
 import { TodoItem } from './TodoItem';
 import './TodoList.css';
+
+const EXIT_ANIMATION_MS = 300;
 
 interface TodoListProps {
   todos?: Todo[];
@@ -20,6 +22,25 @@ export function TodoList(props: TodoListProps) {
   const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
   const [filter, setFilter] = useState<TodoFilterType>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
+  const [exitingIds, setExitingIds] = useState<Set<string>>(new Set());
+  const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      setExitingIds((prev) => new Set(prev).add(id));
+      const timer = setTimeout(() => {
+        deleteTodo(id);
+        setExitingIds((prev) => {
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        });
+        timersRef.current.delete(id);
+      }, EXIT_ANIMATION_MS);
+      timersRef.current.set(id, timer);
+    },
+    [deleteTodo],
+  );
 
   const filteredTodos = todos.filter((todo) => {
     if (filter === 'active' && todo.completed) return false;
@@ -46,7 +67,8 @@ export function TodoList(props: TodoListProps) {
             key={todo.id}
             todo={todo}
             onToggle={toggleTodo}
-            onDelete={deleteTodo}
+            onDelete={handleDelete}
+            isExiting={exitingIds.has(todo.id)}
           />
         ))}
       </ul>

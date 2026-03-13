@@ -1,3 +1,31 @@
+@keyframes todoSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes todoSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    max-height: 80px;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: -0.5rem;
+    border-color: transparent;
+  }
+}
+
 .todo-item {
   display: flex;
   align-items: center;
@@ -7,6 +35,18 @@
   border-radius: 0.375rem;
   background: #fff;
   list-style: none;
+  animation: todoSlideIn 0.25s ease-out both;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.todo-item:hover {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  border-color: #d1d5db;
+}
+
+.todo-item--exiting {
+  animation: todoSlideOut 0.3s ease-in forwards;
+  pointer-events: none;
 }
 
 .todo-item__label {
@@ -21,15 +61,22 @@
   width: 1.125rem;
   height: 1.125rem;
   cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.todo-item__checkbox:active {
+  transform: scale(0.85);
 }
 
 .todo-item__title {
   font-size: 1rem;
   color: #111827;
+  transition: color 0.3s, text-decoration-color 0.3s;
+  text-decoration: line-through transparent;
 }
 
 .todo-item--completed .todo-item__title {
-  text-decoration: line-through;
+  text-decoration: line-through #9ca3af;
   color: #9ca3af;
 }
 
@@ -40,6 +87,11 @@
   font-size: 0.75rem;
   font-weight: 500;
   text-transform: capitalize;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.todo-item__category:hover {
+  transform: scale(1.05);
 }
 
 .todo-item__category--work {
@@ -70,9 +122,28 @@
   border-radius: 0.375rem;
   cursor: pointer;
   font-size: 0.8125rem;
-  transition: background-color 0.15s, color 0.15s;
+  transition: background-color 0.15s, color 0.15s, transform 0.1s;
 }
 
 .todo-item__delete:hover {
   background: #fef2f2;
+}
+
+.todo-item__delete:active {
+  transform: scale(0.93);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .todo-item {
+    animation: none;
+  }
+  .todo-item--exiting {
+    animation: none;
+    opacity: 0;
+  }
+  .todo-item__checkbox:active,
+  .todo-item__category:hover,
+  .todo-item__delete:active {
+    transform: none;
+  }
 }
