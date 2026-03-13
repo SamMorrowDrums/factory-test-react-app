@@ -5,11 +5,20 @@ interface TodoItemProps {
   todo: Todo;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  isExiting?: boolean;
 }
 
-export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
+export function TodoItem({ todo, onToggle, onDelete, isExiting }: TodoItemProps) {
+  const classNames = [
+    'todo-item',
+    todo.completed ? 'todo-item--completed' : '',
+    isExiting ? 'todo-item--exiting' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <li className={`todo-item${todo.completed ? ' todo-item--completed' : ''}`}>
+    <li className={classNames}>
       <label className="todo-item__label">
         <input
           type="checkbox"

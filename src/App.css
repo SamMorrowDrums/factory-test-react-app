@@ -15,6 +15,28 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .app {
   max-width: 600px;
   margin: 0 auto;
@@ -24,6 +46,7 @@ body {
 .app__header {
   text-align: center;
   margin-bottom: 2rem;
+  animation: fadeInDown 0.4s ease-out;
 }
 
 .app__title {
@@ -38,4 +61,12 @@ body {
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  animation: fadeInUp 0.4s ease-out 0.1s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app__header,
+  .app__main {
+    animation: none;
+  }
 }

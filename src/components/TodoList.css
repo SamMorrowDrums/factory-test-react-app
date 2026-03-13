@@ -24,6 +24,7 @@
 
 .todo-list__count {
   font-weight: 500;
+  transition: color 0.2s;
 }
 
 .todo-list__clear-completed {
@@ -34,9 +35,19 @@
   border-radius: 0.375rem;
   cursor: pointer;
   font-size: 0.8125rem;
-  transition: background-color 0.15s, color 0.15s;
+  transition: background-color 0.15s, color 0.15s, transform 0.1s;
 }
 
 .todo-list__clear-completed:hover {
   background: #f3f4f6;
+}
+
+.todo-list__clear-completed:active {
+  transform: scale(0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .todo-list__clear-completed:active {
+    transform: none;
+  }
 }
