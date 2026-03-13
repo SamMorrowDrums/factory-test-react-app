@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
 *,
 *::before,
 *::after {
@@ -6,17 +8,42 @@
   padding: 0;
 }
 
+:root {
+  --cyber-bg: #0a0a0f;
+  --cyber-surface: #12121a;
+  --cyber-surface-hover: #1a1a28;
+  --cyber-border: #1e1e3a;
+  --cyber-cyan: #00f0ff;
+  --cyber-magenta: #ff00aa;
+  --cyber-yellow: #ffe600;
+  --cyber-green: #39ff14;
+  --cyber-red: #ff2244;
+  --cyber-text: #e0e0ff;
+  --cyber-text-dim: #8888aa;
+  --cyber-glow-cyan: 0 0 8px rgba(0, 240, 255, 0.4), 0 0 20px rgba(0, 240, 255, 0.15);
+  --cyber-glow-magenta: 0 0 8px rgba(255, 0, 170, 0.4), 0 0 20px rgba(255, 0, 170, 0.15);
+  --cyber-font-display: 'Orbitron', sans-serif;
+  --cyber-font-mono: 'Share Tech Mono', monospace;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
-  background: #f9fafb;
-  color: #111827;
+  font-family: var(--cyber-font-mono);
+  background: var(--cyber-bg);
+  color: var(--cyber-text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 240, 255, 0.015) 2px,
+      rgba(0, 240, 255, 0.015) 4px
+    );
 }
 
 .app {
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
@@ -27,15 +54,35 @@ body {
 }
 
 .app__title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1f2937;
+  font-family: var(--cyber-font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--cyber-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  text-shadow:
+    0 0 10px rgba(0, 240, 255, 0.6),
+    0 0 30px rgba(0, 240, 255, 0.3),
+    0 0 60px rgba(0, 240, 255, 0.15);
 }
 
 .app__main {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
+  background: var(--cyber-surface);
+  border: 1px solid var(--cyber-border);
+  border-radius: 2px;
   padding: 1rem 1.25rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    var(--cyber-glow-cyan),
+    inset 0 1px 0 rgba(0, 240, 255, 0.05);
+  position: relative;
+}
+
+.app__main::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyber-cyan), transparent);
 }
