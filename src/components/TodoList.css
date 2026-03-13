@@ -19,24 +19,33 @@
   justify-content: space-between;
   padding: 0.75rem 0;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--cyber-text-dim);
+  border-top: 1px solid var(--cyber-border);
+  margin-top: 0.25rem;
 }
 
 .todo-list__count {
   font-weight: 500;
+  font-family: var(--cyber-font-mono);
 }
 
 .todo-list__clear-completed {
   padding: 0.375rem 0.75rem;
-  border: 1px solid #d1d5db;
-  background: #fff;
-  color: #374151;
-  border-radius: 0.375rem;
+  border: 1px solid var(--cyber-border);
+  background: transparent;
+  color: var(--cyber-text-dim);
+  border-radius: 2px;
   cursor: pointer;
-  font-size: 0.8125rem;
-  transition: background-color 0.15s, color 0.15s;
+  font-size: 0.75rem;
+  font-family: var(--cyber-font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .todo-list__clear-completed:hover {
-  background: #f3f4f6;
+  background: rgba(255, 0, 170, 0.1);
+  border-color: rgba(255, 0, 170, 0.4);
+  color: var(--cyber-magenta);
 }
