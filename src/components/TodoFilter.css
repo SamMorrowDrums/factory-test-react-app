@@ -3,6 +3,7 @@
   align-items: center;
   gap: 1rem;
   padding: 0.75rem 0;
+  flex-wrap: wrap;
 }
 
 .todo-filter__status-buttons {
@@ -46,6 +47,21 @@
 }
 
 .todo-filter__category-select:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -1px;
+}
+
+.todo-filter__priority-select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  color: #374151;
+  background: #fff;
+  cursor: pointer;
+}
+
+.todo-filter__priority-select:focus {
   outline: 2px solid #3b82f6;
   outline-offset: -1px;
 }

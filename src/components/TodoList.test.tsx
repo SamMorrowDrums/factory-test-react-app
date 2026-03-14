@@ -9,14 +9,16 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Test todo',
   completed: false,
   category: 'work',
+  priority: 'medium',
+  dueDate: null,
   createdAt: Date.now(),
   ...overrides,
 });
 
 const defaultTodos: Todo[] = [
-  makeTodo({ id: '1', title: 'Active work', completed: false, category: 'work' }),
-  makeTodo({ id: '2', title: 'Done shopping', completed: true, category: 'shopping' }),
-  makeTodo({ id: '3', title: 'Active personal', completed: false, category: 'personal' }),
+  makeTodo({ id: '1', title: 'Active work', completed: false, category: 'work', priority: 'high' }),
+  makeTodo({ id: '2', title: 'Done shopping', completed: true, category: 'shopping', priority: 'low' }),
+  makeTodo({ id: '3', title: 'Active personal', completed: false, category: 'personal', priority: 'medium' }),
 ];
 
 let mockReturnValue: ReturnType<typeof createMockReturn>;
@@ -54,6 +56,7 @@ describe('TodoList', () => {
     expect(screen.getByRole('button', { name: 'Active' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Completed' })).toBeInTheDocument();
     expect(screen.getByLabelText('Filter by category')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filter by priority')).toBeInTheDocument();
   });
 
   it('shows the count of remaining active items', () => {
@@ -111,6 +114,16 @@ describe('TodoList', () => {
 
     expect(screen.getByText('Done shopping')).toBeInTheDocument();
     expect(screen.queryByText('Active work')).not.toBeInTheDocument();
+    expect(screen.queryByText('Active personal')).not.toBeInTheDocument();
+  });
+
+  it('filters by priority', async () => {
+    render(<TodoList />);
+    const prioritySelect = screen.getByLabelText('Filter by priority');
+    await userEvent.selectOptions(prioritySelect, 'high');
+
+    expect(screen.getByText('Active work')).toBeInTheDocument();
+    expect(screen.queryByText('Done shopping')).not.toBeInTheDocument();
     expect(screen.queryByText('Active personal')).not.toBeInTheDocument();
   });
 
