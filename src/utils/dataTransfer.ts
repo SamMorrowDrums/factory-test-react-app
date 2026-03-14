@@ -14,7 +14,8 @@ function isValidTodo(obj: unknown): obj is Todo {
     typeof t.title === 'string' &&
     typeof t.completed === 'boolean' &&
     isValidCategory(t.category) &&
-    typeof t.createdAt === 'number'
+    typeof t.createdAt === 'number' &&
+    (t.notes === undefined || typeof t.notes === 'string')
   );
 }
 
@@ -49,7 +50,7 @@ export function importFromJSON(text: string): Todo[] {
 
 // ── CSV ─────────────────────────────────────────────────────────────────
 
-const CSV_HEADER = 'id,title,completed,category,createdAt';
+const CSV_HEADER = 'id,title,completed,category,createdAt,notes';
 
 function escapeCSVField(value: string): string {
   if (value.includes(',') || value.includes('"') || value.includes('\n')) {
@@ -61,7 +62,7 @@ function escapeCSVField(value: string): string {
 export function exportToCSV(todos: Todo[]): string {
   const rows = todos.map(
     (t) =>
-      `${escapeCSVField(t.id)},${escapeCSVField(t.title)},${t.completed},${t.category},${t.createdAt}`,
+      `${escapeCSVField(t.id)},${escapeCSVField(t.title)},${t.completed},${t.category},${t.createdAt},${escapeCSVField(t.notes ?? '')}`,
   );
   return [CSV_HEADER, ...rows].join('\n');
 }
@@ -115,10 +116,11 @@ export function importFromCSV(text: string): Todo[] {
     if (!line) continue;
     const fields = parseCSVRow(line);
     if (fields.length < 5) {
-      throw new Error(`Invalid CSV row at line ${i + 1}: expected 5 fields, got ${fields.length}`);
+      throw new Error(`Invalid CSV row at line ${i + 1}: expected at least 5 fields, got ${fields.length}`);
     }
 
-    const [id, title, completedStr, category, createdAtStr] = fields;
+    const [id, title, completedStr, category, createdAtStr, ...rest] = fields;
+    const notes = rest.length > 0 ? rest[0] : undefined;
     const completed = completedStr === 'true';
     if (completedStr !== 'true' && completedStr !== 'false') {
       throw new Error(`Invalid completed value at line ${i + 1}: "${completedStr}"`);
@@ -131,7 +133,11 @@ export function importFromCSV(text: string): Todo[] {
       throw new Error(`Invalid createdAt at line ${i + 1}: "${createdAtStr}"`);
     }
 
-    todos.push({ id, title, completed, category, createdAt });
+    const todo: Todo = { id, title, completed, category, createdAt };
+    if (notes) {
+      todo.notes = notes;
+    }
+    todos.push(todo);
   }
 
   return todos;

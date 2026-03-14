@@ -173,4 +173,52 @@ describe('useTodos', () => {
 
     expect(result.current.todos.map((t) => t.id)).toEqual(['2', '1', '3']);
   });
+
+  it('adds a todo with notes', () => {
+    const { result } = renderHook(() => useTodos());
+
+    act(() => {
+      result.current.addTodo('Task with notes', 'work', 'Some detailed notes');
+    });
+
+    expect(result.current.todos).toHaveLength(1);
+    expect(result.current.todos[0].notes).toBe('Some detailed notes');
+  });
+
+  it('adds a todo without notes when notes are undefined', () => {
+    const { result } = renderHook(() => useTodos());
+
+    act(() => {
+      result.current.addTodo('Task without notes', 'work');
+    });
+
+    expect(result.current.todos).toHaveLength(1);
+    expect(result.current.todos[0].notes).toBeUndefined();
+  });
+
+  it('updates notes on a todo', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.updateNotes('1', 'New notes');
+    });
+
+    expect(result.current.todos[0].notes).toBe('New notes');
+  });
+
+  it('removes notes when setting empty string', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1, notes: 'Old notes' },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.updateNotes('1', '');
+    });
+
+    expect(result.current.todos[0].notes).toBeUndefined();
+  });
 });

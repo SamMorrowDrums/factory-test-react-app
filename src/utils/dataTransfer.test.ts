@@ -51,13 +51,12 @@ describe('exportToCSV', () => {
   it('produces a header row and data rows', () => {
     const csv = exportToCSV(sampleTodos);
     const lines = csv.split('\n');
-    expect(lines[0]).toBe('id,title,completed,category,createdAt');
-    expect(lines.length).toBe(3);
+    expect(lines[0]).toBe('id,title,completed,category,createdAt,notes');
   });
 
   it('handles empty array', () => {
     const csv = exportToCSV([]);
-    expect(csv).toBe('id,title,completed,category,createdAt');
+    expect(csv).toBe('id,title,completed,category,createdAt,notes');
   });
 
   it('escapes titles with commas', () => {
@@ -106,7 +105,7 @@ describe('importFromCSV', () => {
 
   it('throws on row with too few fields', () => {
     expect(() => importFromCSV('id,title,completed,category,createdAt\na1,Buy milk')).toThrow(
-      'expected 5 fields',
+      'expected at least 5 fields',
     );
   });
 
@@ -132,5 +131,37 @@ describe('importFromCSV', () => {
     const csv = 'id,title,completed,category,createdAt\na1,Buy milk,false,shopping,1\n\nb2,Work,true,work,2';
     const result = importFromCSV(csv);
     expect(result).toHaveLength(2);
+  });
+
+  it('round-trips todos with notes through CSV', () => {
+    const todosWithNotes: Todo[] = [
+      { id: 'a1', title: 'Task', completed: false, category: 'work', createdAt: 1, notes: 'Some notes' },
+    ];
+    const csv = exportToCSV(todosWithNotes);
+    const result = importFromCSV(csv);
+    expect(result).toEqual(todosWithNotes);
+  });
+
+  it('imports CSV without notes column', () => {
+    const csv = 'a1,Buy milk,false,shopping,1700000000000';
+    const result = importFromCSV(csv);
+    expect(result[0].notes).toBeUndefined();
+  });
+
+  it('round-trips todos with notes through JSON', () => {
+    const todosWithNotes: Todo[] = [
+      { id: 'a1', title: 'Task', completed: false, category: 'work', createdAt: 1, notes: 'Details here' },
+    ];
+    const json = exportToJSON(todosWithNotes);
+    const result = importFromJSON(json);
+    expect(result).toEqual(todosWithNotes);
+  });
+
+  it('imports JSON with notes field', () => {
+    const json = JSON.stringify([
+      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1, notes: 'My note' },
+    ]);
+    const result = importFromJSON(json);
+    expect(result[0].notes).toBe('My note');
   });
 });

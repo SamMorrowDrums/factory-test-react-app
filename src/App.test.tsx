@@ -23,6 +23,7 @@ let mockReturnValue: {
   addTodo: ReturnType<typeof vi.fn>;
   toggleTodo: ReturnType<typeof vi.fn>;
   deleteTodo: ReturnType<typeof vi.fn>;
+  updateNotes: ReturnType<typeof vi.fn>;
   clearCompleted: ReturnType<typeof vi.fn>;
   reorderTodos: ReturnType<typeof vi.fn>;
   importTodos: ReturnType<typeof vi.fn>;
@@ -43,6 +44,7 @@ describe('App', () => {
       addTodo: vi.fn(),
       toggleTodo: vi.fn(),
       deleteTodo: vi.fn(),
+      updateNotes: vi.fn(),
       clearCompleted: vi.fn(),
       reorderTodos: vi.fn(),
       importTodos: vi.fn(),
@@ -70,6 +72,6 @@ describe('App', () => {
     const input = screen.getByPlaceholderText('Add a new todo…');
     await userEvent.type(input, 'New task');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
-    expect(mockReturnValue.addTodo).toHaveBeenCalledWith('New task', 'work');
+    expect(mockReturnValue.addTodo).toHaveBeenCalledWith('New task', 'work', undefined);
   });
 });

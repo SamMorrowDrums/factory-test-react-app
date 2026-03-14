@@ -10,6 +10,7 @@ interface TodoListProps {
   todos?: Todo[];
   toggleTodo?: (id: string) => void;
   deleteTodo?: (id: string) => void;
+  updateNotes?: (id: string, notes: string) => void;
   clearCompleted?: () => void;
   reorderTodos?: (draggedId: string, targetId: string) => void;
 }
@@ -19,6 +20,7 @@ export function TodoList(props: TodoListProps) {
   const todos = props.todos ?? internal.todos;
   const toggleTodo = props.toggleTodo ?? internal.toggleTodo;
   const deleteTodo = props.deleteTodo ?? internal.deleteTodo;
+  const updateNotes = props.updateNotes ?? internal.updateNotes;
   const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
   const reorderTodos = props.reorderTodos ?? internal.reorderTodos;
   const [filter, setFilter] = useState<TodoFilterType>('all');
@@ -33,7 +35,7 @@ export function TodoList(props: TodoListProps) {
       if (filter === 'active' && todo.completed) return false;
       if (filter === 'completed' && !todo.completed) return false;
       if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
-      if (query && !todo.title.toLowerCase().includes(query)) return false;
+      if (query && !todo.title.toLowerCase().includes(query) && !(todo.notes?.toLowerCase().includes(query))) return false;
       return true;
     });
   }, [todos, filter, categoryFilter, searchQuery]);
@@ -86,6 +88,7 @@ export function TodoList(props: TodoListProps) {
             todo={todo}
             onToggle={toggleTodo}
             onDelete={deleteTodo}
+            onUpdateNotes={updateNotes}
             searchQuery={searchQuery}
             isDragging={draggedIdRef.current === todo.id}
             isDragOver={dragOverId === todo.id}
