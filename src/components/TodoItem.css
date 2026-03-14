@@ -1,13 +1,13 @@
 .todo-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid #2a2a3e;
-  border-radius: 0.25rem;
-  background: #12121a;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
   list-style: none;
-  transition: opacity 0.15s, border-color 0.15s, box-shadow 0.15s;
+  transition: opacity var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
   cursor: grab;
 }
 
@@ -17,12 +17,12 @@
 }
 
 .todo-item--drag-over {
-  border-color: #00ffff;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+  border-color: var(--color-neon-cyan);
+  box-shadow: var(--shadow-glow-lg);
 }
 
 .todo-item__drag-handle {
-  color: #555568;
+  color: var(--color-text-muted);
   font-size: 1rem;
   cursor: grab;
   user-select: none;
@@ -36,7 +36,7 @@
 .todo-item__label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-sm);
   flex: 1;
   cursor: pointer;
 }
@@ -49,89 +49,89 @@
 
 .todo-item__title {
   font-size: 1rem;
-  color: #e0e0e8;
+  color: var(--color-text-primary);
 }
 
 .todo-item--completed .todo-item__title {
   text-decoration: line-through;
-  color: #555568;
+  color: var(--color-text-muted);
 }
 
 .todo-item__category {
   display: inline-block;
-  padding: 0.1875rem 0.625rem;
-  border-radius: 0.1875rem;
+  padding: var(--radius-sm) 0.625rem;
+  border-radius: var(--radius-sm);
   font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border: 1px solid;
-  transition: box-shadow 0.2s, text-shadow 0.2s;
+  transition: box-shadow var(--transition-normal), text-shadow var(--transition-normal);
 }
 
 .todo-item__category--work {
-  background: rgba(0, 255, 255, 0.1);
-  color: #00ffff;
-  border-color: rgba(0, 255, 255, 0.4);
-  text-shadow: 0 0 6px rgba(0, 255, 255, 0.6);
-  box-shadow: 0 0 4px rgba(0, 255, 255, 0.15), inset 0 0 4px rgba(0, 255, 255, 0.05);
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--color-neon-cyan);
+  border-color: rgba(0, 240, 255, 0.4);
+  text-shadow: 0 0 6px rgba(0, 240, 255, 0.6);
+  box-shadow: 0 0 4px rgba(0, 240, 255, 0.15), inset 0 0 4px rgba(0, 240, 255, 0.05);
 }
 
 .todo-item__category--work:hover {
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.35), inset 0 0 6px rgba(0, 255, 255, 0.1);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.35), inset 0 0 6px rgba(0, 240, 255, 0.1);
 }
 
 .todo-item__category--personal {
-  background: rgba(255, 0, 255, 0.1);
-  color: #ff00ff;
-  border-color: rgba(255, 0, 255, 0.4);
-  text-shadow: 0 0 6px rgba(255, 0, 255, 0.6);
-  box-shadow: 0 0 4px rgba(255, 0, 255, 0.15), inset 0 0 4px rgba(255, 0, 255, 0.05);
+  background: rgba(184, 41, 221, 0.1);
+  color: var(--color-neon-purple);
+  border-color: rgba(184, 41, 221, 0.4);
+  text-shadow: 0 0 6px rgba(184, 41, 221, 0.6);
+  box-shadow: 0 0 4px rgba(184, 41, 221, 0.15), inset 0 0 4px rgba(184, 41, 221, 0.05);
 }
 
 .todo-item__category--personal:hover {
-  box-shadow: 0 0 8px rgba(255, 0, 255, 0.35), inset 0 0 6px rgba(255, 0, 255, 0.1);
+  box-shadow: 0 0 8px rgba(184, 41, 221, 0.35), inset 0 0 6px rgba(184, 41, 221, 0.1);
 }
 
 .todo-item__category--shopping {
-  background: rgba(255, 240, 0, 0.1);
-  color: #e0d800;
-  border-color: rgba(255, 240, 0, 0.4);
-  text-shadow: 0 0 6px rgba(255, 240, 0, 0.5);
-  box-shadow: 0 0 4px rgba(255, 240, 0, 0.15), inset 0 0 4px rgba(255, 240, 0, 0.05);
+  background: rgba(224, 216, 0, 0.1);
+  color: var(--color-neon-yellow);
+  border-color: rgba(224, 216, 0, 0.4);
+  text-shadow: 0 0 6px rgba(224, 216, 0, 0.5);
+  box-shadow: 0 0 4px rgba(224, 216, 0, 0.15), inset 0 0 4px rgba(224, 216, 0, 0.05);
 }
 
 .todo-item__category--shopping:hover {
-  box-shadow: 0 0 8px rgba(255, 240, 0, 0.35), inset 0 0 6px rgba(255, 240, 0, 0.1);
+  box-shadow: 0 0 8px rgba(224, 216, 0, 0.35), inset 0 0 6px rgba(224, 216, 0, 0.1);
 }
 
 .todo-item__category--health {
-  background: rgba(0, 255, 100, 0.1);
-  color: #00ff64;
-  border-color: rgba(0, 255, 100, 0.4);
-  text-shadow: 0 0 6px rgba(0, 255, 100, 0.6);
-  box-shadow: 0 0 4px rgba(0, 255, 100, 0.15), inset 0 0 4px rgba(0, 255, 100, 0.05);
+  background: rgba(57, 255, 20, 0.1);
+  color: var(--color-neon-green);
+  border-color: rgba(57, 255, 20, 0.4);
+  text-shadow: 0 0 6px rgba(57, 255, 20, 0.6);
+  box-shadow: 0 0 4px rgba(57, 255, 20, 0.15), inset 0 0 4px rgba(57, 255, 20, 0.05);
 }
 
 .todo-item__category--health:hover {
-  box-shadow: 0 0 8px rgba(0, 255, 100, 0.35), inset 0 0 6px rgba(0, 255, 100, 0.1);
+  box-shadow: 0 0 8px rgba(57, 255, 20, 0.35), inset 0 0 6px rgba(57, 255, 20, 0.1);
 }
 
 .todo-item__delete {
-  padding: 0.375rem 0.75rem;
-  border: 1px solid rgba(255, 50, 80, 0.4);
-  background: rgba(255, 50, 80, 0.08);
-  color: #ff3250;
-  border-radius: 0.25rem;
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid rgba(255, 42, 109, 0.4);
+  background: rgba(255, 42, 109, 0.08);
+  color: var(--color-neon-magenta);
+  border-radius: var(--radius-md);
   cursor: pointer;
   font-size: 0.8125rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  transition: background-color 0.15s, box-shadow 0.15s;
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .todo-item__delete:hover {
-  background: rgba(255, 50, 80, 0.15);
-  box-shadow: 0 0 6px rgba(255, 50, 80, 0.3);
+  background: rgba(255, 42, 109, 0.15);
+  box-shadow: 0 0 6px rgba(255, 42, 109, 0.3);
 }
