@@ -142,4 +142,54 @@ describe('TodoList', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Clear completed' }));
     expect(clearCompleted).toHaveBeenCalledOnce();
   });
+
+  it('renders the search bar', () => {
+    render(<TodoList />);
+    expect(screen.getByLabelText('Search todos')).toBeInTheDocument();
+  });
+
+  it('filters todos by search query', async () => {
+    render(<TodoList />);
+    const searchInput = screen.getByLabelText('Search todos');
+    await userEvent.type(searchInput, 'work');
+
+    const list = screen.getByRole('list');
+    const items = within(list).getAllByRole('listitem');
+    expect(items).toHaveLength(1);
+    expect(items[0]).toHaveTextContent('Active work');
+  });
+
+  it('search is case-insensitive', async () => {
+    render(<TodoList />);
+    const searchInput = screen.getByLabelText('Search todos');
+    await userEvent.type(searchInput, 'ACTIVE');
+
+    const list = screen.getByRole('list');
+    const items = within(list).getAllByRole('listitem');
+    expect(items).toHaveLength(2);
+    expect(items[0]).toHaveTextContent('Active work');
+    expect(items[1]).toHaveTextContent('Active personal');
+  });
+
+  it('combines search with status and category filters', async () => {
+    render(<TodoList />);
+    await userEvent.click(screen.getByRole('button', { name: 'Active' }));
+    const searchInput = screen.getByLabelText('Search todos');
+    await userEvent.type(searchInput, 'personal');
+
+    const list = screen.getByRole('list');
+    const items = within(list).getAllByRole('listitem');
+    expect(items).toHaveLength(1);
+    expect(items[0]).toHaveTextContent('Active personal');
+  });
+
+  it('shows no items when search matches nothing', async () => {
+    render(<TodoList />);
+    const searchInput = screen.getByLabelText('Search todos');
+    await userEvent.type(searchInput, 'zzzzz');
+
+    const list = screen.getByRole('list');
+    const items = within(list).queryAllByRole('listitem');
+    expect(items).toHaveLength(0);
+  });
 });
