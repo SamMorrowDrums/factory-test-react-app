@@ -81,6 +81,10 @@
   box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
 }
 
+.install-banner__install:active {
+  transform: scale(0.95);
+}
+
 .install-banner__dismiss {
   background: none;
   border: none;
@@ -89,8 +93,19 @@
   font-size: 0.875rem;
   padding: 0.125rem 0.25rem;
   line-height: 1;
+  transition: color 0.15s, transform 0.1s;
 }
 
 .install-banner__dismiss:hover {
   color: #e2e8f0;
+}
+
+.install-banner__dismiss:active {
+  transform: scale(0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .install-banner {
+    animation: none;
+  }
 }

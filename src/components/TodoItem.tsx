@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo, useState, useCallback, useRef } from 'react';
 import type { Todo } from '../types/todo';
 import './TodoItem.css';
 
@@ -25,17 +25,24 @@ export const TodoItem = memo(function TodoItem({
   onDrop,
   onDragEnd,
 }: TodoItemProps) {
+  const [isExiting, setIsExiting] = useState(false);
+  const exitTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
   const classNames = [
     'todo-item',
     todo.completed ? 'todo-item--completed' : '',
     isDragging ? 'todo-item--dragging' : '',
     isDragOver ? 'todo-item--drag-over' : '',
+    isExiting ? 'todo-item--exiting' : '',
   ]
     .filter(Boolean)
     .join(' ');
 
   const handleToggle = useCallback(() => onToggle(todo.id), [onToggle, todo.id]);
-  const handleDelete = useCallback(() => onDelete(todo.id), [onDelete, todo.id]);
+  const handleDelete = useCallback(() => {
+    setIsExiting(true);
+    exitTimerRef.current = setTimeout(() => onDelete(todo.id), 200);
+  }, [onDelete, todo.id]);
 
   return (
     <li

@@ -11,11 +11,13 @@
   border-radius: 0.375rem;
   font-size: 0.875rem;
   color: #374151;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .todo-input__text:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: -1px;
+  outline: none;
+  border-color: #00ffff;
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.15), 0 0 8px rgba(0, 255, 255, 0.1);
 }
 
 .todo-input__category {
@@ -26,11 +28,13 @@
   color: #374151;
   background: #fff;
   cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .todo-input__category:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: -1px;
+  outline: none;
+  border-color: #00ffff;
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.15), 0 0 8px rgba(0, 255, 255, 0.1);
 }
 
 .todo-input__add {
@@ -41,9 +45,14 @@
   border-radius: 0.375rem;
   font-size: 0.875rem;
   cursor: pointer;
-  transition: background-color 0.15s;
+  transition: background-color 0.15s, transform 0.1s, box-shadow 0.2s;
 }
 
 .todo-input__add:hover {
   background: #2563eb;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+}
+
+.todo-input__add:active {
+  transform: scale(0.95);
 }

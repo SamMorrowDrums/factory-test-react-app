@@ -23,6 +23,7 @@ body {
 .app__header {
   text-align: center;
   margin-bottom: 2rem;
+  animation: app-fade-in 0.4s ease-out both;
 }
 
 .app__title {
@@ -39,6 +40,18 @@ body {
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.05);
+  animation: app-fade-in 0.4s ease-out 0.1s both;
+}
+
+@keyframes app-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .app__toolbar {
@@ -64,7 +77,7 @@ body {
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.8rem;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.1s;
 }
 
 .app__undo-btn:hover:not(:disabled),
@@ -72,8 +85,20 @@ body {
   background: #475569;
 }
 
+.app__undo-btn:active:not(:disabled),
+.app__redo-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
 .app__undo-btn:disabled,
 .app__redo-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app__header,
+  .app__main {
+    animation: none;
+  }
 }

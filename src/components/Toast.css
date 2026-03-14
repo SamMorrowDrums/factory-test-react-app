@@ -49,8 +49,19 @@
   font-size: 0.875rem;
   padding: 0.125rem 0.25rem;
   line-height: 1;
+  transition: color 0.15s, transform 0.1s;
 }
 
 .toast__dismiss:hover {
   color: #e2e8f0;
+}
+
+.toast__dismiss:active {
+  transform: scale(0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TodoItem } from './TodoItem';
 import type { Todo } from '../types/todo';
@@ -76,7 +76,9 @@ describe('TodoItem', () => {
     render(<TodoItem {...defaultProps} onDelete={onDelete} />);
 
     await userEvent.click(screen.getByRole('button', { name: /delete/i }));
-    expect(onDelete).toHaveBeenCalledWith('test-1');
+    await waitFor(() => {
+      expect(onDelete).toHaveBeenCalledWith('test-1');
+    });
   });
 
   it('renders different category badges correctly', () => {
