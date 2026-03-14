@@ -86,4 +86,20 @@ describe('TodoItem', () => {
     const badge = screen.getByText('work');
     expect(badge).toHaveClass('todo-item__category--work');
   });
+
+  it('highlights matching text when searchQuery is provided', () => {
+    const { container } = render(
+      <TodoItem {...defaultProps} searchQuery="Buy" />
+    );
+    const mark = container.querySelector('mark.highlight');
+    expect(mark).toBeInTheDocument();
+    expect(mark).toHaveTextContent('Buy');
+  });
+
+  it('does not highlight when searchQuery is empty', () => {
+    const { container } = render(
+      <TodoItem {...defaultProps} searchQuery="" />
+    );
+    expect(container.querySelector('mark')).not.toBeInTheDocument();
+  });
 });

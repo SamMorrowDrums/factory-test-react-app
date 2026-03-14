@@ -28,6 +28,14 @@
   color: #e0e0e8;
 }
 
+.todo-item__title .highlight {
+  background: rgba(0, 255, 255, 0.2);
+  color: #00ffff;
+  border-radius: 0.125rem;
+  padding: 0 0.0625rem;
+  text-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
+}
+
 .todo-item--completed .todo-item__title {
   text-decoration: line-through;
   color: #555568;

@@ -141,4 +141,54 @@ describe('TodoList', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Clear completed' }));
     expect(clearCompleted).toHaveBeenCalledOnce();
   });
+
+  it('renders a search input', () => {
+    render(<TodoList />);
+    expect(screen.getByPlaceholderText('Search todos…')).toBeInTheDocument();
+  });
+
+  it('filters todos by search query in real-time', async () => {
+    render(<TodoList />);
+    const searchInput = screen.getByLabelText('Search todos');
+    await userEvent.type(searchInput, 'Active');
+
+    const items = screen.getAllByRole('listitem');
+    expect(items).toHaveLength(2);
+    expect(items[0]).toHaveTextContent('Active work');
+    expect(items[1]).toHaveTextContent('Active personal');
+  });
+
+  it('search is case-insensitive', async () => {
+    render(<TodoList />);
+    const searchInput = screen.getByLabelText('Search todos');
+    await userEvent.type(searchInput, 'active');
+
+    const items = screen.getAllByRole('listitem');
+    expect(items).toHaveLength(2);
+    expect(items[0]).toHaveTextContent('Active work');
+    expect(items[1]).toHaveTextContent('Active personal');
+  });
+
+  it('combines search with status and category filters', async () => {
+    render(<TodoList />);
+    const searchInput = screen.getByLabelText('Search todos');
+    await userEvent.type(searchInput, 'Active');
+    await userEvent.click(screen.getByRole('button', { name: 'Active' }));
+    const categorySelect = screen.getByLabelText('Filter by category');
+    await userEvent.selectOptions(categorySelect, 'work');
+
+    const items = screen.getAllByRole('listitem');
+    expect(items).toHaveLength(1);
+    expect(items[0]).toHaveTextContent('Active work');
+  });
+
+  it('shows no items when search has no matches', async () => {
+    render(<TodoList />);
+    const searchInput = screen.getByLabelText('Search todos');
+    await userEvent.type(searchInput, 'xyznonexistent');
+
+    const list = screen.getByRole('list');
+    const items = within(list).queryAllByRole('listitem');
+    expect(items).toHaveLength(0);
+  });
 });

@@ -1,13 +1,15 @@
 import type { Todo } from '../types/todo';
+import { HighlightText } from './HighlightText';
 import './TodoItem.css';
 
 interface TodoItemProps {
   todo: Todo;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  searchQuery?: string;
 }
 
-export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
+export function TodoItem({ todo, onToggle, onDelete, searchQuery = '' }: TodoItemProps) {
   return (
     <li className={`todo-item${todo.completed ? ' todo-item--completed' : ''}`}>
       <label className="todo-item__label">
@@ -18,7 +20,9 @@ export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
           onChange={() => onToggle(todo.id)}
           aria-label={`Mark "${todo.title}" as ${todo.completed ? 'incomplete' : 'complete'}`}
         />
-        <span className="todo-item__title">{todo.title}</span>
+        <span className="todo-item__title">
+          <HighlightText text={todo.title} query={searchQuery} />
+        </span>
       </label>
 
       <span className={`todo-item__category todo-item__category--${todo.category}`}>

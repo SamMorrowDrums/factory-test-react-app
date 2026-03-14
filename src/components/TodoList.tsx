@@ -3,6 +3,7 @@ import { type Todo, type TodoCategory, type TodoFilter as TodoFilterType } from 
 import { useTodos } from '../hooks/useTodos';
 import { TodoFilter } from './TodoFilter';
 import { TodoItem } from './TodoItem';
+import { SearchInput } from './SearchInput';
 import './TodoList.css';
 
 interface TodoListProps {
@@ -20,11 +21,13 @@ export function TodoList(props: TodoListProps) {
   const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
   const [filter, setFilter] = useState<TodoFilterType>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const filteredTodos = todos.filter((todo) => {
     if (filter === 'active' && todo.completed) return false;
     if (filter === 'completed' && !todo.completed) return false;
     if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
+    if (searchQuery.trim() && !todo.title.toLowerCase().includes(searchQuery.trim().toLowerCase())) return false;
     return true;
   });
 
@@ -33,6 +36,8 @@ export function TodoList(props: TodoListProps) {
 
   return (
     <div className="todo-list">
+      <SearchInput query={searchQuery} onChange={setSearchQuery} />
+
       <TodoFilter
         currentFilter={filter}
         currentCategory={categoryFilter}
@@ -47,6 +52,7 @@ export function TodoList(props: TodoListProps) {
             todo={todo}
             onToggle={toggleTodo}
             onDelete={deleteTodo}
+            searchQuery={searchQuery}
           />
         ))}
       </ul>
