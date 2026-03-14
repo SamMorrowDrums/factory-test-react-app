@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useMemo } from 'react';
 import { type Todo, type TodoCategory, type TodoFilter as TodoFilterType } from '../types/todo';
 import { useTodos } from '../hooks/useTodos';
 import { TodoFilter } from './TodoFilter';
+import { SearchBar } from './SearchBar';
 import { TodoItem } from './TodoItem';
 import './TodoList.css';
 
@@ -22,15 +23,20 @@ export function TodoList(props: TodoListProps) {
   const reorderTodos = props.reorderTodos ?? internal.reorderTodos;
   const [filter, setFilter] = useState<TodoFilterType>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const draggedIdRef = useRef<string | null>(null);
 
-  const filteredTodos = useMemo(() => todos.filter((todo) => {
-    if (filter === 'active' && todo.completed) return false;
-    if (filter === 'completed' && !todo.completed) return false;
-    if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
-    return true;
-  }), [todos, filter, categoryFilter]);
+  const filteredTodos = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
+    return todos.filter((todo) => {
+      if (filter === 'active' && todo.completed) return false;
+      if (filter === 'completed' && !todo.completed) return false;
+      if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
+      if (query && !todo.title.toLowerCase().includes(query)) return false;
+      return true;
+    });
+  }, [todos, filter, categoryFilter, searchQuery]);
 
   const activeCount = useMemo(() => todos.filter((todo) => !todo.completed).length, [todos]);
   const hasCompleted = useMemo(() => todos.some((todo) => todo.completed), [todos]);
@@ -71,6 +77,8 @@ export function TodoList(props: TodoListProps) {
         onCategoryChange={setCategoryFilter}
       />
 
+      <SearchBar query={searchQuery} onChange={setSearchQuery} />
+
       <ul className="todo-list__items">
         {filteredTodos.map((todo) => (
           <TodoItem
@@ -78,6 +86,7 @@ export function TodoList(props: TodoListProps) {
             todo={todo}
             onToggle={toggleTodo}
             onDelete={deleteTodo}
+            searchQuery={searchQuery}
             isDragging={draggedIdRef.current === todo.id}
             isDragOver={dragOverId === todo.id}
             onDragStart={handleDragStart(todo.id)}

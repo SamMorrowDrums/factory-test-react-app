@@ -57,6 +57,14 @@
   color: #555568;
 }
 
+.todo-item__highlight {
+  background: rgba(0, 255, 255, 0.2);
+  color: #0ff;
+  border-radius: 0.125rem;
+  padding: 0 0.0625rem;
+  text-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
+}
+
 .todo-item__category {
   display: inline-block;
   padding: 0.1875rem 0.625rem;

@@ -6,6 +6,7 @@ interface TodoItemProps {
   todo: Todo;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  searchQuery?: string;
   isDragging?: boolean;
   isDragOver?: boolean;
   onDragStart?: (e: React.DragEvent<HTMLLIElement>) => void;
@@ -14,10 +15,31 @@ interface TodoItemProps {
   onDragEnd?: (e: React.DragEvent<HTMLLIElement>) => void;
 }
 
+function HighlightedText({ text, query }: { text: string; query: string }) {
+  const trimmed = query.trim();
+  if (!trimmed) return <>{text}</>;
+
+  const regex = new RegExp(`(${trimmed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  const parts = text.split(regex);
+
+  return (
+    <>
+      {parts.map((part, i) =>
+        regex.test(part) ? (
+          <mark key={i} className="todo-item__highlight">{part}</mark>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  );
+}
+
 export const TodoItem = memo(function TodoItem({
   todo,
   onToggle,
   onDelete,
+  searchQuery = '',
   isDragging = false,
   isDragOver = false,
   onDragStart,
@@ -58,7 +80,9 @@ export const TodoItem = memo(function TodoItem({
           onChange={handleToggle}
           aria-label={`Mark "${todo.title}" as ${todo.completed ? 'incomplete' : 'complete'}`}
         />
-        <span className="todo-item__title">{todo.title}</span>
+        <span className="todo-item__title">
+          <HighlightedText text={todo.title} query={searchQuery} />
+        </span>
       </label>
 
       <span className={`todo-item__category todo-item__category--${todo.category}`}>

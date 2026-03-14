@@ -109,4 +109,22 @@ describe('TodoItem', () => {
     const li = container.querySelector('.todo-item');
     expect(li).toHaveClass('todo-item--drag-over');
   });
+
+  it('highlights matching text when searchQuery is provided', () => {
+    render(<TodoItem {...defaultProps} searchQuery="groc" />);
+    const highlight = screen.getByText('groc');
+    expect(highlight.tagName).toBe('MARK');
+    expect(highlight).toHaveClass('todo-item__highlight');
+  });
+
+  it('does not highlight when searchQuery is empty', () => {
+    const { container } = render(<TodoItem {...defaultProps} searchQuery="" />);
+    expect(container.querySelector('.todo-item__highlight')).toBeNull();
+  });
+
+  it('highlights case-insensitively', () => {
+    render(<TodoItem {...defaultProps} searchQuery="BUY" />);
+    const highlight = screen.getByText('Buy');
+    expect(highlight.tagName).toBe('MARK');
+  });
 });
