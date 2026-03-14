@@ -42,6 +42,23 @@ describe('createTodo', () => {
   });
 });
 
+describe('createTodo with parentId', () => {
+  it('creates a sub-task with parentId when provided', () => {
+    const todo = createTodo('Sub item', 'work', 'parent-1');
+
+    expect(todo.title).toBe('Sub item');
+    expect(todo.category).toBe('work');
+    expect(todo.parentId).toBe('parent-1');
+    expect(todo.completed).toBe(false);
+  });
+
+  it('creates a todo without parentId when not provided', () => {
+    const todo = createTodo('Top level', 'personal');
+
+    expect(todo.parentId).toBeUndefined();
+  });
+});
+
 describe('TodoCategory', () => {
   it('accepts valid category values', () => {
     const categories: TodoCategory[] = ['work', 'personal', 'shopping', 'health'];

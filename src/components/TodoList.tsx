@@ -10,6 +10,7 @@ interface TodoListProps {
   toggleTodo?: (id: string) => void;
   deleteTodo?: (id: string) => void;
   clearCompleted?: () => void;
+  addTodo?: (title: string, category: TodoCategory, parentId?: string) => void;
 }
 
 export function TodoList(props: TodoListProps) {
@@ -18,15 +19,27 @@ export function TodoList(props: TodoListProps) {
   const toggleTodo = props.toggleTodo ?? internal.toggleTodo;
   const deleteTodo = props.deleteTodo ?? internal.deleteTodo;
   const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
+  const addTodo = props.addTodo ?? internal.addTodo;
   const [filter, setFilter] = useState<TodoFilterType>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
 
-  const filteredTodos = todos.filter((todo) => {
+  const topLevelTodos = todos.filter((todo) => todo.parentId == null);
+
+  const filteredTodos = topLevelTodos.filter((todo) => {
     if (filter === 'active' && todo.completed) return false;
     if (filter === 'completed' && !todo.completed) return false;
     if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
     return true;
   });
+
+  const getSubTasks = (parentId: string) =>
+    todos.filter((todo) => todo.parentId === parentId);
+
+  const handleAddSubTask = (title: string, parentId: string) => {
+    const parent = todos.find((t) => t.id === parentId);
+    if (!parent) return;
+    addTodo(title, parent.category, parentId);
+  };
 
   const activeCount = todos.filter((todo) => !todo.completed).length;
   const hasCompleted = todos.some((todo) => todo.completed);
@@ -47,6 +60,8 @@ export function TodoList(props: TodoListProps) {
             todo={todo}
             onToggle={toggleTodo}
             onDelete={deleteTodo}
+            subTasks={getSubTasks(todo.id)}
+            onAddSubTask={handleAddSubTask}
           />
         ))}
       </ul>

@@ -8,14 +8,16 @@ export interface Todo {
   completed: boolean;
   category: TodoCategory;
   createdAt: number;
+  parentId?: string;
 }
 
-export function createTodo(title: string, category: TodoCategory): Todo {
+export function createTodo(title: string, category: TodoCategory, parentId?: string): Todo {
   return {
     id: crypto.randomUUID(),
     title,
     completed: false,
     category,
     createdAt: Date.now(),
+    ...(parentId != null ? { parentId } : {}),
   };
 }

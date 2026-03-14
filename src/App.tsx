@@ -20,6 +20,7 @@ function App() {
           toggleTodo={toggleTodo}
           deleteTodo={deleteTodo}
           clearCompleted={clearCompleted}
+          addTodo={addTodo}
         />
       </main>
     </div>

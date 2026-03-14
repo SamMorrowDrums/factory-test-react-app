@@ -141,4 +141,50 @@ describe('TodoList', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Clear completed' }));
     expect(clearCompleted).toHaveBeenCalledOnce();
   });
+
+  it('does not render sub-tasks as top-level items', () => {
+    const todosWithSubs: Todo[] = [
+      makeTodo({ id: '1', title: 'Parent task', completed: false, category: 'work' }),
+      makeTodo({ id: '2', title: 'Child task', completed: false, category: 'work', parentId: '1' }),
+    ];
+    mockReturnValue = createMockReturn(todosWithSubs);
+
+    const { container } = render(<TodoList />);
+    const topList = container.querySelector('.todo-list__items')!;
+    // Only one direct child <li> in the top-level list (the parent)
+    const directItems = topList.querySelectorAll(':scope > li');
+    expect(directItems).toHaveLength(1);
+    expect(screen.getByText('Parent task')).toBeInTheDocument();
+    expect(screen.getByText('Child task')).toBeInTheDocument();
+  });
+
+  it('renders sub-tasks under their parent', () => {
+    const todosWithSubs: Todo[] = [
+      makeTodo({ id: '1', title: 'Parent task', completed: false, category: 'work' }),
+      makeTodo({ id: 'sub-1', title: 'Sub item', completed: false, category: 'work', parentId: '1' }),
+    ];
+    mockReturnValue = createMockReturn(todosWithSubs);
+
+    render(<TodoList />);
+    const subList = screen.getByRole('list', { name: /sub-tasks of/i });
+    expect(within(subList).getByText('Sub item')).toBeInTheDocument();
+  });
+
+  it('counts sub-tasks in the active item count', () => {
+    const todosWithSubs: Todo[] = [
+      makeTodo({ id: '1', title: 'Parent', completed: false, category: 'work' }),
+      makeTodo({ id: '2', title: 'Child', completed: false, category: 'work', parentId: '1' }),
+      makeTodo({ id: '3', title: 'Done', completed: true, category: 'work' }),
+    ];
+    mockReturnValue = createMockReturn(todosWithSubs);
+
+    render(<TodoList />);
+    expect(screen.getByText('2 items left')).toBeInTheDocument();
+  });
+
+  it('renders add sub-task buttons on top-level todos', () => {
+    render(<TodoList />);
+    const addButtons = screen.getAllByRole('button', { name: /add sub-task/i });
+    expect(addButtons).toHaveLength(3);
+  });
 });
