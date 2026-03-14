@@ -8,6 +8,7 @@ import {
   downloadFile,
   readFile,
 } from '../utils/dataTransfer';
+import { CyberButton } from './CyberButton';
 import './DataTransfer.css';
 
 interface DataTransferProps {
@@ -62,15 +63,15 @@ export const DataTransfer = memo(function DataTransfer({ todos, onImport, onErro
 
   return (
     <div className="data-transfer">
-      <button className="data-transfer__btn" onClick={handleExportJSON} aria-label="Export JSON">
+      <CyberButton variant="ghost" onClick={handleExportJSON} aria-label="Export JSON">
         ↓ JSON
-      </button>
-      <button className="data-transfer__btn" onClick={handleExportCSV} aria-label="Export CSV">
+      </CyberButton>
+      <CyberButton variant="ghost" onClick={handleExportCSV} aria-label="Export CSV">
         ↓ CSV
-      </button>
-      <button className="data-transfer__btn" onClick={handleImportClick} aria-label="Import">
+      </CyberButton>
+      <CyberButton variant="ghost" onClick={handleImportClick} aria-label="Import">
         ↑ Import
-      </button>
+      </CyberButton>
       <input
         ref={fileInputRef}
         type="file"

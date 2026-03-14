@@ -1,0 +1,27 @@
+.cyber-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.875rem;
+  color: #e2e8f0;
+  background: #0d1117;
+  border: 1px solid #334155;
+  border-radius: 2px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  caret-color: #00ffff;
+}
+
+.cyber-input::placeholder {
+  color: #555568;
+  font-style: italic;
+}
+
+.cyber-input:hover {
+  border-color: rgba(0, 255, 255, 0.3);
+}
+
+.cyber-input:focus {
+  outline: none;
+  border-color: #00ffff;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.2), inset 0 0 4px rgba(0, 255, 255, 0.05);
+}

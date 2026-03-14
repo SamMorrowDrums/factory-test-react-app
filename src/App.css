@@ -56,24 +56,5 @@ body {
 
 .app__undo-btn,
 .app__redo-btn {
-  background: #334155;
-  color: #e2e8f0;
-  border: 1px solid #475569;
-  border-radius: 0.25rem;
-  padding: 0.25rem 0.625rem;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.app__undo-btn:hover:not(:disabled),
-.app__redo-btn:hover:not(:disabled) {
-  background: #475569;
-}
-
-.app__undo-btn:disabled,
-.app__redo-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+  /* Handled by CyberButton component */
 }

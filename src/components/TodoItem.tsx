@@ -1,5 +1,7 @@
 import { memo, useCallback } from 'react';
 import type { Todo } from '../types/todo';
+import { CyberCheckbox } from './CyberCheckbox';
+import { CyberButton } from './CyberButton';
 import './TodoItem.css';
 
 interface TodoItemProps {
@@ -51,9 +53,7 @@ export const TodoItem = memo(function TodoItem({
       </span>
 
       <label className="todo-item__label">
-        <input
-          type="checkbox"
-          className="todo-item__checkbox"
+        <CyberCheckbox
           checked={todo.completed}
           onChange={handleToggle}
           aria-label={`Mark "${todo.title}" as ${todo.completed ? 'incomplete' : 'complete'}`}
@@ -65,13 +65,14 @@ export const TodoItem = memo(function TodoItem({
         {todo.category}
       </span>
 
-      <button
-        className="todo-item__delete"
+      <CyberButton
+        variant="danger"
+        size="sm"
         onClick={handleDelete}
         aria-label={`Delete "${todo.title}"`}
       >
         Delete
-      </button>
+      </CyberButton>
     </li>
   );
 });

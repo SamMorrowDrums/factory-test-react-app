@@ -62,23 +62,7 @@
 }
 
 .install-banner__install {
-  background: transparent;
-  color: #0ff;
-  border: 1px solid #0ff;
-  border-radius: 0.25rem;
-  padding: 0.3rem 0.75rem;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: background 0.15s, box-shadow 0.15s;
-  white-space: nowrap;
-}
-
-.install-banner__install:hover {
-  background: rgba(0, 255, 255, 0.1);
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  /* Handled by CyberButton component */
 }
 
 .install-banner__dismiss {

@@ -8,6 +8,7 @@ import { GlitchText } from './components/GlitchText';
 import { ToastContainer } from './components/Toast';
 import { DataTransfer } from './components/DataTransfer';
 import { InstallBanner } from './components/InstallBanner';
+import { CyberButton } from './components/CyberButton';
 import './App.css';
 
 function App() {
@@ -62,22 +63,22 @@ function App() {
       <main className="app__main">
         <div className="app__toolbar">
           <div className="app__toolbar-left">
-            <button
-              className="app__undo-btn"
+            <CyberButton
+              variant="ghost"
               onClick={handleUndo}
               disabled={!canUndo()}
               aria-label="Undo"
             >
               ↩ Undo
-            </button>
-            <button
-              className="app__redo-btn"
+            </CyberButton>
+            <CyberButton
+              variant="ghost"
               onClick={handleRedo}
               disabled={!canRedo()}
               aria-label="Redo"
             >
               Redo ↪
-            </button>
+            </CyberButton>
           </div>
           <DataTransfer
             todos={todos}

@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { CyberButton } from './CyberButton';
 import './InstallBanner.css';
 
 interface InstallBannerProps {
@@ -15,9 +16,9 @@ export const InstallBanner = memo(function InstallBanner({ onInstall, onDismiss 
         <span className="install-banner__subtitle">Go offline. Go rogue.</span>
       </div>
       <div className="install-banner__actions">
-        <button className="install-banner__install" onClick={onInstall}>
+        <CyberButton variant="primary" onClick={onInstall}>
           JACK_IN
-        </button>
+        </CyberButton>
         <button
           className="install-banner__dismiss"
           onClick={onDismiss}

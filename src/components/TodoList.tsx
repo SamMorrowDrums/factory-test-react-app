@@ -3,6 +3,7 @@ import { type Todo, type TodoCategory, type TodoFilter as TodoFilterType } from 
 import { useTodos } from '../hooks/useTodos';
 import { TodoFilter } from './TodoFilter';
 import { TodoItem } from './TodoItem';
+import { CyberButton } from './CyberButton';
 import './TodoList.css';
 
 interface TodoListProps {
@@ -94,12 +95,13 @@ export function TodoList(props: TodoListProps) {
         </span>
 
         {hasCompleted && (
-          <button
-            className="todo-list__clear-completed"
+          <CyberButton
+            variant="ghost"
+            size="sm"
             onClick={clearCompleted}
           >
             Clear completed
-          </button>
+          </CyberButton>
         )}
       </div>
     </div>

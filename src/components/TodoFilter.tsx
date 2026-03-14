@@ -1,5 +1,7 @@
 import { memo, useCallback } from 'react';
 import { type TodoCategory, type TodoFilter as TodoFilterType } from '../types/todo';
+import { CyberButton } from './CyberButton';
+import { CyberSelect } from './CyberSelect';
 import './TodoFilter.css';
 
 const STATUS_OPTIONS: { value: TodoFilterType; label: string }[] = [
@@ -38,21 +40,20 @@ export const TodoFilter = memo(function TodoFilter({
     <div className="todo-filter">
       <div className="todo-filter__status-buttons">
         {STATUS_OPTIONS.map(({ value, label }) => (
-          <button
+          <CyberButton
             key={value}
-            className={`todo-filter__button${
-              currentFilter === value ? ' todo-filter__button--active' : ''
-            }`}
+            variant="ghost"
+            size="sm"
+            active={currentFilter === value}
             onClick={() => onFilterChange(value)}
             aria-pressed={currentFilter === value}
           >
             {label}
-          </button>
+          </CyberButton>
         ))}
       </div>
 
-      <select
-        className="todo-filter__category-select"
+      <CyberSelect
         value={currentCategory}
         onChange={handleCategoryChange}
         aria-label="Filter by category"
@@ -62,7 +63,7 @@ export const TodoFilter = memo(function TodoFilter({
             {label}
           </option>
         ))}
-      </select>
+      </CyberSelect>
     </div>
   );
 });

@@ -1,5 +1,8 @@
 import { memo, useState, useCallback } from 'react';
 import type { TodoCategory } from '../types/todo';
+import { CyberInput } from './CyberInput';
+import { CyberSelect } from './CyberSelect';
+import { CyberButton } from './CyberButton';
 import './TodoInput.css';
 
 const CATEGORY_OPTIONS: { value: TodoCategory; label: string }[] = [
@@ -30,17 +33,14 @@ export const TodoInput = memo(function TodoInput({ onAdd }: TodoInputProps) {
 
   return (
     <form className="todo-input" onSubmit={handleSubmit}>
-      <input
-        className="todo-input__text"
-        type="text"
+      <CyberInput
         value={title}
         onChange={handleTitleChange}
         placeholder="Add a new todo…"
         aria-label="Todo title"
       />
 
-      <select
-        className="todo-input__category"
+      <CyberSelect
         value={category}
         onChange={handleCategoryChange}
         aria-label="Todo category"
@@ -50,11 +50,11 @@ export const TodoInput = memo(function TodoInput({ onAdd }: TodoInputProps) {
             {label}
           </option>
         ))}
-      </select>
+      </CyberSelect>
 
-      <button className="todo-input__add" type="submit">
+      <CyberButton variant="primary" type="submit">
         Add
-      </button>
+      </CyberButton>
     </form>
   );
 });

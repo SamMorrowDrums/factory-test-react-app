@@ -21,11 +21,11 @@ describe('TodoFilter', () => {
   it('highlights the active filter button', () => {
     render(<TodoFilter {...defaultProps} currentFilter="active" />);
     const activeBtn = screen.getByText('Active');
-    expect(activeBtn).toHaveClass('todo-filter__button--active');
+    expect(activeBtn).toHaveClass('cyber-btn--active');
     expect(activeBtn).toHaveAttribute('aria-pressed', 'true');
 
     const allBtn = screen.getByText('All');
-    expect(allBtn).not.toHaveClass('todo-filter__button--active');
+    expect(allBtn).not.toHaveClass('cyber-btn--active');
     expect(allBtn).toHaveAttribute('aria-pressed', 'false');
   });
 
