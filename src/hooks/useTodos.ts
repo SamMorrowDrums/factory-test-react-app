@@ -1,15 +1,36 @@
+import { useCallback } from 'react';
 import { Todo, TodoCategory, createTodo } from '../types/todo';
 import { useLocalStorage } from './useLocalStorage';
+import { useUndoRedo } from './useUndoRedo';
+
+export interface TodoUndoRedoInfo {
+  canUndo: () => boolean;
+  canRedo: () => boolean;
+  undo: () => string | undefined;
+  redo: () => string | undefined;
+}
 
 export function useTodos(initialTodos: Todo[] = []) {
   const [todos, setTodos] = useLocalStorage<Todo[]>('todos', initialTodos);
+  const { pushUndo, undo: undoStack, redo: redoStack, canUndo, canRedo } = useUndoRedo<Todo[]>();
+
+  /** Helper: snapshot current state then apply a mutation. */
+  const mutate = useCallback(
+    (updater: (prev: Todo[]) => Todo[]) => {
+      setTodos((prev) => {
+        pushUndo(prev);
+        return updater(prev);
+      });
+    },
+    [setTodos, pushUndo],
+  );
 
   const addTodo = (title: string, category: TodoCategory) => {
-    setTodos((prev) => [...prev, createTodo(title, category)]);
+    mutate((prev) => [...prev, createTodo(title, category)]);
   };
 
   const toggleTodo = (id: string) => {
-    setTodos((prev) =>
+    mutate((prev) =>
       prev.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo,
       ),
@@ -17,16 +38,16 @@ export function useTodos(initialTodos: Todo[] = []) {
   };
 
   const deleteTodo = (id: string) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+    mutate((prev) => prev.filter((todo) => todo.id !== id));
   };
 
   const clearCompleted = () => {
-    setTodos((prev) => prev.filter((todo) => !todo.completed));
+    mutate((prev) => prev.filter((todo) => !todo.completed));
   };
 
   const reorderTodos = (draggedId: string, targetId: string) => {
     if (draggedId === targetId) return;
-    setTodos((prev) => {
+    mutate((prev) => {
       const draggedIndex = prev.findIndex((t) => t.id === draggedId);
       const targetIndex = prev.findIndex((t) => t.id === targetId);
       if (draggedIndex === -1 || targetIndex === -1) return prev;
@@ -39,5 +60,38 @@ export function useTodos(initialTodos: Todo[] = []) {
     });
   };
 
-  return { todos, addTodo, toggleTodo, deleteTodo, clearCompleted, reorderTodos } as const;
+  const undo = useCallback((): string | undefined => {
+    let description: string | undefined;
+    setTodos((current) => {
+      const previous = undoStack(current);
+      if (previous === undefined) return current;
+      description = 'Undo';
+      return previous;
+    });
+    return description;
+  }, [setTodos, undoStack]);
+
+  const redo = useCallback((): string | undefined => {
+    let description: string | undefined;
+    setTodos((current) => {
+      const next = redoStack(current);
+      if (next === undefined) return current;
+      description = 'Redo';
+      return next;
+    });
+    return description;
+  }, [setTodos, redoStack]);
+
+  return {
+    todos,
+    addTodo,
+    toggleTodo,
+    deleteTodo,
+    clearCompleted,
+    reorderTodos,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } as const;
 }

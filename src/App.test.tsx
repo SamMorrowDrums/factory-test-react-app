@@ -25,6 +25,10 @@ let mockReturnValue: {
   deleteTodo: ReturnType<typeof vi.fn>;
   clearCompleted: ReturnType<typeof vi.fn>;
   reorderTodos: ReturnType<typeof vi.fn>;
+  undo: ReturnType<typeof vi.fn>;
+  redo: ReturnType<typeof vi.fn>;
+  canUndo: ReturnType<typeof vi.fn>;
+  canRedo: ReturnType<typeof vi.fn>;
 };
 
 vi.mock('./hooks/useTodos', () => ({
@@ -40,6 +44,10 @@ describe('App', () => {
       deleteTodo: vi.fn(),
       clearCompleted: vi.fn(),
       reorderTodos: vi.fn(),
+      undo: vi.fn(() => undefined),
+      redo: vi.fn(() => undefined),
+      canUndo: vi.fn(() => false),
+      canRedo: vi.fn(() => false),
     };
   });
 
