@@ -1,0 +1,24 @@
+.data-transfer {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.data-transfer__btn {
+  background: #334155;
+  color: #e2e8f0;
+  border: 1px solid #475569;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.data-transfer__btn:hover {
+  background: #475569;
+}
+
+.data-transfer__file-input {
+  display: none;
+}

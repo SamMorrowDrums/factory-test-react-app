@@ -45,6 +45,10 @@ export function useTodos(initialTodos: Todo[] = []) {
     mutate((prev) => prev.filter((todo) => !todo.completed));
   };
 
+  const importTodos = (imported: Todo[]) => {
+    mutate(() => imported);
+  };
+
   const reorderTodos = (draggedId: string, targetId: string) => {
     if (draggedId === targetId) return;
     mutate((prev) => {
@@ -89,6 +93,7 @@ export function useTodos(initialTodos: Todo[] = []) {
     deleteTodo,
     clearCompleted,
     reorderTodos,
+    importTodos,
     undo,
     redo,
     canUndo,
