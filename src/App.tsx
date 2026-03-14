@@ -16,6 +16,7 @@ function App() {
     addTodo,
     toggleTodo,
     deleteTodo,
+    updateNotes,
     clearCompleted,
     reorderTodos,
     importTodos,
@@ -91,6 +92,7 @@ function App() {
           todos={todos}
           toggleTodo={toggleTodo}
           deleteTodo={deleteTodo}
+          updateNotes={updateNotes}
           clearCompleted={clearCompleted}
           reorderTodos={reorderTodos}
         />

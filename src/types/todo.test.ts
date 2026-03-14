@@ -40,6 +40,21 @@ describe('createTodo', () => {
     expect(todo).toHaveProperty('category');
     expect(todo).toHaveProperty('createdAt');
   });
+
+  it('creates a todo with notes when provided', () => {
+    const todo = createTodo('Task', 'work', 'Some notes');
+    expect(todo.notes).toBe('Some notes');
+  });
+
+  it('creates a todo without notes when not provided', () => {
+    const todo = createTodo('Task', 'work');
+    expect(todo.notes).toBeUndefined();
+  });
+
+  it('omits notes property when notes is empty string', () => {
+    const todo = createTodo('Task', 'work', '');
+    expect(todo.notes).toBeUndefined();
+  });
 });
 
 describe('TodoCategory', () => {

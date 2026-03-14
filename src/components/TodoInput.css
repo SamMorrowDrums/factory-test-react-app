@@ -1,7 +1,13 @@
 .todo-input {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   padding: 0.75rem 0;
+}
+
+.todo-input__row {
+  display: flex;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
@@ -44,6 +50,53 @@
   box-shadow: 0 0 8px rgba(0, 255, 255, 0.25);
 }
 
+.todo-input__notes-toggle {
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  color: #555568;
+  border: 1px solid #475569;
+  border-radius: 0.25rem;
+  font-size: 0.8125rem;
+  font-family: 'Courier New', Courier, monospace;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+
+.todo-input__notes-toggle:hover {
+  color: #e2e8f0;
+  border-color: #e2e8f0;
+}
+
+.todo-input__notes-toggle--active {
+  color: #0ff;
+  border-color: #0ff;
+  box-shadow: 0 0 6px rgba(0, 255, 255, 0.2);
+}
+
+.todo-input__notes {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #475569;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: 'Courier New', Courier, monospace;
+  color: #e2e8f0;
+  background: #12121a;
+  resize: vertical;
+  min-height: 3rem;
+}
+
+.todo-input__notes::placeholder {
+  color: #555568;
+}
+
+.todo-input__notes:focus {
+  outline: none;
+  border-color: #0ff;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.25);
+}
+
 .todo-input__add {
   padding: 0.5rem 1.25rem;
   background: transparent;
@@ -65,7 +118,7 @@
 
 /* ── Mobile ── */
 @media (max-width: 480px) {
-  .todo-input {
+  .todo-input__row {
     flex-direction: column;
   }
 
@@ -75,6 +128,7 @@
   }
 
   .todo-input__category,
+  .todo-input__notes-toggle,
   .todo-input__add {
     width: 100%;
     padding: 0.625rem 0.75rem;

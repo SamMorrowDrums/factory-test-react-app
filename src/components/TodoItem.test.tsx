@@ -127,4 +127,53 @@ describe('TodoItem', () => {
     const highlight = screen.getByText('Buy');
     expect(highlight.tagName).toBe('MARK');
   });
+
+  it('renders an expand button', () => {
+    render(<TodoItem {...defaultProps} />);
+    expect(screen.getByRole('button', { name: 'Add notes' })).toBeInTheDocument();
+  });
+
+  it('shows expand arrow when todo has notes', () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ notes: 'Some note' })} />);
+    expect(screen.getByRole('button', { name: 'Expand notes' })).toBeInTheDocument();
+  });
+
+  it('expands notes when expand button is clicked on todo with notes', async () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ notes: 'My detailed note' })} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Expand notes' }));
+    expect(screen.getByText('My detailed note')).toBeInTheDocument();
+  });
+
+  it('collapses notes when expand button is clicked again', async () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ notes: 'My detailed note' })} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Expand notes' }));
+    expect(screen.getByText('My detailed note')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Collapse notes' }));
+    expect(screen.queryByText('My detailed note')).toBeNull();
+  });
+
+  it('opens notes editor when add notes button is clicked on todo without notes', async () => {
+    render(<TodoItem {...defaultProps} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Add notes' }));
+    expect(screen.getByLabelText('Edit notes')).toBeInTheDocument();
+  });
+
+  it('calls onUpdateNotes when saving notes', async () => {
+    const onUpdateNotes = vi.fn();
+    render(<TodoItem {...defaultProps} onUpdateNotes={onUpdateNotes} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Add notes' }));
+    await userEvent.type(screen.getByLabelText('Edit notes'), 'New note');
+    await userEvent.click(screen.getByRole('button', { name: 'Save notes' }));
+    expect(onUpdateNotes).toHaveBeenCalledWith('test-1', 'New note');
+  });
+
+  it('cancels editing notes without saving', async () => {
+    const onUpdateNotes = vi.fn();
+    render(<TodoItem {...defaultProps} onUpdateNotes={onUpdateNotes} todo={makeTodo({ notes: 'Original' })} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Expand notes' }));
+    await userEvent.click(screen.getByText('Original'));
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel editing' }));
+    expect(onUpdateNotes).not.toHaveBeenCalled();
+    expect(screen.getByText('Original')).toBeInTheDocument();
+  });
 });

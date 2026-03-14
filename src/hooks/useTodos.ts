@@ -25,8 +25,8 @@ export function useTodos(initialTodos: Todo[] = []) {
     [setTodos, pushUndo],
   );
 
-  const addTodo = useCallback((title: string, category: TodoCategory) => {
-    mutate((prev) => [...prev, createTodo(title, category)]);
+  const addTodo = useCallback((title: string, category: TodoCategory, notes?: string) => {
+    mutate((prev) => [...prev, createTodo(title, category, notes)]);
   }, [mutate]);
 
   const toggleTodo = useCallback((id: string) => {
@@ -39,6 +39,14 @@ export function useTodos(initialTodos: Todo[] = []) {
 
   const deleteTodo = useCallback((id: string) => {
     mutate((prev) => prev.filter((todo) => todo.id !== id));
+  }, [mutate]);
+
+  const updateNotes = useCallback((id: string, notes: string) => {
+    mutate((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, notes: notes || undefined } : todo,
+      ),
+    );
   }, [mutate]);
 
   const clearCompleted = useCallback(() => {
@@ -91,6 +99,7 @@ export function useTodos(initialTodos: Todo[] = []) {
     addTodo,
     toggleTodo,
     deleteTodo,
+    updateNotes,
     clearCompleted,
     reorderTodos,
     importTodos,
