@@ -1,5 +1,7 @@
 # Todo App
 
+[![CI](https://github.com/SamMorrowDrums/factory-test-react-app/actions/workflows/ci.yml/badge.svg)](https://github.com/SamMorrowDrums/factory-test-react-app/actions/workflows/ci.yml)
+
 A simple React + TypeScript todo list application with categories, persistence, and filtering.
 
 ## Getting Started
