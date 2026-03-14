@@ -26,6 +26,11 @@
   box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
 }
 
+.todo-item--focused {
+  border-color: #00ffff;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3), inset 0 0 4px rgba(0, 255, 255, 0.05);
+}
+
 .todo-item__drag-handle {
   color: #555568;
   font-size: 1rem;

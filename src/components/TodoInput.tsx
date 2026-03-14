@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from 'react';
+import { memo, useState, useCallback, forwardRef } from 'react';
 import type { TodoCategory } from '../types/todo';
 import './TodoInput.css';
 
@@ -13,7 +13,7 @@ interface TodoInputProps {
   onAdd: (title: string, category: TodoCategory, notes?: string) => void;
 }
 
-export const TodoInput = memo(function TodoInput({ onAdd }: TodoInputProps) {
+export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(function TodoInput({ onAdd }, ref) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState<TodoCategory>('work');
   const [notes, setNotes] = useState('');
@@ -39,6 +39,7 @@ export const TodoInput = memo(function TodoInput({ onAdd }: TodoInputProps) {
     <form className="todo-input" onSubmit={handleSubmit}>
       <div className="todo-input__row">
         <input
+          ref={ref}
           className="todo-input__text"
           type="text"
           value={title}
@@ -87,4 +88,4 @@ export const TodoInput = memo(function TodoInput({ onAdd }: TodoInputProps) {
       )}
     </form>
   );
-});
+}));

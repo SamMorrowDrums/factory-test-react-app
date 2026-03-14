@@ -80,6 +80,28 @@ body {
   cursor: not-allowed;
 }
 
+.app__toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app__shortcuts-btn {
+  background: #334155;
+  color: #e2e8f0;
+  border: 1px solid #475569;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  line-height: 1;
+}
+
+.app__shortcuts-btn:hover {
+  background: #475569;
+}
+
 /* ── Mobile ── */
 @media (max-width: 480px) {
   .app {
