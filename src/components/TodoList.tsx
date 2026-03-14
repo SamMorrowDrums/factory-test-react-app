@@ -11,6 +11,7 @@ interface TodoListProps {
   deleteTodo?: (id: string) => void;
   clearCompleted?: () => void;
   reorderTodos?: (draggedId: string, targetId: string) => void;
+  updateTodoNotes?: (id: string, notes: string) => void;
 }
 
 export function TodoList(props: TodoListProps) {
@@ -20,6 +21,7 @@ export function TodoList(props: TodoListProps) {
   const deleteTodo = props.deleteTodo ?? internal.deleteTodo;
   const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
   const reorderTodos = props.reorderTodos ?? internal.reorderTodos;
+  const updateTodoNotes = props.updateTodoNotes ?? internal.updateTodoNotes;
   const [filter, setFilter] = useState<TodoFilterType>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
   const [dragOverId, setDragOverId] = useState<string | null>(null);
@@ -78,6 +80,7 @@ export function TodoList(props: TodoListProps) {
             todo={todo}
             onToggle={toggleTodo}
             onDelete={deleteTodo}
+            onUpdateNotes={updateTodoNotes}
             isDragging={draggedIdRef.current === todo.id}
             isDragOver={dragOverId === todo.id}
             onDragStart={handleDragStart(todo.id)}

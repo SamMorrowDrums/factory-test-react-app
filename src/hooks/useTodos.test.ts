@@ -173,4 +173,33 @@ describe('useTodos', () => {
 
     expect(result.current.todos.map((t) => t.id)).toEqual(['2', '1', '3']);
   });
+
+  it('updates notes for a todo', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.updateTodoNotes('1', 'Some notes here');
+    });
+
+    expect(result.current.todos[0].notes).toBe('Some notes here');
+    expect(result.current.todos[1].notes).toBeUndefined();
+  });
+
+  it('persists notes to localStorage', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.updateTodoNotes('1', 'Persisted note');
+    });
+
+    const stored = JSON.parse(localStorage.getItem('todos')!) as Todo[];
+    expect(stored[0].notes).toBe('Persisted note');
+  });
 });

@@ -8,6 +8,7 @@ export interface Todo {
   completed: boolean;
   category: TodoCategory;
   createdAt: number;
+  notes?: string;
 }
 
 export function createTodo(title: string, category: TodoCategory): Todo {

@@ -109,4 +109,54 @@ describe('TodoItem', () => {
     const li = container.querySelector('.todo-item');
     expect(li).toHaveClass('todo-item--drag-over');
   });
+
+  it('renders an expand button', () => {
+    render(<TodoItem {...defaultProps} />);
+    expect(screen.getByRole('button', { name: /expand notes/i })).toBeInTheDocument();
+  });
+
+  it('does not show the notes section by default', () => {
+    render(<TodoItem {...defaultProps} />);
+    expect(screen.queryByRole('textbox', { name: /notes for/i })).not.toBeInTheDocument();
+  });
+
+  it('shows the notes textarea when expand button is clicked', async () => {
+    render(<TodoItem {...defaultProps} />);
+    await userEvent.click(screen.getByRole('button', { name: /expand notes/i }));
+    expect(screen.getByRole('textbox', { name: /notes for/i })).toBeInTheDocument();
+  });
+
+  it('hides the notes textarea when collapse button is clicked', async () => {
+    render(<TodoItem {...defaultProps} />);
+    await userEvent.click(screen.getByRole('button', { name: /expand notes/i }));
+    expect(screen.getByRole('textbox', { name: /notes for/i })).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: /collapse notes/i }));
+    expect(screen.queryByRole('textbox', { name: /notes for/i })).not.toBeInTheDocument();
+  });
+
+  it('displays existing notes in the textarea', async () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ notes: 'My note' })} />);
+    await userEvent.click(screen.getByRole('button', { name: /expand notes/i }));
+    expect(screen.getByRole('textbox', { name: /notes for/i })).toHaveValue('My note');
+  });
+
+  it('calls onUpdateNotes when notes are changed', async () => {
+    const onUpdateNotes = vi.fn();
+    render(<TodoItem {...defaultProps} onUpdateNotes={onUpdateNotes} />);
+
+    await userEvent.click(screen.getByRole('button', { name: /expand notes/i }));
+    await userEvent.type(screen.getByRole('textbox', { name: /notes for/i }), 'H');
+
+    expect(onUpdateNotes).toHaveBeenCalledWith('test-1', 'H');
+  });
+
+  it('sets aria-expanded correctly on the expand button', async () => {
+    render(<TodoItem {...defaultProps} />);
+    const btn = screen.getByRole('button', { name: /expand notes/i });
+    expect(btn).toHaveAttribute('aria-expanded', 'false');
+
+    await userEvent.click(btn);
+    expect(screen.getByRole('button', { name: /collapse notes/i })).toHaveAttribute('aria-expanded', 'true');
+  });
 });

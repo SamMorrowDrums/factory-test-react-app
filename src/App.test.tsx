@@ -24,6 +24,7 @@ let mockReturnValue: {
   toggleTodo: ReturnType<typeof vi.fn>;
   deleteTodo: ReturnType<typeof vi.fn>;
   clearCompleted: ReturnType<typeof vi.fn>;
+  updateTodoNotes: ReturnType<typeof vi.fn>;
   reorderTodos: ReturnType<typeof vi.fn>;
 };
 
@@ -39,6 +40,7 @@ describe('App', () => {
       toggleTodo: vi.fn(),
       deleteTodo: vi.fn(),
       clearCompleted: vi.fn(),
+      updateTodoNotes: vi.fn(),
       reorderTodos: vi.fn(),
     };
   });

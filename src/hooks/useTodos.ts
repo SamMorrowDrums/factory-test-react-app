@@ -24,6 +24,14 @@ export function useTodos(initialTodos: Todo[] = []) {
     setTodos((prev) => prev.filter((todo) => !todo.completed));
   };
 
+  const updateTodoNotes = (id: string, notes: string) => {
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, notes } : todo,
+      ),
+    );
+  };
+
   const reorderTodos = (draggedId: string, targetId: string) => {
     if (draggedId === targetId) return;
     setTodos((prev) => {
@@ -39,5 +47,5 @@ export function useTodos(initialTodos: Todo[] = []) {
     });
   };
 
-  return { todos, addTodo, toggleTodo, deleteTodo, clearCompleted, reorderTodos } as const;
+  return { todos, addTodo, toggleTodo, deleteTodo, clearCompleted, updateTodoNotes, reorderTodos } as const;
 }
