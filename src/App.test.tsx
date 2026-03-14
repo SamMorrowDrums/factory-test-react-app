@@ -25,6 +25,7 @@ let mockReturnValue: {
   deleteTodo: ReturnType<typeof vi.fn>;
   clearCompleted: ReturnType<typeof vi.fn>;
   reorderTodos: ReturnType<typeof vi.fn>;
+  importTodos: ReturnType<typeof vi.fn>;
   undo: ReturnType<typeof vi.fn>;
   redo: ReturnType<typeof vi.fn>;
   canUndo: ReturnType<typeof vi.fn>;
@@ -44,6 +45,7 @@ describe('App', () => {
       deleteTodo: vi.fn(),
       clearCompleted: vi.fn(),
       reorderTodos: vi.fn(),
+      importTodos: vi.fn(),
       undo: vi.fn(() => undefined),
       redo: vi.fn(() => undefined),
       canUndo: vi.fn(() => false),

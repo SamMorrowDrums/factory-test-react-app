@@ -43,8 +43,15 @@ body {
 
 .app__toolbar {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
+}
+
+.app__toolbar-left {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .app__undo-btn,

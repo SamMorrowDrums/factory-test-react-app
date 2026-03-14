@@ -5,6 +5,7 @@ import { TodoInput } from './components/TodoInput';
 import { TodoList } from './components/TodoList';
 import { GlitchText } from './components/GlitchText';
 import { ToastContainer } from './components/Toast';
+import { DataTransfer } from './components/DataTransfer';
 import './App.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
     deleteTodo,
     clearCompleted,
     reorderTodos,
+    importTodos,
     undo,
     redo,
     canUndo,
@@ -56,22 +58,30 @@ function App() {
 
       <main className="app__main">
         <div className="app__toolbar">
-          <button
-            className="app__undo-btn"
-            onClick={handleUndo}
-            disabled={!canUndo()}
-            aria-label="Undo"
-          >
-            ↩ Undo
-          </button>
-          <button
-            className="app__redo-btn"
-            onClick={handleRedo}
-            disabled={!canRedo()}
-            aria-label="Redo"
-          >
-            Redo ↪
-          </button>
+          <div className="app__toolbar-left">
+            <button
+              className="app__undo-btn"
+              onClick={handleUndo}
+              disabled={!canUndo()}
+              aria-label="Undo"
+            >
+              ↩ Undo
+            </button>
+            <button
+              className="app__redo-btn"
+              onClick={handleRedo}
+              disabled={!canRedo()}
+              aria-label="Redo"
+            >
+              Redo ↪
+            </button>
+          </div>
+          <DataTransfer
+            todos={todos}
+            onImport={importTodos}
+            onError={showToast}
+            onSuccess={showToast}
+          />
         </div>
         <TodoInput onAdd={addTodo} />
         <TodoList
