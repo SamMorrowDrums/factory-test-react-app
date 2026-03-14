@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { ReactNode } from 'react';
 import './GlitchText.css';
 
@@ -7,7 +8,7 @@ interface GlitchTextProps {
   className?: string;
 }
 
-export function GlitchText({ children, as: Tag = 'span', className = '' }: GlitchTextProps) {
+export const GlitchText = memo(function GlitchText({ children, as: Tag = 'span', className = '' }: GlitchTextProps) {
   const text = typeof children === 'string' ? children : '';
 
   return (
@@ -15,4 +16,4 @@ export function GlitchText({ children, as: Tag = 'span', className = '' }: Glitc
       {children}
     </Tag>
   );
-}
+});

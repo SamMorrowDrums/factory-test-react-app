@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useRef, useCallback } from 'react';
 import './Toast.css';
 
 export interface ToastData {
@@ -13,7 +13,7 @@ interface ToastProps {
   duration?: number;
 }
 
-export function Toast({ toast, onDismiss, duration = 3000 }: ToastProps) {
+export const Toast = memo(function Toast({ toast, onDismiss, duration = 3000 }: ToastProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {
@@ -21,19 +21,21 @@ export function Toast({ toast, onDismiss, duration = 3000 }: ToastProps) {
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [toast.id, onDismiss, duration]);
 
+  const handleDismiss = useCallback(() => onDismiss(toast.id), [onDismiss, toast.id]);
+
   return (
     <div className="toast" role="status" aria-live="polite">
       <span className="toast__message">{toast.message}</span>
       <button
         className="toast__dismiss"
-        onClick={() => onDismiss(toast.id)}
+        onClick={handleDismiss}
         aria-label="Dismiss notification"
       >
         ✕
       </button>
     </div>
   );
-}
+});
 
 interface ToastContainerProps {
   toasts: ToastData[];

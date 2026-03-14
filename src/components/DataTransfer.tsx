@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { memo, useRef, useCallback } from 'react';
 import type { Todo } from '../types/todo';
 import {
   exportToJSON,
@@ -17,26 +17,26 @@ interface DataTransferProps {
   onSuccess: (message: string) => void;
 }
 
-export function DataTransfer({ todos, onImport, onError, onSuccess }: DataTransferProps) {
+export const DataTransfer = memo(function DataTransfer({ todos, onImport, onError, onSuccess }: DataTransferProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleExportJSON = () => {
+  const handleExportJSON = useCallback(() => {
     const content = exportToJSON(todos);
     downloadFile(content, 'todos.json', 'application/json');
     onSuccess(`Exported ${todos.length} todos as JSON`);
-  };
+  }, [todos, onSuccess]);
 
-  const handleExportCSV = () => {
+  const handleExportCSV = useCallback(() => {
     const content = exportToCSV(todos);
     downloadFile(content, 'todos.csv', 'text/csv');
     onSuccess(`Exported ${todos.length} todos as CSV`);
-  };
+  }, [todos, onSuccess]);
 
-  const handleImportClick = () => {
+  const handleImportClick = useCallback(() => {
     fileInputRef.current?.click();
-  };
+  }, []);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -58,7 +58,7 @@ export function DataTransfer({ todos, onImport, onError, onSuccess }: DataTransf
 
     // Reset so the same file can be re-selected
     e.target.value = '';
-  };
+  }, [onImport, onError, onSuccess]);
 
   return (
     <div className="data-transfer">
@@ -83,4 +83,4 @@ export function DataTransfer({ todos, onImport, onError, onSuccess }: DataTransf
       />
     </div>
   );
-}
+});

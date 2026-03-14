@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import type { Todo } from '../types/todo';
 import './TodoItem.css';
 
@@ -13,7 +14,7 @@ interface TodoItemProps {
   onDragEnd?: (e: React.DragEvent<HTMLLIElement>) => void;
 }
 
-export function TodoItem({
+export const TodoItem = memo(function TodoItem({
   todo,
   onToggle,
   onDelete,
@@ -33,6 +34,9 @@ export function TodoItem({
     .filter(Boolean)
     .join(' ');
 
+  const handleToggle = useCallback(() => onToggle(todo.id), [onToggle, todo.id]);
+  const handleDelete = useCallback(() => onDelete(todo.id), [onDelete, todo.id]);
+
   return (
     <li
       className={classNames}
@@ -51,7 +55,7 @@ export function TodoItem({
           type="checkbox"
           className="todo-item__checkbox"
           checked={todo.completed}
-          onChange={() => onToggle(todo.id)}
+          onChange={handleToggle}
           aria-label={`Mark "${todo.title}" as ${todo.completed ? 'incomplete' : 'complete'}`}
         />
         <span className="todo-item__title">{todo.title}</span>
@@ -63,11 +67,11 @@ export function TodoItem({
 
       <button
         className="todo-item__delete"
-        onClick={() => onDelete(todo.id)}
+        onClick={handleDelete}
         aria-label={`Delete "${todo.title}"`}
       >
         Delete
       </button>
     </li>
   );
-}
+});
