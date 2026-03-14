@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { type Todo, type TodoCategory, type TodoFilter as TodoFilterType } from '../types/todo';
 import { useTodos } from '../hooks/useTodos';
 import { TodoFilter } from './TodoFilter';
@@ -25,42 +25,42 @@ export function TodoList(props: TodoListProps) {
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const draggedIdRef = useRef<string | null>(null);
 
-  const filteredTodos = todos.filter((todo) => {
+  const filteredTodos = useMemo(() => todos.filter((todo) => {
     if (filter === 'active' && todo.completed) return false;
     if (filter === 'completed' && !todo.completed) return false;
     if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
     return true;
-  });
+  }), [todos, filter, categoryFilter]);
 
-  const activeCount = todos.filter((todo) => !todo.completed).length;
-  const hasCompleted = todos.some((todo) => todo.completed);
+  const activeCount = useMemo(() => todos.filter((todo) => !todo.completed).length, [todos]);
+  const hasCompleted = useMemo(() => todos.some((todo) => todo.completed), [todos]);
 
-  const handleDragStart = (todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
+  const handleDragStart = useCallback((todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
     draggedIdRef.current = todoId;
     e.dataTransfer.effectAllowed = 'move';
-  };
+  }, []);
 
-  const handleDragOver = (todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
+  const handleDragOver = useCallback((todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     if (draggedIdRef.current && draggedIdRef.current !== todoId) {
       setDragOverId(todoId);
     }
-  };
+  }, []);
 
-  const handleDrop = (todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
+  const handleDrop = useCallback((todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
     e.preventDefault();
     if (draggedIdRef.current && draggedIdRef.current !== todoId) {
       reorderTodos(draggedIdRef.current, todoId);
     }
     draggedIdRef.current = null;
     setDragOverId(null);
-  };
+  }, [reorderTodos]);
 
-  const handleDragEnd = () => {
+  const handleDragEnd = useCallback(() => {
     draggedIdRef.current = null;
     setDragOverId(null);
-  };
+  }, []);
 
   return (
     <div className="todo-list">

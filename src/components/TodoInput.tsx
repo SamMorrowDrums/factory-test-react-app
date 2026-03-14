@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState, useCallback } from 'react';
 import type { TodoCategory } from '../types/todo';
 import './TodoInput.css';
 
@@ -13,17 +13,20 @@ interface TodoInputProps {
   onAdd: (title: string, category: TodoCategory) => void;
 }
 
-export function TodoInput({ onAdd }: TodoInputProps) {
+export const TodoInput = memo(function TodoInput({ onAdd }: TodoInputProps) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState<TodoCategory>('work');
 
-  function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = title.trim();
     if (!trimmed) return;
     onAdd(trimmed, category);
     setTitle('');
-  }
+  }, [title, category, onAdd]);
+
+  const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value), []);
+  const handleCategoryChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value as TodoCategory), []);
 
   return (
     <form className="todo-input" onSubmit={handleSubmit}>
@@ -31,7 +34,7 @@ export function TodoInput({ onAdd }: TodoInputProps) {
         className="todo-input__text"
         type="text"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={handleTitleChange}
         placeholder="Add a new todo…"
         aria-label="Todo title"
       />
@@ -39,7 +42,7 @@ export function TodoInput({ onAdd }: TodoInputProps) {
       <select
         className="todo-input__category"
         value={category}
-        onChange={(e) => setCategory(e.target.value as TodoCategory)}
+        onChange={handleCategoryChange}
         aria-label="Todo category"
       >
         {CATEGORY_OPTIONS.map(({ value, label }) => (
@@ -54,4 +57,4 @@ export function TodoInput({ onAdd }: TodoInputProps) {
       </button>
     </form>
   );
-}
+});

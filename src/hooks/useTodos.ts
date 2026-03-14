@@ -25,31 +25,31 @@ export function useTodos(initialTodos: Todo[] = []) {
     [setTodos, pushUndo],
   );
 
-  const addTodo = (title: string, category: TodoCategory) => {
+  const addTodo = useCallback((title: string, category: TodoCategory) => {
     mutate((prev) => [...prev, createTodo(title, category)]);
-  };
+  }, [mutate]);
 
-  const toggleTodo = (id: string) => {
+  const toggleTodo = useCallback((id: string) => {
     mutate((prev) =>
       prev.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo,
       ),
     );
-  };
+  }, [mutate]);
 
-  const deleteTodo = (id: string) => {
+  const deleteTodo = useCallback((id: string) => {
     mutate((prev) => prev.filter((todo) => todo.id !== id));
-  };
+  }, [mutate]);
 
-  const clearCompleted = () => {
+  const clearCompleted = useCallback(() => {
     mutate((prev) => prev.filter((todo) => !todo.completed));
-  };
+  }, [mutate]);
 
-  const importTodos = (imported: Todo[]) => {
+  const importTodos = useCallback((imported: Todo[]) => {
     mutate(() => imported);
-  };
+  }, [mutate]);
 
-  const reorderTodos = (draggedId: string, targetId: string) => {
+  const reorderTodos = useCallback((draggedId: string, targetId: string) => {
     if (draggedId === targetId) return;
     mutate((prev) => {
       const draggedIndex = prev.findIndex((t) => t.id === draggedId);
@@ -62,7 +62,7 @@ export function useTodos(initialTodos: Todo[] = []) {
       next.splice(newTargetIndex, 0, dragged);
       return next;
     });
-  };
+  }, [mutate]);
 
   const undo = useCallback((): string | undefined => {
     let description: string | undefined;

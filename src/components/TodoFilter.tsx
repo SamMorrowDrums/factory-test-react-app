@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { type TodoCategory, type TodoFilter as TodoFilterType } from '../types/todo';
 import './TodoFilter.css';
 
@@ -22,12 +23,17 @@ interface TodoFilterProps {
   onCategoryChange: (category: TodoCategory | 'all') => void;
 }
 
-export function TodoFilter({
+export const TodoFilter = memo(function TodoFilter({
   currentFilter,
   currentCategory,
   onFilterChange,
   onCategoryChange,
 }: TodoFilterProps) {
+  const handleCategoryChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => onCategoryChange(e.target.value as TodoCategory | 'all'),
+    [onCategoryChange],
+  );
+
   return (
     <div className="todo-filter">
       <div className="todo-filter__status-buttons">
@@ -48,7 +54,7 @@ export function TodoFilter({
       <select
         className="todo-filter__category-select"
         value={currentCategory}
-        onChange={(e) => onCategoryChange(e.target.value as TodoCategory | 'all')}
+        onChange={handleCategoryChange}
         aria-label="Filter by category"
       >
         {CATEGORY_OPTIONS.map(({ value, label }) => (
@@ -59,4 +65,4 @@ export function TodoFilter({
       </select>
     </div>
   );
-}
+});
