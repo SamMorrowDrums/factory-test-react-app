@@ -1,11 +1,13 @@
 import { useEffect, useCallback } from 'react';
 import { useTodos } from './hooks/useTodos';
 import { useToast } from './hooks/useToast';
+import { useInstallPrompt } from './hooks/useInstallPrompt';
 import { TodoInput } from './components/TodoInput';
 import { TodoList } from './components/TodoList';
 import { GlitchText } from './components/GlitchText';
 import { ToastContainer } from './components/Toast';
 import { DataTransfer } from './components/DataTransfer';
+import { InstallBanner } from './components/InstallBanner';
 import './App.css';
 
 function App() {
@@ -23,6 +25,7 @@ function App() {
     canRedo,
   } = useTodos();
   const { toasts, showToast, dismissToast } = useToast();
+  const { showPrompt, install, dismiss } = useInstallPrompt();
 
   const handleUndo = useCallback(() => {
     const desc = undo();
@@ -94,6 +97,7 @@ function App() {
       </main>
 
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+      {showPrompt && <InstallBanner onInstall={install} onDismiss={dismiss} />}
     </div>
   );
 }
