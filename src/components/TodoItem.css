@@ -1,12 +1,18 @@
 .todo-item {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 0.25rem;
   padding: 0.75rem 1rem;
   border: 1px solid #2a2a3e;
   border-radius: 0.25rem;
   background: #12121a;
   list-style: none;
+}
+
+.todo-item__row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .todo-item__label {
@@ -110,4 +116,8 @@
 .todo-item__delete:hover {
   background: rgba(255, 50, 80, 0.15);
   box-shadow: 0 0 6px rgba(255, 50, 80, 0.3);
+}
+
+.todo-item__tags {
+  padding-left: 1.625rem;
 }

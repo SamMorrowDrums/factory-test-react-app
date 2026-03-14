@@ -15,7 +15,7 @@ describe('useTodos', () => {
 
   it('starts with provided initial todos', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1 },
+      { id: '1', title: 'Test', completed: false, category: 'work', tags: [], createdAt: 1 },
     ];
     const { result } = renderHook(() => useTodos(initial));
     expect(result.current.todos).toHaveLength(1);
@@ -33,13 +33,14 @@ describe('useTodos', () => {
     expect(result.current.todos[0].title).toBe('Buy milk');
     expect(result.current.todos[0].category).toBe('shopping');
     expect(result.current.todos[0].completed).toBe(false);
+    expect(result.current.todos[0].tags).toEqual([]);
     expect(result.current.todos[0].id).toBeDefined();
     expect(result.current.todos[0].createdAt).toBeDefined();
   });
 
   it('toggles a todo', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1 },
+      { id: '1', title: 'Test', completed: false, category: 'work', tags: [], createdAt: 1 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -58,8 +59,8 @@ describe('useTodos', () => {
 
   it('deletes a todo', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
-      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+      { id: '1', title: 'First', completed: false, category: 'work', tags: [], createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', tags: [], createdAt: 2 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -73,9 +74,9 @@ describe('useTodos', () => {
 
   it('clears completed todos', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'Done', completed: true, category: 'work', createdAt: 1 },
-      { id: '2', title: 'Not done', completed: false, category: 'personal', createdAt: 2 },
-      { id: '3', title: 'Also done', completed: true, category: 'health', createdAt: 3 },
+      { id: '1', title: 'Done', completed: true, category: 'work', tags: [], createdAt: 1 },
+      { id: '2', title: 'Not done', completed: false, category: 'personal', tags: [], createdAt: 2 },
+      { id: '3', title: 'Also done', completed: true, category: 'health', tags: [], createdAt: 3 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -101,7 +102,7 @@ describe('useTodos', () => {
 
   it('loads todos from localStorage on mount', () => {
     const saved: Todo[] = [
-      { id: '1', title: 'Saved', completed: false, category: 'work', createdAt: 1 },
+      { id: '1', title: 'Saved', completed: false, category: 'work', tags: [], createdAt: 1 },
     ];
     localStorage.setItem('todos', JSON.stringify(saved));
 
@@ -114,5 +115,70 @@ describe('useTodos', () => {
     localStorage.setItem('todos', 'not-json');
     const { result } = renderHook(() => useTodos());
     expect(result.current.todos).toEqual([]);
+  });
+
+  it('adds a tag to a todo', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Test', completed: false, category: 'work', tags: [], createdAt: 1 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.addTag('1', 'urgent');
+    });
+
+    expect(result.current.todos[0].tags).toEqual(['urgent']);
+  });
+
+  it('does not add duplicate tags', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Test', completed: false, category: 'work', tags: ['urgent'], createdAt: 1 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.addTag('1', 'urgent');
+    });
+
+    expect(result.current.todos[0].tags).toEqual(['urgent']);
+  });
+
+  it('removes a tag from a todo', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Test', completed: false, category: 'work', tags: ['urgent', 'bug'], createdAt: 1 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.removeTag('1', 'urgent');
+    });
+
+    expect(result.current.todos[0].tags).toEqual(['bug']);
+  });
+
+  it('normalizes tags when adding (trims, lowercases)', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Test', completed: false, category: 'work', tags: [], createdAt: 1 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.addTag('1', '  Urgent  ');
+    });
+
+    expect(result.current.todos[0].tags).toEqual(['urgent']);
+  });
+
+  it('ignores empty tag strings', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Test', completed: false, category: 'work', tags: [], createdAt: 1 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.addTag('1', '   ');
+    });
+
+    expect(result.current.todos[0].tags).toEqual([]);
   });
 });

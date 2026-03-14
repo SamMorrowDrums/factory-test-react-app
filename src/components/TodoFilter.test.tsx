@@ -7,8 +7,11 @@ describe('TodoFilter', () => {
   const defaultProps = {
     currentFilter: 'all' as const,
     currentCategory: 'all' as const,
+    currentTag: '',
+    availableTags: ['urgent', 'bug'],
     onFilterChange: vi.fn(),
     onCategoryChange: vi.fn(),
+    onTagChange: vi.fn(),
   };
 
   it('renders all three status filter buttons', () => {
@@ -66,5 +69,27 @@ describe('TodoFilter', () => {
     render(<TodoFilter {...defaultProps} currentCategory="personal" />);
     const select = screen.getByLabelText('Filter by category') as HTMLSelectElement;
     expect(select.value).toBe('personal');
+  });
+
+  it('renders tag filter dropdown when tags are available', () => {
+    render(<TodoFilter {...defaultProps} />);
+    const tagSelect = screen.getByLabelText('Filter by tag');
+    expect(tagSelect).toBeInTheDocument();
+    expect(screen.getByText('All Tags')).toBeInTheDocument();
+    expect(screen.getByText('urgent')).toBeInTheDocument();
+    expect(screen.getByText('bug')).toBeInTheDocument();
+  });
+
+  it('calls onTagChange when a tag is selected', async () => {
+    const onTagChange = vi.fn();
+    render(<TodoFilter {...defaultProps} onTagChange={onTagChange} />);
+
+    await userEvent.selectOptions(screen.getByLabelText('Filter by tag'), 'urgent');
+    expect(onTagChange).toHaveBeenCalledWith('urgent');
+  });
+
+  it('does not render tag dropdown when no tags available', () => {
+    render(<TodoFilter {...defaultProps} availableTags={[]} />);
+    expect(screen.queryByLabelText('Filter by tag')).not.toBeInTheDocument();
   });
 });

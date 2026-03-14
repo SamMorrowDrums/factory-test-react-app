@@ -18,7 +18,7 @@ describe('TodoInput', () => {
     await userEvent.type(screen.getByLabelText('Todo title'), 'Buy milk');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work');
+    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', undefined);
   });
 
   it('clears the input after submission', async () => {
@@ -57,7 +57,7 @@ describe('TodoInput', () => {
     await userEvent.selectOptions(screen.getByLabelText('Todo category'), 'health');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Go running', 'health');
+    expect(onAdd).toHaveBeenCalledWith('Go running', 'health', undefined);
   });
 
   it('renders all four category options', () => {
@@ -79,6 +79,6 @@ describe('TodoInput', () => {
     await userEvent.type(screen.getByLabelText('Todo title'), '  Buy milk  ');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work');
+    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', undefined);
   });
 });

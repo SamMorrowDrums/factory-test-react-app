@@ -18,15 +18,21 @@ const CATEGORY_OPTIONS: { value: TodoCategory | 'all'; label: string }[] = [
 interface TodoFilterProps {
   currentFilter: TodoFilterType;
   currentCategory: TodoCategory | 'all';
+  currentTag: string;
+  availableTags: string[];
   onFilterChange: (filter: TodoFilterType) => void;
   onCategoryChange: (category: TodoCategory | 'all') => void;
+  onTagChange: (tag: string) => void;
 }
 
 export function TodoFilter({
   currentFilter,
   currentCategory,
+  currentTag,
+  availableTags,
   onFilterChange,
   onCategoryChange,
+  onTagChange,
 }: TodoFilterProps) {
   return (
     <div className="todo-filter">
@@ -57,6 +63,22 @@ export function TodoFilter({
           </option>
         ))}
       </select>
+
+      {availableTags.length > 0 && (
+        <select
+          className="todo-filter__tag-select"
+          value={currentTag}
+          onChange={(e) => onTagChange(e.target.value)}
+          aria-label="Filter by tag"
+        >
+          <option value="">All Tags</option>
+          {availableTags.map((tag) => (
+            <option key={tag} value={tag}>
+              {tag}
+            </option>
+          ))}
+        </select>
+      )}
     </div>
   );
 }

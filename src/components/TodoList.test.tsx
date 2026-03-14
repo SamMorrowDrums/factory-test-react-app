@@ -9,6 +9,7 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Test todo',
   completed: false,
   category: 'work',
+  tags: [],
   createdAt: Date.now(),
   ...overrides,
 });
@@ -27,6 +28,8 @@ function createMockReturn(todos: Todo[] = defaultTodos, overrides: Record<string
     addTodo: vi.fn(),
     toggleTodo: vi.fn(),
     deleteTodo: vi.fn(),
+    addTag: vi.fn(),
+    removeTag: vi.fn(),
     clearCompleted: vi.fn(),
     ...overrides,
   };
@@ -140,5 +143,42 @@ describe('TodoList', () => {
     render(<TodoList />);
     await userEvent.click(screen.getByRole('button', { name: 'Clear completed' }));
     expect(clearCompleted).toHaveBeenCalledOnce();
+  });
+
+  it('filters by tag', async () => {
+    const taggedTodos: Todo[] = [
+      makeTodo({ id: '1', title: 'Tagged urgent', tags: ['urgent'] }),
+      makeTodo({ id: '2', title: 'Tagged bug', tags: ['bug'] }),
+      makeTodo({ id: '3', title: 'No tags', tags: [] }),
+    ];
+    mockReturnValue = createMockReturn(taggedTodos);
+
+    render(<TodoList />);
+    const tagSelect = screen.getByLabelText('Filter by tag');
+    await userEvent.selectOptions(tagSelect, 'urgent');
+
+    expect(screen.getByText('Tagged urgent')).toBeInTheDocument();
+    expect(screen.queryByText('Tagged bug')).not.toBeInTheDocument();
+    expect(screen.queryByText('No tags')).not.toBeInTheDocument();
+  });
+
+  it('renders tag filter dropdown when todos have tags', () => {
+    const taggedTodos: Todo[] = [
+      makeTodo({ id: '1', title: 'Tagged', tags: ['urgent'] }),
+    ];
+    mockReturnValue = createMockReturn(taggedTodos);
+
+    render(<TodoList />);
+    expect(screen.getByLabelText('Filter by tag')).toBeInTheDocument();
+  });
+
+  it('hides tag filter dropdown when no todos have tags', () => {
+    const noTagTodos: Todo[] = [
+      makeTodo({ id: '1', title: 'No tags', tags: [] }),
+    ];
+    mockReturnValue = createMockReturn(noTagTodos);
+
+    render(<TodoList />);
+    expect(screen.queryByLabelText('Filter by tag')).not.toBeInTheDocument();
   });
 });

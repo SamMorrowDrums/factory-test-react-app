@@ -9,6 +9,7 @@ describe('createTodo', () => {
     expect(todo.title).toBe('Buy groceries');
     expect(todo.category).toBe('shopping');
     expect(todo.completed).toBe(false);
+    expect(todo.tags).toEqual([]);
   });
 
   it('generates a unique id', () => {
@@ -38,7 +39,33 @@ describe('createTodo', () => {
     expect(todo).toHaveProperty('title');
     expect(todo).toHaveProperty('completed');
     expect(todo).toHaveProperty('category');
+    expect(todo).toHaveProperty('tags');
     expect(todo).toHaveProperty('createdAt');
+  });
+
+  it('creates a todo with tags when provided', () => {
+    const todo = createTodo('Tagged task', 'work', ['urgent', 'bug']);
+
+    expect(todo.tags).toEqual(['urgent', 'bug']);
+  });
+
+  it('normalizes tags (trims whitespace, lowercases, deduplicates)', () => {
+    const todo = createTodo('Task', 'work', ['  Urgent ', 'BUG', 'urgent', '']);
+
+    expect(todo.tags).toEqual(['urgent', 'bug']);
+  });
+
+  it('the Todo interface includes tags field', () => {
+    const todo: Todo = {
+      id: '1',
+      title: 'Test',
+      completed: false,
+      category: 'work',
+      tags: ['test'],
+      createdAt: 1,
+    };
+
+    expect(todo.tags).toEqual(['test']);
   });
 });
 

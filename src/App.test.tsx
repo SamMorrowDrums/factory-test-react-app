@@ -9,6 +9,7 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Test todo',
   completed: false,
   category: 'work',
+  tags: [],
   createdAt: Date.now(),
   ...overrides,
 });
@@ -23,6 +24,8 @@ let mockReturnValue: {
   addTodo: ReturnType<typeof vi.fn>;
   toggleTodo: ReturnType<typeof vi.fn>;
   deleteTodo: ReturnType<typeof vi.fn>;
+  addTag: ReturnType<typeof vi.fn>;
+  removeTag: ReturnType<typeof vi.fn>;
   clearCompleted: ReturnType<typeof vi.fn>;
 };
 
@@ -37,6 +40,8 @@ describe('App', () => {
       addTodo: vi.fn(),
       toggleTodo: vi.fn(),
       deleteTodo: vi.fn(),
+      addTag: vi.fn(),
+      removeTag: vi.fn(),
       clearCompleted: vi.fn(),
     };
   });
@@ -58,6 +63,6 @@ describe('App', () => {
     const input = screen.getByPlaceholderText('Add a new todo…');
     await userEvent.type(input, 'New task');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
-    expect(mockReturnValue.addTodo).toHaveBeenCalledWith('New task', 'work');
+    expect(mockReturnValue.addTodo).toHaveBeenCalledWith('New task', 'work', undefined);
   });
 });

@@ -9,6 +9,7 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Buy groceries',
   completed: false,
   category: 'shopping',
+  tags: [],
   createdAt: Date.now(),
   ...overrides,
 });
@@ -85,5 +86,34 @@ describe('TodoItem', () => {
     );
     const badge = screen.getByText('work');
     expect(badge).toHaveClass('todo-item__category--work');
+  });
+
+  it('renders tags when present', () => {
+    render(
+      <TodoItem {...defaultProps} todo={makeTodo({ tags: ['urgent', 'bug'] })} />
+    );
+    expect(screen.getByText('urgent')).toBeInTheDocument();
+    expect(screen.getByText('bug')).toBeInTheDocument();
+  });
+
+  it('shows TagInput when onAddTag is provided', () => {
+    const onAddTag = vi.fn();
+    render(
+      <TodoItem {...defaultProps} onAddTag={onAddTag} />
+    );
+    expect(screen.getByLabelText('Add tag')).toBeInTheDocument();
+  });
+
+  it('renders tag badges when tags are set', () => {
+    const onAddTag = vi.fn();
+    render(
+      <TodoItem
+        {...defaultProps}
+        todo={makeTodo({ tags: ['urgent', 'bug'] })}
+        onAddTag={onAddTag}
+      />
+    );
+    expect(screen.getByText('urgent')).toBeInTheDocument();
+    expect(screen.getByText('bug')).toBeInTheDocument();
   });
 });
