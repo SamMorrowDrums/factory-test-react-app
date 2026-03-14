@@ -77,3 +77,20 @@ body {
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+.app__mute-btn {
+  background: #334155;
+  color: #e2e8f0;
+  border: 1px solid #475569;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+  line-height: 1;
+}
+
+.app__mute-btn:hover {
+  background: #475569;
+  box-shadow: 0 0 6px rgba(0, 255, 255, 0.3);
+}
