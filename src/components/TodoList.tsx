@@ -13,6 +13,11 @@ interface TodoListProps {
   updateNotes?: (id: string, notes: string) => void;
   clearCompleted?: () => void;
   reorderTodos?: (draggedId: string, targetId: string) => void;
+  focusedTodoId?: string | null;
+  filter?: TodoFilterType;
+  categoryFilter?: TodoCategory | 'all';
+  onFilterChange?: (filter: TodoFilterType) => void;
+  onCategoryChange?: (category: TodoCategory | 'all') => void;
 }
 
 export function TodoList(props: TodoListProps) {
@@ -23,8 +28,15 @@ export function TodoList(props: TodoListProps) {
   const updateNotes = props.updateNotes ?? internal.updateNotes;
   const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
   const reorderTodos = props.reorderTodos ?? internal.reorderTodos;
-  const [filter, setFilter] = useState<TodoFilterType>('all');
-  const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
+
+  const [internalFilter, setInternalFilter] = useState<TodoFilterType>('all');
+  const [internalCategoryFilter, setInternalCategoryFilter] = useState<TodoCategory | 'all'>('all');
+
+  const filter = props.filter ?? internalFilter;
+  const categoryFilter = props.categoryFilter ?? internalCategoryFilter;
+  const onFilterChange = props.onFilterChange ?? setInternalFilter;
+  const onCategoryChange = props.onCategoryChange ?? setInternalCategoryFilter;
+
   const [searchQuery, setSearchQuery] = useState('');
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const draggedIdRef = useRef<string | null>(null);
@@ -75,8 +87,8 @@ export function TodoList(props: TodoListProps) {
       <TodoFilter
         currentFilter={filter}
         currentCategory={categoryFilter}
-        onFilterChange={setFilter}
-        onCategoryChange={setCategoryFilter}
+        onFilterChange={onFilterChange}
+        onCategoryChange={onCategoryChange}
       />
 
       <SearchBar query={searchQuery} onChange={setSearchQuery} />
@@ -90,6 +102,7 @@ export function TodoList(props: TodoListProps) {
             onDelete={deleteTodo}
             onUpdateNotes={updateNotes}
             searchQuery={searchQuery}
+            isFocused={props.focusedTodoId === todo.id}
             isDragging={draggedIdRef.current === todo.id}
             isDragOver={dragOverId === todo.id}
             onDragStart={handleDragStart(todo.id)}

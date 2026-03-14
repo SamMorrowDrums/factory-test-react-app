@@ -8,6 +8,7 @@ interface TodoItemProps {
   onDelete: (id: string) => void;
   onUpdateNotes?: (id: string, notes: string) => void;
   searchQuery?: string;
+  isFocused?: boolean;
   isDragging?: boolean;
   isDragOver?: boolean;
   onDragStart?: (e: React.DragEvent<HTMLLIElement>) => void;
@@ -42,6 +43,7 @@ export const TodoItem = memo(function TodoItem({
   onDelete,
   onUpdateNotes,
   searchQuery = '',
+  isFocused = false,
   isDragging = false,
   isDragOver = false,
   onDragStart,
@@ -53,6 +55,7 @@ export const TodoItem = memo(function TodoItem({
   const [editingNotes, setEditingNotes] = useState(false);
   const [notesValue, setNotesValue] = useState(todo.notes ?? '');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const itemRef = useRef<HTMLLIElement>(null);
 
   const hasNotes = Boolean(todo.notes);
 
@@ -66,11 +69,18 @@ export const TodoItem = memo(function TodoItem({
     }
   }, [editingNotes]);
 
+  useEffect(() => {
+    if (isFocused && itemRef.current) {
+      itemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }, [isFocused]);
+
   const classNames = [
     'todo-item',
     todo.completed ? 'todo-item--completed' : '',
     isDragging ? 'todo-item--dragging' : '',
     isDragOver ? 'todo-item--drag-over' : '',
+    isFocused ? 'todo-item--focused' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -110,6 +120,7 @@ export const TodoItem = memo(function TodoItem({
 
   return (
     <li
+      ref={itemRef}
       className={classNames}
       draggable
       onDragStart={onDragStart}
