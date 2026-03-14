@@ -1,0 +1,183 @@
+/* ── Theme Variables ── */
+:root {
+  /* Font */
+  --font-family: 'Courier New', Courier, monospace;
+
+  /* Backgrounds */
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-input: #12121a;
+  --color-button: #334155;
+  --color-button-hover: #475569;
+
+  /* Text */
+  --color-text: #e2e8f0;
+  --color-text-dim: #555568;
+  --color-text-muted: #94a3b8;
+  --color-text-item: #e0e0e8;
+
+  /* Borders */
+  --color-border: #334155;
+  --color-border-strong: #475569;
+  --color-border-input: #2a2a3e;
+
+  /* Accent */
+  --color-accent: #0ff;
+  --color-accent-bg: rgba(0, 255, 255, 0.1);
+  --color-accent-bg-strong: rgba(0, 255, 255, 0.18);
+
+  /* Shadows & Glows */
+  --shadow-surface: 0 0 15px rgba(0, 255, 255, 0.05);
+  --shadow-focus: 0 0 8px rgba(0, 255, 255, 0.25);
+  --shadow-hover: 0 0 10px rgba(0, 255, 255, 0.3);
+  --shadow-subtle: 0 0 6px rgba(0, 255, 255, 0.2);
+  --shadow-button: 0 0 6px rgba(0, 255, 255, 0.15);
+  --shadow-toast: 0 0 12px rgba(0, 255, 255, 0.12);
+  --shadow-drag-over: 0 0 8px rgba(0, 255, 255, 0.3);
+
+  /* Category: work */
+  --color-cat-work: #00ffff;
+  --color-cat-work-bg: rgba(0, 255, 255, 0.1);
+  --color-cat-work-border: rgba(0, 255, 255, 0.4);
+  --cat-work-text-shadow: 0 0 6px rgba(0, 255, 255, 0.6);
+  --cat-work-shadow: 0 0 4px rgba(0, 255, 255, 0.15), inset 0 0 4px rgba(0, 255, 255, 0.05);
+  --cat-work-shadow-hover: 0 0 8px rgba(0, 255, 255, 0.35), inset 0 0 6px rgba(0, 255, 255, 0.1);
+
+  /* Category: personal */
+  --color-cat-personal: #ff00ff;
+  --color-cat-personal-bg: rgba(255, 0, 255, 0.1);
+  --color-cat-personal-border: rgba(255, 0, 255, 0.4);
+  --cat-personal-text-shadow: 0 0 6px rgba(255, 0, 255, 0.6);
+  --cat-personal-shadow: 0 0 4px rgba(255, 0, 255, 0.15), inset 0 0 4px rgba(255, 0, 255, 0.05);
+  --cat-personal-shadow-hover: 0 0 8px rgba(255, 0, 255, 0.35), inset 0 0 6px rgba(255, 0, 255, 0.1);
+
+  /* Category: shopping */
+  --color-cat-shopping: #e0d800;
+  --color-cat-shopping-bg: rgba(255, 240, 0, 0.1);
+  --color-cat-shopping-border: rgba(255, 240, 0, 0.4);
+  --cat-shopping-text-shadow: 0 0 6px rgba(255, 240, 0, 0.5);
+  --cat-shopping-shadow: 0 0 4px rgba(255, 240, 0, 0.15), inset 0 0 4px rgba(255, 240, 0, 0.05);
+  --cat-shopping-shadow-hover: 0 0 8px rgba(255, 240, 0, 0.35), inset 0 0 6px rgba(255, 240, 0, 0.1);
+
+  /* Category: health */
+  --color-cat-health: #00ff64;
+  --color-cat-health-bg: rgba(0, 255, 100, 0.1);
+  --color-cat-health-border: rgba(0, 255, 100, 0.4);
+  --cat-health-text-shadow: 0 0 6px rgba(0, 255, 100, 0.6);
+  --cat-health-shadow: 0 0 4px rgba(0, 255, 100, 0.15), inset 0 0 4px rgba(0, 255, 100, 0.05);
+  --cat-health-shadow-hover: 0 0 8px rgba(0, 255, 100, 0.35), inset 0 0 6px rgba(0, 255, 100, 0.1);
+
+  /* Delete */
+  --color-delete: #ff3250;
+  --color-delete-border: rgba(255, 50, 80, 0.4);
+  --color-delete-bg: rgba(255, 50, 80, 0.08);
+  --color-delete-bg-hover: rgba(255, 50, 80, 0.15);
+  --shadow-delete: 0 0 6px rgba(255, 50, 80, 0.3);
+
+  /* Highlight */
+  --color-highlight-bg: rgba(0, 255, 255, 0.2);
+  --color-highlight-text: #0ff;
+  --highlight-text-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
+
+  /* Install banner */
+  --shadow-install: 0 0 20px rgba(0, 255, 255, 0.25), inset 0 0 8px rgba(0, 255, 255, 0.05);
+  --color-install-title: #0ff;
+  --install-title-shadow: 0 0 6px rgba(0, 255, 255, 0.4);
+  --install-icon-filter: drop-shadow(0 0 4px rgba(0, 255, 255, 0.6));
+
+  /* Glitch effect */
+  --glitch-before-color: #0ff;
+  --glitch-after-color: #f0f;
+  --glitch-animation: glitch-shift 3s infinite;
+  --glitch-before-animation: glitch-clip-before 3s infinite linear alternate-reverse;
+  --glitch-after-animation: glitch-clip-after 3s infinite linear alternate-reverse;
+}
+
+/* ── Clean Theme ── */
+.theme-clean {
+  --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-input: #ffffff;
+  --color-button: #f1f5f9;
+  --color-button-hover: #e2e8f0;
+
+  --color-text: #1e293b;
+  --color-text-dim: #64748b;
+  --color-text-muted: #94a3b8;
+  --color-text-item: #334155;
+
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-border-input: #cbd5e1;
+
+  --color-accent: #3b82f6;
+  --color-accent-bg: rgba(59, 130, 246, 0.08);
+  --color-accent-bg-strong: rgba(59, 130, 246, 0.14);
+
+  --shadow-surface: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-focus: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  --shadow-hover: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-subtle: none;
+  --shadow-button: none;
+  --shadow-toast: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-drag-over: 0 0 0 2px #3b82f6;
+
+  /* Category: work */
+  --color-cat-work: #0284c7;
+  --color-cat-work-bg: rgba(2, 132, 199, 0.08);
+  --color-cat-work-border: rgba(2, 132, 199, 0.3);
+  --cat-work-text-shadow: none;
+  --cat-work-shadow: none;
+  --cat-work-shadow-hover: 0 1px 3px rgba(2, 132, 199, 0.15);
+
+  /* Category: personal */
+  --color-cat-personal: #7c3aed;
+  --color-cat-personal-bg: rgba(124, 58, 237, 0.08);
+  --color-cat-personal-border: rgba(124, 58, 237, 0.3);
+  --cat-personal-text-shadow: none;
+  --cat-personal-shadow: none;
+  --cat-personal-shadow-hover: 0 1px 3px rgba(124, 58, 237, 0.15);
+
+  /* Category: shopping */
+  --color-cat-shopping: #ca8a04;
+  --color-cat-shopping-bg: rgba(202, 138, 4, 0.08);
+  --color-cat-shopping-border: rgba(202, 138, 4, 0.3);
+  --cat-shopping-text-shadow: none;
+  --cat-shopping-shadow: none;
+  --cat-shopping-shadow-hover: 0 1px 3px rgba(202, 138, 4, 0.15);
+
+  /* Category: health */
+  --color-cat-health: #16a34a;
+  --color-cat-health-bg: rgba(22, 163, 74, 0.08);
+  --color-cat-health-border: rgba(22, 163, 74, 0.3);
+  --cat-health-text-shadow: none;
+  --cat-health-shadow: none;
+  --cat-health-shadow-hover: 0 1px 3px rgba(22, 163, 74, 0.15);
+
+  /* Delete */
+  --color-delete: #dc2626;
+  --color-delete-border: rgba(220, 38, 38, 0.25);
+  --color-delete-bg: rgba(220, 38, 38, 0.05);
+  --color-delete-bg-hover: rgba(220, 38, 38, 0.1);
+  --shadow-delete: 0 1px 3px rgba(220, 38, 38, 0.15);
+
+  /* Highlight */
+  --color-highlight-bg: rgba(59, 130, 246, 0.12);
+  --color-highlight-text: #1d4ed8;
+  --highlight-text-shadow: none;
+
+  /* Install banner */
+  --shadow-install: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --color-install-title: #3b82f6;
+  --install-title-shadow: none;
+  --install-icon-filter: none;
+
+  /* Glitch disabled in clean */
+  --glitch-before-color: transparent;
+  --glitch-after-color: transparent;
+  --glitch-animation: none;
+  --glitch-before-animation: none;
+  --glitch-after-animation: none;
+}

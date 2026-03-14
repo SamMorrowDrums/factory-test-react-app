@@ -9,49 +9,49 @@
   flex: 1;
   min-width: 0;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #475569;
+  border: 1px solid var(--color-border-strong);
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family: 'Courier New', Courier, monospace;
-  color: #e2e8f0;
-  background: #12121a;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-input);
 }
 
 .todo-input__text::placeholder {
-  color: #555568;
+  color: var(--color-text-dim);
 }
 
 .todo-input__text:focus {
   outline: none;
-  border-color: #0ff;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.25);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
 }
 
 .todo-input__category {
   padding: 0.5rem 0.75rem;
-  border: 1px solid #475569;
+  border: 1px solid var(--color-border-strong);
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family: 'Courier New', Courier, monospace;
-  color: #e2e8f0;
-  background: #334155;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-button);
   cursor: pointer;
 }
 
 .todo-input__category:focus {
   outline: none;
-  border-color: #0ff;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.25);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
 }
 
 .todo-input__add {
   padding: 0.5rem 1.25rem;
   background: transparent;
-  color: #0ff;
-  border: 1px solid #0ff;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-family);
   font-weight: 700;
   letter-spacing: 0.05em;
   cursor: pointer;
@@ -59,8 +59,8 @@
 }
 
 .todo-input__add:hover {
-  background: rgba(0, 255, 255, 0.1);
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  background: var(--color-accent-bg);
+  box-shadow: var(--shadow-hover);
 }
 
 /* ── Mobile ── */

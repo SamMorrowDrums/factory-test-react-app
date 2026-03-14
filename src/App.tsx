@@ -1,10 +1,12 @@
 import { useEffect, useCallback } from 'react';
 import { useTodos } from './hooks/useTodos';
 import { useToast } from './hooks/useToast';
+import { useTheme } from './hooks/useTheme';
 import { useInstallPrompt } from './hooks/useInstallPrompt';
 import { TodoInput } from './components/TodoInput';
 import { TodoList } from './components/TodoList';
 import { GlitchText } from './components/GlitchText';
+import { ThemeToggle } from './components/ThemeToggle';
 import { ToastContainer } from './components/Toast';
 import { DataTransfer } from './components/DataTransfer';
 import { InstallBanner } from './components/InstallBanner';
@@ -25,6 +27,7 @@ function App() {
     canRedo,
   } = useTodos();
   const { toasts, showToast, dismissToast } = useToast();
+  const { theme, toggleTheme } = useTheme();
   const { showPrompt, install, dismiss } = useInstallPrompt();
 
   const handleUndo = useCallback(() => {
@@ -56,7 +59,10 @@ function App() {
   return (
     <div className="app">
       <header className="app__header">
-        <GlitchText as="h1" className="app__title">GLITCH_DO</GlitchText>
+        <div className="app__header-row">
+          <GlitchText as="h1" className="app__title">GLITCH_DO</GlitchText>
+          <ThemeToggle theme={theme} onToggle={toggleTheme} />
+        </div>
       </header>
 
       <main className="app__main">

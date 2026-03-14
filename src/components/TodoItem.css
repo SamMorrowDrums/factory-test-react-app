@@ -3,9 +3,9 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  border: 1px solid #2a2a3e;
+  border: 1px solid var(--color-border-input);
   border-radius: 0.25rem;
-  background: #12121a;
+  background: var(--color-input);
   list-style: none;
   transition: opacity 0.15s, border-color 0.15s, box-shadow 0.15s;
   cursor: grab;
@@ -17,12 +17,12 @@
 }
 
 .todo-item--drag-over {
-  border-color: #00ffff;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-drag-over);
 }
 
 .todo-item__drag-handle {
-  color: #555568;
+  color: var(--color-text-dim);
   font-size: 1rem;
   cursor: grab;
   user-select: none;
@@ -49,20 +49,20 @@
 
 .todo-item__title {
   font-size: 1rem;
-  color: #e0e0e8;
+  color: var(--color-text-item);
 }
 
 .todo-item--completed .todo-item__title {
   text-decoration: line-through;
-  color: #555568;
+  color: var(--color-text-dim);
 }
 
 .todo-item__highlight {
-  background: rgba(0, 255, 255, 0.2);
-  color: #0ff;
+  background: var(--color-highlight-bg);
+  color: var(--color-highlight-text);
   border-radius: 0.125rem;
   padding: 0 0.0625rem;
-  text-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
+  text-shadow: var(--highlight-text-shadow);
 }
 
 .todo-item__category {
@@ -78,58 +78,58 @@
 }
 
 .todo-item__category--work {
-  background: rgba(0, 255, 255, 0.1);
-  color: #00ffff;
-  border-color: rgba(0, 255, 255, 0.4);
-  text-shadow: 0 0 6px rgba(0, 255, 255, 0.6);
-  box-shadow: 0 0 4px rgba(0, 255, 255, 0.15), inset 0 0 4px rgba(0, 255, 255, 0.05);
+  background: var(--color-cat-work-bg);
+  color: var(--color-cat-work);
+  border-color: var(--color-cat-work-border);
+  text-shadow: var(--cat-work-text-shadow);
+  box-shadow: var(--cat-work-shadow);
 }
 
 .todo-item__category--work:hover {
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.35), inset 0 0 6px rgba(0, 255, 255, 0.1);
+  box-shadow: var(--cat-work-shadow-hover);
 }
 
 .todo-item__category--personal {
-  background: rgba(255, 0, 255, 0.1);
-  color: #ff00ff;
-  border-color: rgba(255, 0, 255, 0.4);
-  text-shadow: 0 0 6px rgba(255, 0, 255, 0.6);
-  box-shadow: 0 0 4px rgba(255, 0, 255, 0.15), inset 0 0 4px rgba(255, 0, 255, 0.05);
+  background: var(--color-cat-personal-bg);
+  color: var(--color-cat-personal);
+  border-color: var(--color-cat-personal-border);
+  text-shadow: var(--cat-personal-text-shadow);
+  box-shadow: var(--cat-personal-shadow);
 }
 
 .todo-item__category--personal:hover {
-  box-shadow: 0 0 8px rgba(255, 0, 255, 0.35), inset 0 0 6px rgba(255, 0, 255, 0.1);
+  box-shadow: var(--cat-personal-shadow-hover);
 }
 
 .todo-item__category--shopping {
-  background: rgba(255, 240, 0, 0.1);
-  color: #e0d800;
-  border-color: rgba(255, 240, 0, 0.4);
-  text-shadow: 0 0 6px rgba(255, 240, 0, 0.5);
-  box-shadow: 0 0 4px rgba(255, 240, 0, 0.15), inset 0 0 4px rgba(255, 240, 0, 0.05);
+  background: var(--color-cat-shopping-bg);
+  color: var(--color-cat-shopping);
+  border-color: var(--color-cat-shopping-border);
+  text-shadow: var(--cat-shopping-text-shadow);
+  box-shadow: var(--cat-shopping-shadow);
 }
 
 .todo-item__category--shopping:hover {
-  box-shadow: 0 0 8px rgba(255, 240, 0, 0.35), inset 0 0 6px rgba(255, 240, 0, 0.1);
+  box-shadow: var(--cat-shopping-shadow-hover);
 }
 
 .todo-item__category--health {
-  background: rgba(0, 255, 100, 0.1);
-  color: #00ff64;
-  border-color: rgba(0, 255, 100, 0.4);
-  text-shadow: 0 0 6px rgba(0, 255, 100, 0.6);
-  box-shadow: 0 0 4px rgba(0, 255, 100, 0.15), inset 0 0 4px rgba(0, 255, 100, 0.05);
+  background: var(--color-cat-health-bg);
+  color: var(--color-cat-health);
+  border-color: var(--color-cat-health-border);
+  text-shadow: var(--cat-health-text-shadow);
+  box-shadow: var(--cat-health-shadow);
 }
 
 .todo-item__category--health:hover {
-  box-shadow: 0 0 8px rgba(0, 255, 100, 0.35), inset 0 0 6px rgba(0, 255, 100, 0.1);
+  box-shadow: var(--cat-health-shadow-hover);
 }
 
 .todo-item__delete {
   padding: 0.375rem 0.75rem;
-  border: 1px solid rgba(255, 50, 80, 0.4);
-  background: rgba(255, 50, 80, 0.08);
-  color: #ff3250;
+  border: 1px solid var(--color-delete-border);
+  background: var(--color-delete-bg);
+  color: var(--color-delete);
   border-radius: 0.25rem;
   cursor: pointer;
   font-size: 0.8125rem;
@@ -141,8 +141,8 @@
 }
 
 .todo-item__delete:hover {
-  background: rgba(255, 50, 80, 0.15);
-  box-shadow: 0 0 6px rgba(255, 50, 80, 0.3);
+  background: var(--color-delete-bg-hover);
+  box-shadow: var(--shadow-delete);
 }
 
 /* ── Mobile ── */

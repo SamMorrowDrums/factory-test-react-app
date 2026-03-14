@@ -2,9 +2,9 @@
   position: relative;
   display: inline-block;
   font-weight: 700;
-  color: #e2e8f0;
+  color: var(--color-text);
   letter-spacing: 0.05em;
-  animation: glitch-shift 3s infinite;
+  animation: var(--glitch-animation);
 }
 
 .glitch::before,
@@ -19,15 +19,15 @@
 }
 
 .glitch::before {
-  color: #0ff;
-  animation: glitch-clip-before 3s infinite linear alternate-reverse;
+  color: var(--glitch-before-color);
+  animation: var(--glitch-before-animation);
   clip-path: inset(0 0 65% 0);
   transform: translate(-2px, -1px);
 }
 
 .glitch::after {
-  color: #f0f;
-  animation: glitch-clip-after 3s infinite linear alternate-reverse;
+  color: var(--glitch-after-color);
+  animation: var(--glitch-after-animation);
   clip-path: inset(60% 0 0 0);
   transform: translate(2px, 1px);
 }
