@@ -86,4 +86,27 @@ describe('TodoItem', () => {
     const badge = screen.getByText('work');
     expect(badge).toHaveClass('todo-item__category--work');
   });
+
+  it('renders a drag handle', () => {
+    render(<TodoItem {...defaultProps} />);
+    expect(screen.getByLabelText('Drag to reorder')).toBeInTheDocument();
+  });
+
+  it('has draggable attribute', () => {
+    render(<TodoItem {...defaultProps} />);
+    const item = screen.getByRole('listitem');
+    expect(item).toHaveAttribute('draggable', 'true');
+  });
+
+  it('applies dragging class when isDragging is true', () => {
+    const { container } = render(<TodoItem {...defaultProps} isDragging />);
+    const li = container.querySelector('.todo-item');
+    expect(li).toHaveClass('todo-item--dragging');
+  });
+
+  it('applies drag-over class when isDragOver is true', () => {
+    const { container } = render(<TodoItem {...defaultProps} isDragOver />);
+    const li = container.querySelector('.todo-item');
+    expect(li).toHaveClass('todo-item--drag-over');
+  });
 });

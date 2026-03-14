@@ -5,7 +5,7 @@ import { GlitchText } from './components/GlitchText';
 import './App.css';
 
 function App() {
-  const { todos, addTodo, toggleTodo, deleteTodo, clearCompleted } = useTodos();
+  const { todos, addTodo, toggleTodo, deleteTodo, clearCompleted, reorderTodos } = useTodos();
 
   return (
     <div className="app">
@@ -20,6 +20,7 @@ function App() {
           toggleTodo={toggleTodo}
           deleteTodo={deleteTodo}
           clearCompleted={clearCompleted}
+          reorderTodos={reorderTodos}
         />
       </main>
     </div>
