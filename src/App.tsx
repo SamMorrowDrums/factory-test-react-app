@@ -52,12 +52,16 @@ function App() {
 
   return (
     <div className="app">
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
+
       <header className="app__header">
         <GlitchText as="h1" className="app__title">GLITCH_DO</GlitchText>
       </header>
 
-      <main className="app__main">
-        <div className="app__toolbar">
+      <main className="app__main" id="main-content">
+        <div className="app__toolbar" role="toolbar" aria-label="Todo actions">
           <div className="app__toolbar-left">
             <button
               className="app__undo-btn"

@@ -35,20 +35,20 @@ describe('DataTransfer', () => {
 
   it('renders export and import buttons', () => {
     renderComponent();
-    expect(screen.getByRole('button', { name: 'Export JSON' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Export CSV' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Import' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Export todos as JSON' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Export todos as CSV' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Import todos from file' })).toBeInTheDocument();
   });
 
   it('calls onSuccess when exporting JSON', async () => {
     renderComponent();
-    await userEvent.click(screen.getByRole('button', { name: 'Export JSON' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Export todos as JSON' }));
     expect(onSuccess).toHaveBeenCalledWith('Exported 2 todos as JSON');
   });
 
   it('calls onSuccess when exporting CSV', async () => {
     renderComponent();
-    await userEvent.click(screen.getByRole('button', { name: 'Export CSV' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Export todos as CSV' }));
     expect(onSuccess).toHaveBeenCalledWith('Exported 2 todos as CSV');
   });
 

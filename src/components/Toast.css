@@ -37,6 +37,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}
+
 .toast__message {
   flex: 1;
 }
@@ -53,4 +59,9 @@
 
 .toast__dismiss:hover {
   color: #e2e8f0;
+}
+
+.toast__dismiss:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }

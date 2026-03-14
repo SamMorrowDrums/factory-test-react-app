@@ -9,11 +9,11 @@ export interface ToastData {
 interface ToastProps {
   toast: ToastData;
   onDismiss: (id: string) => void;
-  /** Auto-dismiss delay in ms (default 3000). */
+  /** Auto-dismiss delay in ms (default 5000). */
   duration?: number;
 }
 
-export function Toast({ toast, onDismiss, duration = 3000 }: ToastProps) {
+export function Toast({ toast, onDismiss, duration = 5000 }: ToastProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {

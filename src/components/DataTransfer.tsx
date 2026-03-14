@@ -61,14 +61,14 @@ export function DataTransfer({ todos, onImport, onError, onSuccess }: DataTransf
   };
 
   return (
-    <div className="data-transfer">
-      <button className="data-transfer__btn" onClick={handleExportJSON} aria-label="Export JSON">
+    <div className="data-transfer" role="group" aria-label="Import and export">
+      <button className="data-transfer__btn" onClick={handleExportJSON} aria-label="Export todos as JSON">
         ↓ JSON
       </button>
-      <button className="data-transfer__btn" onClick={handleExportCSV} aria-label="Export CSV">
+      <button className="data-transfer__btn" onClick={handleExportCSV} aria-label="Export todos as CSV">
         ↓ CSV
       </button>
-      <button className="data-transfer__btn" onClick={handleImportClick} aria-label="Import">
+      <button className="data-transfer__btn" onClick={handleImportClick} aria-label="Import todos from file">
         ↑ Import
       </button>
       <input

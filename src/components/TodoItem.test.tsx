@@ -89,7 +89,8 @@ describe('TodoItem', () => {
 
   it('renders a drag handle', () => {
     render(<TodoItem {...defaultProps} />);
-    expect(screen.getByLabelText('Drag to reorder')).toBeInTheDocument();
+    expect(screen.getByText('⠿')).toBeInTheDocument();
+    expect(screen.getByText('⠿')).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('has draggable attribute', () => {

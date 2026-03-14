@@ -5,24 +5,30 @@ interface TodoItemProps {
   todo: Todo;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
   isDragging?: boolean;
   isDragOver?: boolean;
   onDragStart?: (e: React.DragEvent<HTMLLIElement>) => void;
   onDragOver?: (e: React.DragEvent<HTMLLIElement>) => void;
   onDrop?: (e: React.DragEvent<HTMLLIElement>) => void;
   onDragEnd?: (e: React.DragEvent<HTMLLIElement>) => void;
+  positionLabel?: string;
 }
 
 export function TodoItem({
   todo,
   onToggle,
   onDelete,
+  onMoveUp,
+  onMoveDown,
   isDragging = false,
   isDragOver = false,
   onDragStart,
   onDragOver,
   onDrop,
   onDragEnd,
+  positionLabel,
 }: TodoItemProps) {
   const classNames = [
     'todo-item',
@@ -33,6 +39,16 @@ export function TodoItem({
     .filter(Boolean)
     .join(' ');
 
+  function handleKeyDown(e: React.KeyboardEvent<HTMLLIElement>) {
+    if (e.altKey && e.key === 'ArrowUp' && onMoveUp) {
+      e.preventDefault();
+      onMoveUp();
+    } else if (e.altKey && e.key === 'ArrowDown' && onMoveDown) {
+      e.preventDefault();
+      onMoveDown();
+    }
+  }
+
   return (
     <li
       className={classNames}
@@ -41,8 +57,11 @@ export function TodoItem({
       onDragOver={onDragOver}
       onDrop={onDrop}
       onDragEnd={onDragEnd}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      aria-label={`${todo.title}, ${todo.category}${todo.completed ? ', completed' : ''}${positionLabel ? `, ${positionLabel}` : ''}. Use Alt+Up or Alt+Down to reorder.`}
     >
-      <span className="todo-item__drag-handle" aria-label="Drag to reorder">
+      <span className="todo-item__drag-handle" aria-hidden="true">
         ⠿
       </span>
 

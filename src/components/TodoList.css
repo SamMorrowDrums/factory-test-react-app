@@ -19,7 +19,7 @@
   justify-content: space-between;
   padding: 0.75rem 0;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: #94a3b8;
 }
 
 .todo-list__count {
@@ -39,4 +39,9 @@
 
 .todo-list__clear-completed:hover {
   background: #f3f4f6;
+}
+
+.todo-list__clear-completed:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }

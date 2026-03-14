@@ -7,6 +7,20 @@
   animation: glitch-shift 3s infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .glitch {
+    animation: none;
+  }
+
+  .glitch::before,
+  .glitch::after {
+    animation: none;
+    clip-path: none;
+    transform: none;
+    content: none;
+  }
+}
+
 .glitch::before,
 .glitch::after {
   content: attr(data-text);

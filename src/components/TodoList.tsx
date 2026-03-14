@@ -62,6 +62,16 @@ export function TodoList(props: TodoListProps) {
     setDragOverId(null);
   };
 
+  const handleMoveUp = (index: number) => {
+    if (index <= 0) return;
+    reorderTodos(filteredTodos[index].id, filteredTodos[index - 1].id);
+  };
+
+  const handleMoveDown = (index: number) => {
+    if (index >= filteredTodos.length - 1) return;
+    reorderTodos(filteredTodos[index].id, filteredTodos[index + 1].id);
+  };
+
   return (
     <div className="todo-list">
       <TodoFilter
@@ -71,25 +81,28 @@ export function TodoList(props: TodoListProps) {
         onCategoryChange={setCategoryFilter}
       />
 
-      <ul className="todo-list__items">
-        {filteredTodos.map((todo) => (
+      <ul className="todo-list__items" aria-label="Todo items">
+        {filteredTodos.map((todo, index) => (
           <TodoItem
             key={todo.id}
             todo={todo}
             onToggle={toggleTodo}
             onDelete={deleteTodo}
+            onMoveUp={() => handleMoveUp(index)}
+            onMoveDown={() => handleMoveDown(index)}
             isDragging={draggedIdRef.current === todo.id}
             isDragOver={dragOverId === todo.id}
             onDragStart={handleDragStart(todo.id)}
             onDragOver={handleDragOver(todo.id)}
             onDrop={handleDrop(todo.id)}
             onDragEnd={handleDragEnd}
+            positionLabel={`item ${index + 1} of ${filteredTodos.length}`}
           />
         ))}
       </ul>
 
       <div className="todo-list__footer">
-        <span className="todo-list__count">
+        <span className="todo-list__count" aria-live="polite">
           {activeCount} {activeCount === 1 ? 'item' : 'items'} left
         </span>
 

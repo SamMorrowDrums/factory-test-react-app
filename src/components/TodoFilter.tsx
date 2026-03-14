@@ -29,8 +29,8 @@ export function TodoFilter({
   onCategoryChange,
 }: TodoFilterProps) {
   return (
-    <div className="todo-filter">
-      <div className="todo-filter__status-buttons">
+    <div className="todo-filter" role="search" aria-label="Filter todos">
+      <div className="todo-filter__status-buttons" role="group" aria-label="Filter by status">
         {STATUS_OPTIONS.map(({ value, label }) => (
           <button
             key={value}

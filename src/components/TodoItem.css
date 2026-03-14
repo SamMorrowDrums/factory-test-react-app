@@ -22,7 +22,7 @@
 }
 
 .todo-item__drag-handle {
-  color: #555568;
+  color: #8b8ba0;
   font-size: 1rem;
   cursor: grab;
   user-select: none;
@@ -54,7 +54,7 @@
 
 .todo-item--completed .todo-item__title {
   text-decoration: line-through;
-  color: #555568;
+  color: #8b8ba0;
 }
 
 .todo-item__category {
@@ -134,4 +134,19 @@
 .todo-item__delete:hover {
   background: rgba(255, 50, 80, 0.15);
   box-shadow: 0 0 6px rgba(255, 50, 80, 0.3);
+}
+
+.todo-item__delete:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.todo-item__checkbox:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.todo-item:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
