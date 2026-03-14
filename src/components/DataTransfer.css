@@ -1,22 +1,22 @@
 .data-transfer {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-sm);
 }
 
 .data-transfer__btn {
-  background: #334155;
-  color: #e2e8f0;
-  border: 1px solid #475569;
-  border-radius: 0.25rem;
-  padding: 0.25rem 0.625rem;
-  font-family: 'Courier New', Courier, monospace;
+  background: var(--color-btn-bg);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-interactive);
+  border-radius: var(--radius-md);
+  padding: var(--space-xs) 0.625rem;
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background var(--transition-fast);
 }
 
 .data-transfer__btn:hover {
-  background: #475569;
+  background: var(--color-btn-hover);
 }
 
 .data-transfer__file-input {
