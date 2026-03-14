@@ -31,6 +31,15 @@ vi.mock('./hooks/useTodos', () => ({
   useTodos: () => mockReturnValue,
 }));
 
+let mockThemeValue: {
+  theme: 'cyberpunk' | 'clean';
+  toggleTheme: ReturnType<typeof vi.fn>;
+};
+
+vi.mock('./hooks/useTheme', () => ({
+  useTheme: () => mockThemeValue,
+}));
+
 describe('App', () => {
   beforeEach(() => {
     mockReturnValue = {
@@ -40,6 +49,10 @@ describe('App', () => {
       deleteTodo: vi.fn(),
       clearCompleted: vi.fn(),
       reorderTodos: vi.fn(),
+    };
+    mockThemeValue = {
+      theme: 'cyberpunk',
+      toggleTheme: vi.fn(),
     };
   });
 
@@ -61,5 +74,16 @@ describe('App', () => {
     await userEvent.type(input, 'New task');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
     expect(mockReturnValue.addTodo).toHaveBeenCalledWith('New task', 'work');
+  });
+
+  it('renders the theme toggle button', () => {
+    render(<App />);
+    expect(screen.getByLabelText('Switch to clean theme')).toBeInTheDocument();
+  });
+
+  it('calls toggleTheme when theme toggle is clicked', async () => {
+    render(<App />);
+    await userEvent.click(screen.getByLabelText('Switch to clean theme'));
+    expect(mockThemeValue.toggleTheme).toHaveBeenCalledOnce();
   });
 });

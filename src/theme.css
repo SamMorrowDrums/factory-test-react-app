@@ -1,0 +1,146 @@
+/* Cyberpunk theme (default) */
+:root,
+[data-theme="cyberpunk"] {
+  --font-family: 'Courier New', Courier, monospace;
+
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-item-bg: #12121a;
+  --color-input-bg: #1a1a2e;
+  --color-hover-bg: rgba(0, 255, 255, 0.08);
+
+  --color-text: #e2e8f0;
+  --color-text-secondary: #e0e0e8;
+  --color-muted: #555568;
+  --color-input-text: #c8c8d8;
+
+  --color-border: #334155;
+  --color-item-border: #2a2a3e;
+  --color-input-border: #3a3a5e;
+
+  --color-primary: #00ffff;
+  --color-primary-hover: #00cccc;
+  --color-primary-text: #0f172a;
+  --color-focus: #00ffff;
+
+  --color-accent: #00ffff;
+  --color-accent-glow: rgba(0, 255, 255, 0.05);
+  --color-accent-alt: #f0f;
+
+  --color-danger: #ff3250;
+  --color-danger-bg: rgba(255, 50, 80, 0.08);
+  --color-danger-border: rgba(255, 50, 80, 0.4);
+  --color-danger-hover-bg: rgba(255, 50, 80, 0.15);
+  --color-danger-glow: 0 0 6px rgba(255, 50, 80, 0.3);
+
+  --color-footer-text: #6b7280;
+
+  --drag-over-border: #00ffff;
+  --drag-over-glow: 0 0 8px rgba(0, 255, 255, 0.3);
+  --surface-shadow: 0 0 15px rgba(0, 255, 255, 0.05);
+
+  /* Category: work */
+  --cat-work-color: #00ffff;
+  --cat-work-bg: rgba(0, 255, 255, 0.1);
+  --cat-work-border: rgba(0, 255, 255, 0.4);
+  --cat-work-text-shadow: 0 0 6px rgba(0, 255, 255, 0.6);
+  --cat-work-shadow: 0 0 4px rgba(0, 255, 255, 0.15), inset 0 0 4px rgba(0, 255, 255, 0.05);
+  --cat-work-shadow-hover: 0 0 8px rgba(0, 255, 255, 0.35), inset 0 0 6px rgba(0, 255, 255, 0.1);
+
+  /* Category: personal */
+  --cat-personal-color: #ff00ff;
+  --cat-personal-bg: rgba(255, 0, 255, 0.1);
+  --cat-personal-border: rgba(255, 0, 255, 0.4);
+  --cat-personal-text-shadow: 0 0 6px rgba(255, 0, 255, 0.6);
+  --cat-personal-shadow: 0 0 4px rgba(255, 0, 255, 0.15), inset 0 0 4px rgba(255, 0, 255, 0.05);
+  --cat-personal-shadow-hover: 0 0 8px rgba(255, 0, 255, 0.35), inset 0 0 6px rgba(255, 0, 255, 0.1);
+
+  /* Category: shopping */
+  --cat-shopping-color: #e0d800;
+  --cat-shopping-bg: rgba(255, 240, 0, 0.1);
+  --cat-shopping-border: rgba(255, 240, 0, 0.4);
+  --cat-shopping-text-shadow: 0 0 6px rgba(255, 240, 0, 0.5);
+  --cat-shopping-shadow: 0 0 4px rgba(255, 240, 0, 0.15), inset 0 0 4px rgba(255, 240, 0, 0.05);
+  --cat-shopping-shadow-hover: 0 0 8px rgba(255, 240, 0, 0.35), inset 0 0 6px rgba(255, 240, 0, 0.1);
+
+  /* Category: health */
+  --cat-health-color: #00ff64;
+  --cat-health-bg: rgba(0, 255, 100, 0.1);
+  --cat-health-border: rgba(0, 255, 100, 0.4);
+  --cat-health-text-shadow: 0 0 6px rgba(0, 255, 100, 0.6);
+  --cat-health-shadow: 0 0 4px rgba(0, 255, 100, 0.15), inset 0 0 4px rgba(0, 255, 100, 0.05);
+  --cat-health-shadow-hover: 0 0 8px rgba(0, 255, 100, 0.35), inset 0 0 6px rgba(0, 255, 100, 0.1);
+}
+
+/* Clean theme */
+[data-theme="clean"] {
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-item-bg: #ffffff;
+  --color-input-bg: #ffffff;
+  --color-hover-bg: #f1f5f9;
+
+  --color-text: #1e293b;
+  --color-text-secondary: #334155;
+  --color-muted: #94a3b8;
+  --color-input-text: #374151;
+
+  --color-border: #e2e8f0;
+  --color-item-border: #e2e8f0;
+  --color-input-border: #d1d5db;
+
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-text: #ffffff;
+  --color-focus: #3b82f6;
+
+  --color-accent: #3b82f6;
+  --color-accent-glow: rgba(59, 130, 246, 0.05);
+  --color-accent-alt: #8b5cf6;
+
+  --color-danger: #ef4444;
+  --color-danger-bg: #fef2f2;
+  --color-danger-border: #fecaca;
+  --color-danger-hover-bg: #fee2e2;
+  --color-danger-glow: none;
+
+  --color-footer-text: #6b7280;
+
+  --drag-over-border: #3b82f6;
+  --drag-over-glow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  --surface-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  /* Category: work (blue) */
+  --cat-work-color: #2563eb;
+  --cat-work-bg: #eff6ff;
+  --cat-work-border: #bfdbfe;
+  --cat-work-text-shadow: none;
+  --cat-work-shadow: none;
+  --cat-work-shadow-hover: 0 1px 2px rgba(37, 99, 235, 0.1);
+
+  /* Category: personal (purple) */
+  --cat-personal-color: #7c3aed;
+  --cat-personal-bg: #f5f3ff;
+  --cat-personal-border: #ddd6fe;
+  --cat-personal-text-shadow: none;
+  --cat-personal-shadow: none;
+  --cat-personal-shadow-hover: 0 1px 2px rgba(124, 58, 237, 0.1);
+
+  /* Category: shopping (amber) */
+  --cat-shopping-color: #d97706;
+  --cat-shopping-bg: #fffbeb;
+  --cat-shopping-border: #fde68a;
+  --cat-shopping-text-shadow: none;
+  --cat-shopping-shadow: none;
+  --cat-shopping-shadow-hover: 0 1px 2px rgba(217, 119, 6, 0.1);
+
+  /* Category: health (green) */
+  --cat-health-color: #059669;
+  --cat-health-bg: #ecfdf5;
+  --cat-health-border: #a7f3d0;
+  --cat-health-text-shadow: none;
+  --cat-health-shadow: none;
+  --cat-health-shadow-hover: 0 1px 2px rgba(5, 150, 105, 0.1);
+}
