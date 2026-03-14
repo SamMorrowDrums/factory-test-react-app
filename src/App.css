@@ -15,10 +15,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .app {
   max-width: 600px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  animation: fadeInUp 0.4s ease-out;
 }
 
 .app__header {
@@ -38,4 +50,19 @@ body {
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.25s ease;
+}
+
+.app__main:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
