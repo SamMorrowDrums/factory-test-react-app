@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createTodo } from './todo';
-import type { Todo, TodoCategory } from './todo';
+import type { Todo, TodoCategory, TodoPriority } from './todo';
 
 describe('createTodo', () => {
   it('creates a todo with the given title and category', () => {
@@ -38,7 +38,30 @@ describe('createTodo', () => {
     expect(todo).toHaveProperty('title');
     expect(todo).toHaveProperty('completed');
     expect(todo).toHaveProperty('category');
+    expect(todo).toHaveProperty('priority');
+    expect(todo).toHaveProperty('dueDate');
     expect(todo).toHaveProperty('createdAt');
+  });
+
+  it('defaults priority to medium', () => {
+    const todo = createTodo('Test', 'work');
+    expect(todo.priority).toBe('medium');
+  });
+
+  it('accepts a custom priority', () => {
+    const todo = createTodo('Urgent task', 'work', 'high');
+    expect(todo.priority).toBe('high');
+  });
+
+  it('defaults dueDate to null', () => {
+    const todo = createTodo('Test', 'work');
+    expect(todo.dueDate).toBeNull();
+  });
+
+  it('accepts a custom dueDate', () => {
+    const dueDate = new Date('2026-12-31').getTime();
+    const todo = createTodo('Year-end task', 'work', 'high', dueDate);
+    expect(todo.dueDate).toBe(dueDate);
   });
 });
 
@@ -48,6 +71,16 @@ describe('TodoCategory', () => {
     categories.forEach((cat) => {
       const todo = createTodo('test', cat);
       expect(todo.category).toBe(cat);
+    });
+  });
+});
+
+describe('TodoPriority', () => {
+  it('accepts valid priority values', () => {
+    const priorities: TodoPriority[] = ['low', 'medium', 'high'];
+    priorities.forEach((pri) => {
+      const todo = createTodo('test', 'work', pri);
+      expect(todo.priority).toBe(pri);
     });
   });
 });
