@@ -9,14 +9,15 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Test todo',
   completed: false,
   category: 'work',
+  priority: 'medium',
   createdAt: Date.now(),
   ...overrides,
 });
 
 const defaultTodos: Todo[] = [
-  makeTodo({ id: '1', title: 'Active work', completed: false, category: 'work' }),
-  makeTodo({ id: '2', title: 'Done shopping', completed: true, category: 'shopping' }),
-  makeTodo({ id: '3', title: 'Active personal', completed: false, category: 'personal' }),
+  makeTodo({ id: '1', title: 'Active work', completed: false, category: 'work', priority: 'high' }),
+  makeTodo({ id: '2', title: 'Done shopping', completed: true, category: 'shopping', priority: 'medium' }),
+  makeTodo({ id: '3', title: 'Active personal', completed: false, category: 'personal', priority: 'low' }),
 ];
 
 let mockReturnValue: ReturnType<typeof createMockReturn>;
@@ -125,6 +126,16 @@ describe('TodoList', () => {
     expect(screen.getByText('Active work')).toBeInTheDocument();
     expect(screen.queryByText('Active personal')).not.toBeInTheDocument();
     expect(screen.queryByText('Done shopping')).not.toBeInTheDocument();
+  });
+
+  it('filters by priority', async () => {
+    render(<TodoList />);
+    const prioritySelect = screen.getByLabelText('Filter by priority');
+    await userEvent.selectOptions(prioritySelect, 'high');
+
+    expect(screen.getByText('Active work')).toBeInTheDocument();
+    expect(screen.queryByText('Done shopping')).not.toBeInTheDocument();
+    expect(screen.queryByText('Active personal')).not.toBeInTheDocument();
   });
 
   it('renders todo items in a list', () => {

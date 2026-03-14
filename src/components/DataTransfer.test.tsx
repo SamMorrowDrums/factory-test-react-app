@@ -5,8 +5,8 @@ import { DataTransfer } from './DataTransfer';
 import type { Todo } from '../types/todo';
 
 const sampleTodos: Todo[] = [
-  { id: '1', title: 'Buy milk', completed: false, category: 'shopping', createdAt: 1700000000000 },
-  { id: '2', title: 'Work out', completed: true, category: 'health', createdAt: 1700000001000 },
+  { id: '1', title: 'Buy milk', completed: false, category: 'shopping', priority: 'medium', createdAt: 1700000000000 },
+  { id: '2', title: 'Work out', completed: true, category: 'health', priority: 'high', createdAt: 1700000001000 },
 ];
 
 vi.mock('../utils/dataTransfer', async () => {
@@ -66,13 +66,13 @@ describe('DataTransfer', () => {
 
   it('imports a valid CSV file', async () => {
     renderComponent();
-    const csv = 'id,title,completed,category,createdAt\n1,Buy milk,false,shopping,1700000000000';
+    const csv = 'id,title,completed,category,priority,dueDate,createdAt\n1,Buy milk,false,shopping,medium,,1700000000000';
     const file = new File([csv], 'todos.csv', { type: 'text/csv' });
     const input = screen.getByTestId('file-input') as HTMLInputElement;
     await userEvent.upload(input, file);
     await waitFor(() => {
       expect(onImport).toHaveBeenCalledWith([
-        { id: '1', title: 'Buy milk', completed: false, category: 'shopping', createdAt: 1700000000000 },
+        { id: '1', title: 'Buy milk', completed: false, category: 'shopping', priority: 'medium', createdAt: 1700000000000 },
       ]);
     });
   });

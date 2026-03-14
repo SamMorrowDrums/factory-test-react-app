@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
-import { type Todo, type TodoCategory, type TodoFilter as TodoFilterType } from '../types/todo';
+import { type Todo, type TodoCategory, type TodoPriority, type TodoFilter as TodoFilterType } from '../types/todo';
 import { useTodos } from '../hooks/useTodos';
 import { TodoFilter } from './TodoFilter';
 import { TodoItem } from './TodoItem';
@@ -22,6 +22,7 @@ export function TodoList(props: TodoListProps) {
   const reorderTodos = props.reorderTodos ?? internal.reorderTodos;
   const [filter, setFilter] = useState<TodoFilterType>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
+  const [priorityFilter, setPriorityFilter] = useState<TodoPriority | 'all'>('all');
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const draggedIdRef = useRef<string | null>(null);
 
@@ -29,8 +30,9 @@ export function TodoList(props: TodoListProps) {
     if (filter === 'active' && todo.completed) return false;
     if (filter === 'completed' && !todo.completed) return false;
     if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
+    if (priorityFilter !== 'all' && todo.priority !== priorityFilter) return false;
     return true;
-  }), [todos, filter, categoryFilter]);
+  }), [todos, filter, categoryFilter, priorityFilter]);
 
   const activeCount = useMemo(() => todos.filter((todo) => !todo.completed).length, [todos]);
   const hasCompleted = useMemo(() => todos.some((todo) => todo.completed), [todos]);
@@ -67,8 +69,10 @@ export function TodoList(props: TodoListProps) {
       <TodoFilter
         currentFilter={filter}
         currentCategory={categoryFilter}
+        currentPriority={priorityFilter}
         onFilterChange={setFilter}
         onCategoryChange={setCategoryFilter}
+        onPriorityChange={setPriorityFilter}
       />
 
       <ul className="todo-list__items">

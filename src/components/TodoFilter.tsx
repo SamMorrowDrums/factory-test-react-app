@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { type TodoCategory, type TodoFilter as TodoFilterType } from '../types/todo';
+import { type TodoCategory, type TodoPriority, type TodoFilter as TodoFilterType } from '../types/todo';
 import './TodoFilter.css';
 
 const STATUS_OPTIONS: { value: TodoFilterType; label: string }[] = [
@@ -16,22 +16,38 @@ const CATEGORY_OPTIONS: { value: TodoCategory | 'all'; label: string }[] = [
   { value: 'health', label: 'Health' },
 ];
 
+const PRIORITY_OPTIONS: { value: TodoPriority | 'all'; label: string }[] = [
+  { value: 'all', label: 'All Priorities' },
+  { value: 'high', label: 'High' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'low', label: 'Low' },
+];
+
 interface TodoFilterProps {
   currentFilter: TodoFilterType;
   currentCategory: TodoCategory | 'all';
+  currentPriority: TodoPriority | 'all';
   onFilterChange: (filter: TodoFilterType) => void;
   onCategoryChange: (category: TodoCategory | 'all') => void;
+  onPriorityChange: (priority: TodoPriority | 'all') => void;
 }
 
 export const TodoFilter = memo(function TodoFilter({
   currentFilter,
   currentCategory,
+  currentPriority,
   onFilterChange,
   onCategoryChange,
+  onPriorityChange,
 }: TodoFilterProps) {
   const handleCategoryChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => onCategoryChange(e.target.value as TodoCategory | 'all'),
     [onCategoryChange],
+  );
+
+  const handlePriorityChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => onPriorityChange(e.target.value as TodoPriority | 'all'),
+    [onPriorityChange],
   );
 
   return (
@@ -58,6 +74,19 @@ export const TodoFilter = memo(function TodoFilter({
         aria-label="Filter by category"
       >
         {CATEGORY_OPTIONS.map(({ value, label }) => (
+          <option key={value} value={value}>
+            {label}
+          </option>
+        ))}
+      </select>
+
+      <select
+        className="todo-filter__priority-select"
+        value={currentPriority}
+        onChange={handlePriorityChange}
+        aria-label="Filter by priority"
+      >
+        {PRIORITY_OPTIONS.map(({ value, label }) => (
           <option key={value} value={value}>
             {label}
           </option>

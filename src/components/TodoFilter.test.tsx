@@ -7,8 +7,10 @@ describe('TodoFilter', () => {
   const defaultProps = {
     currentFilter: 'all' as const,
     currentCategory: 'all' as const,
+    currentPriority: 'all' as const,
     onFilterChange: vi.fn(),
     onCategoryChange: vi.fn(),
+    onPriorityChange: vi.fn(),
   };
 
   it('renders all three status filter buttons', () => {
@@ -66,5 +68,29 @@ describe('TodoFilter', () => {
     render(<TodoFilter {...defaultProps} currentCategory="personal" />);
     const select = screen.getByLabelText('Filter by category') as HTMLSelectElement;
     expect(select.value).toBe('personal');
+  });
+
+  it('renders the priority dropdown with all options', () => {
+    render(<TodoFilter {...defaultProps} />);
+    const select = screen.getByLabelText('Filter by priority');
+    expect(select).toBeInTheDocument();
+
+    const options = select.querySelectorAll('option');
+    expect(options).toHaveLength(4);
+    expect(options[0]).toHaveTextContent('All Priorities');
+    expect(options[1]).toHaveTextContent('High');
+    expect(options[2]).toHaveTextContent('Medium');
+    expect(options[3]).toHaveTextContent('Low');
+  });
+
+  it('calls onPriorityChange when a priority is selected', async () => {
+    const onPriorityChange = vi.fn();
+    render(<TodoFilter {...defaultProps} onPriorityChange={onPriorityChange} />);
+
+    await userEvent.selectOptions(
+      screen.getByLabelText('Filter by priority'),
+      'high'
+    );
+    expect(onPriorityChange).toHaveBeenCalledWith('high');
   });
 });

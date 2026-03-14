@@ -15,7 +15,7 @@ describe('useTodos', () => {
 
   it('starts with provided initial todos', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1 },
+      { id: '1', title: 'Test', completed: false, category: 'work', priority: 'medium', createdAt: 1 },
     ];
     const { result } = renderHook(() => useTodos(initial));
     expect(result.current.todos).toHaveLength(1);
@@ -39,7 +39,7 @@ describe('useTodos', () => {
 
   it('toggles a todo', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1 },
+      { id: '1', title: 'Test', completed: false, category: 'work', priority: 'medium', createdAt: 1 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -58,8 +58,8 @@ describe('useTodos', () => {
 
   it('deletes a todo', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
-      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+      { id: '1', title: 'First', completed: false, category: 'work', priority: 'medium', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', priority: 'high', createdAt: 2 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -73,9 +73,9 @@ describe('useTodos', () => {
 
   it('clears completed todos', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'Done', completed: true, category: 'work', createdAt: 1 },
-      { id: '2', title: 'Not done', completed: false, category: 'personal', createdAt: 2 },
-      { id: '3', title: 'Also done', completed: true, category: 'health', createdAt: 3 },
+      { id: '1', title: 'Done', completed: true, category: 'work', priority: 'medium', createdAt: 1 },
+      { id: '2', title: 'Not done', completed: false, category: 'personal', priority: 'low', createdAt: 2 },
+      { id: '3', title: 'Also done', completed: true, category: 'health', priority: 'high', createdAt: 3 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -101,7 +101,7 @@ describe('useTodos', () => {
 
   it('loads todos from localStorage on mount', () => {
     const saved: Todo[] = [
-      { id: '1', title: 'Saved', completed: false, category: 'work', createdAt: 1 },
+      { id: '1', title: 'Saved', completed: false, category: 'work', priority: 'medium', createdAt: 1 },
     ];
     localStorage.setItem('todos', JSON.stringify(saved));
 
@@ -118,9 +118,9 @@ describe('useTodos', () => {
 
   it('reorders todos by moving dragged item to target position', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
-      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
-      { id: '3', title: 'Third', completed: false, category: 'health', createdAt: 3 },
+      { id: '1', title: 'First', completed: false, category: 'work', priority: 'medium', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', priority: 'medium', createdAt: 2 },
+      { id: '3', title: 'Third', completed: false, category: 'health', priority: 'medium', createdAt: 3 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -133,8 +133,8 @@ describe('useTodos', () => {
 
   it('does not reorder when dragged and target are the same', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
-      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+      { id: '1', title: 'First', completed: false, category: 'work', priority: 'medium', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', priority: 'medium', createdAt: 2 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -147,8 +147,8 @@ describe('useTodos', () => {
 
   it('does not reorder when dragged id is invalid', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
-      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+      { id: '1', title: 'First', completed: false, category: 'work', priority: 'medium', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', priority: 'medium', createdAt: 2 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 
@@ -161,9 +161,9 @@ describe('useTodos', () => {
 
   it('reorders by moving an item forward', () => {
     const initial: Todo[] = [
-      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
-      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
-      { id: '3', title: 'Third', completed: false, category: 'health', createdAt: 3 },
+      { id: '1', title: 'First', completed: false, category: 'work', priority: 'medium', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', priority: 'medium', createdAt: 2 },
+      { id: '3', title: 'Third', completed: false, category: 'health', priority: 'medium', createdAt: 3 },
     ];
     const { result } = renderHook(() => useTodos(initial));
 

@@ -9,6 +9,7 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Buy groceries',
   completed: false,
   category: 'shopping',
+  priority: 'medium',
   createdAt: Date.now(),
   ...overrides,
 });
@@ -85,6 +86,43 @@ describe('TodoItem', () => {
     );
     const badge = screen.getByText('work');
     expect(badge).toHaveClass('todo-item__category--work');
+  });
+
+  it('renders the priority badge', () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ priority: 'high' })} />);
+    const badge = screen.getByText('high');
+    expect(badge).toHaveClass('todo-item__priority');
+    expect(badge).toHaveClass('todo-item__priority--high');
+  });
+
+  it('renders due date when set', () => {
+    const dueDate = new Date('2025-12-25T00:00:00').getTime();
+    render(<TodoItem {...defaultProps} todo={makeTodo({ dueDate })} />);
+    expect(screen.getByText(/Dec/)).toBeInTheDocument();
+  });
+
+  it('does not render due date when not set', () => {
+    render(<TodoItem {...defaultProps} />);
+    const dueDateElements = document.querySelectorAll('.todo-item__due-date');
+    expect(dueDateElements).toHaveLength(0);
+  });
+
+  it('applies overdue class for past due dates on active todos', () => {
+    const pastDate = new Date('2020-01-01T00:00:00').getTime();
+    const { container } = render(
+      <TodoItem {...defaultProps} todo={makeTodo({ dueDate: pastDate })} />
+    );
+    const li = container.querySelector('.todo-item');
+    expect(li).toHaveClass('todo-item--overdue');
+  });
+
+  it('does not apply overdue class for completed todos with past due dates', () => {
+    const pastDate = new Date('2020-01-01T00:00:00').getTime();
+    const { container } = render(
+      <TodoItem {...defaultProps} todo={makeTodo({ dueDate: pastDate, completed: true })} />
+    );
+    const li = container.querySelector('.todo-item');
+    expect(li).not.toHaveClass('todo-item--overdue');
   });
 
   it('renders a drag handle', () => {

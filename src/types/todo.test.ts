@@ -9,6 +9,7 @@ describe('createTodo', () => {
     expect(todo.title).toBe('Buy groceries');
     expect(todo.category).toBe('shopping');
     expect(todo.completed).toBe(false);
+    expect(todo.priority).toBe('medium');
   });
 
   it('generates a unique id', () => {
@@ -38,7 +39,29 @@ describe('createTodo', () => {
     expect(todo).toHaveProperty('title');
     expect(todo).toHaveProperty('completed');
     expect(todo).toHaveProperty('category');
+    expect(todo).toHaveProperty('priority');
     expect(todo).toHaveProperty('createdAt');
+  });
+
+  it('uses default priority of medium', () => {
+    const todo = createTodo('Test', 'work');
+    expect(todo.priority).toBe('medium');
+  });
+
+  it('accepts a custom priority', () => {
+    const todo = createTodo('Urgent task', 'work', 'high');
+    expect(todo.priority).toBe('high');
+  });
+
+  it('accepts an optional due date', () => {
+    const dueDate = 1700100000000;
+    const todo = createTodo('Task with deadline', 'work', 'high', dueDate);
+    expect(todo.dueDate).toBe(dueDate);
+  });
+
+  it('omits dueDate when not provided', () => {
+    const todo = createTodo('No deadline', 'work');
+    expect(todo.dueDate).toBeUndefined();
   });
 });
 
