@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { type Todo, type TodoCategory, type TodoFilter as TodoFilterType } from '../types/todo';
 import { useTodos } from '../hooks/useTodos';
 import { TodoFilter } from './TodoFilter';
@@ -10,6 +10,7 @@ interface TodoListProps {
   toggleTodo?: (id: string) => void;
   deleteTodo?: (id: string) => void;
   clearCompleted?: () => void;
+  reorderTodos?: (draggedId: string, targetId: string) => void;
 }
 
 export function TodoList(props: TodoListProps) {
@@ -18,8 +19,11 @@ export function TodoList(props: TodoListProps) {
   const toggleTodo = props.toggleTodo ?? internal.toggleTodo;
   const deleteTodo = props.deleteTodo ?? internal.deleteTodo;
   const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
+  const reorderTodos = props.reorderTodos ?? internal.reorderTodos;
   const [filter, setFilter] = useState<TodoFilterType>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+  const draggedIdRef = useRef<string | null>(null);
 
   const filteredTodos = todos.filter((todo) => {
     if (filter === 'active' && todo.completed) return false;
@@ -30,6 +34,33 @@ export function TodoList(props: TodoListProps) {
 
   const activeCount = todos.filter((todo) => !todo.completed).length;
   const hasCompleted = todos.some((todo) => todo.completed);
+
+  const handleDragStart = (todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
+    draggedIdRef.current = todoId;
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (draggedIdRef.current && draggedIdRef.current !== todoId) {
+      setDragOverId(todoId);
+    }
+  };
+
+  const handleDrop = (todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
+    e.preventDefault();
+    if (draggedIdRef.current && draggedIdRef.current !== todoId) {
+      reorderTodos(draggedIdRef.current, todoId);
+    }
+    draggedIdRef.current = null;
+    setDragOverId(null);
+  };
+
+  const handleDragEnd = () => {
+    draggedIdRef.current = null;
+    setDragOverId(null);
+  };
 
   return (
     <div className="todo-list">
@@ -47,6 +78,12 @@ export function TodoList(props: TodoListProps) {
             todo={todo}
             onToggle={toggleTodo}
             onDelete={deleteTodo}
+            isDragging={draggedIdRef.current === todo.id}
+            isDragOver={dragOverId === todo.id}
+            onDragStart={handleDragStart(todo.id)}
+            onDragOver={handleDragOver(todo.id)}
+            onDrop={handleDrop(todo.id)}
+            onDragEnd={handleDragEnd}
           />
         ))}
       </ul>

@@ -115,4 +115,62 @@ describe('useTodos', () => {
     const { result } = renderHook(() => useTodos());
     expect(result.current.todos).toEqual([]);
   });
+
+  it('reorders todos by moving dragged item to target position', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+      { id: '3', title: 'Third', completed: false, category: 'health', createdAt: 3 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.reorderTodos('3', '1');
+    });
+
+    expect(result.current.todos.map((t) => t.id)).toEqual(['3', '1', '2']);
+  });
+
+  it('does not reorder when dragged and target are the same', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.reorderTodos('1', '1');
+    });
+
+    expect(result.current.todos.map((t) => t.id)).toEqual(['1', '2']);
+  });
+
+  it('does not reorder when dragged id is invalid', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.reorderTodos('nonexistent', '1');
+    });
+
+    expect(result.current.todos.map((t) => t.id)).toEqual(['1', '2']);
+  });
+
+  it('reorders by moving an item forward', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'First', completed: false, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Second', completed: false, category: 'personal', createdAt: 2 },
+      { id: '3', title: 'Third', completed: false, category: 'health', createdAt: 3 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.reorderTodos('1', '3');
+    });
+
+    expect(result.current.todos.map((t) => t.id)).toEqual(['2', '1', '3']);
+  });
 });

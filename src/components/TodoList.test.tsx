@@ -28,6 +28,7 @@ function createMockReturn(todos: Todo[] = defaultTodos, overrides: Record<string
     toggleTodo: vi.fn(),
     deleteTodo: vi.fn(),
     clearCompleted: vi.fn(),
+    reorderTodos: vi.fn(),
     ...overrides,
   };
 }
