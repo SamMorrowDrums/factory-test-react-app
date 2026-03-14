@@ -43,7 +43,7 @@ describe('App', () => {
 
   it('renders the app title', () => {
     render(<App />);
-    expect(screen.getByRole('heading', { name: 'Todo App' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'GLITCH_DO' })).toBeInTheDocument();
   });
 
   it('renders TodoInput and TodoList', () => {
