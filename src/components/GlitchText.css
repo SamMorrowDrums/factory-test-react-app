@@ -2,7 +2,7 @@
   position: relative;
   display: inline-block;
   font-weight: 700;
-  color: #e2e8f0;
+  color: var(--text-primary);
   letter-spacing: 0.05em;
   animation: glitch-shift 3s infinite;
 }
@@ -19,14 +19,14 @@
 }
 
 .glitch::before {
-  color: #0ff;
+  color: var(--accent);
   animation: glitch-clip-before 3s infinite linear alternate-reverse;
   clip-path: inset(0 0 65% 0);
   transform: translate(-2px, -1px);
 }
 
 .glitch::after {
-  color: #f0f;
+  color: var(--accent-secondary);
   animation: glitch-clip-after 3s infinite linear alternate-reverse;
   clip-path: inset(60% 0 0 0);
   transform: translate(2px, 1px);
@@ -120,4 +120,14 @@
   100% {
     clip-path: inset(65% 0 0 0);
   }
+}
+
+/* ── Clean theme: disable glitch ── */
+[data-theme="clean"] .glitch::before,
+[data-theme="clean"] .glitch::after {
+  display: none;
+}
+
+[data-theme="clean"] .glitch {
+  animation: none;
 }

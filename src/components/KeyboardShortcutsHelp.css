@@ -1,7 +1,7 @@
 .shortcuts-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.85);
+  background: var(--bg-overlay);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -16,10 +16,10 @@
 }
 
 .shortcuts-modal {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-main);
+  border: 1px solid var(--border-main);
   border-radius: 0.5rem;
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+  box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.1);
   max-width: 480px;
   width: 90vw;
   max-height: 80vh;
@@ -43,22 +43,22 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid var(--border-main);
 }
 
 .shortcuts-modal__title {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #00ffff;
+  color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-family);
 }
 
 .shortcuts-modal__close {
   background: none;
-  border: 1px solid #475569;
-  color: #e2e8f0;
+  border: 1px solid var(--border-input);
+  color: var(--text-primary);
   font-size: 1.25rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
@@ -68,7 +68,7 @@
 }
 
 .shortcuts-modal__close:hover {
-  background: #334155;
+  background: var(--border-main);
 }
 
 .shortcuts-modal__body {
@@ -86,11 +86,11 @@
 .shortcuts-modal__section-title {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--text-counter);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 0.5rem;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-family);
 }
 
 .shortcuts-modal__list {
@@ -113,22 +113,22 @@
 .shortcuts-modal__key kbd {
   display: inline-block;
   padding: 0.125rem 0.5rem;
-  background: #0f172a;
-  border: 1px solid #475569;
+  background: var(--bg-body);
+  border: 1px solid var(--border-input);
   border-radius: 0.1875rem;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-family);
   font-size: 0.8125rem;
-  color: #00ffff;
-  box-shadow: 0 1px 0 #475569;
+  color: var(--accent);
+  box-shadow: 0 1px 0 var(--border-input);
 }
 
 .shortcuts-modal__separator {
-  color: #555568;
+  color: var(--text-muted);
   font-size: 0.75rem;
 }
 
 .shortcuts-modal__desc {
-  color: #94a3b8;
+  color: var(--text-counter);
   font-size: 0.875rem;
   text-align: right;
 }

@@ -3,6 +3,7 @@ import { useTodos } from './hooks/useTodos';
 import { useToast } from './hooks/useToast';
 import { useInstallPrompt } from './hooks/useInstallPrompt';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { useTheme } from './hooks/useTheme';
 import { TodoInput } from './components/TodoInput';
 import { TodoList } from './components/TodoList';
 import { GlitchText } from './components/GlitchText';
@@ -10,6 +11,7 @@ import { ToastContainer } from './components/Toast';
 import { DataTransfer } from './components/DataTransfer';
 import { InstallBanner } from './components/InstallBanner';
 import { KeyboardShortcutsHelp } from './components/KeyboardShortcutsHelp';
+import { ThemeToggle } from './components/ThemeToggle';
 import type { TodoFilter, TodoCategory } from './types/todo';
 import './App.css';
 
@@ -31,6 +33,7 @@ function App() {
   const { toasts, showToast, dismissToast } = useToast();
   const { showPrompt, install, dismiss } = useInstallPrompt();
   const { showHelp, toggleHelp, closeHelp, shortcuts } = useKeyboardShortcuts();
+  const { theme, toggleTheme } = useTheme();
 
   const [filter, setFilter] = useState<TodoFilter>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
@@ -243,6 +246,7 @@ function App() {
               onError={showToast}
               onSuccess={showToast}
             />
+            <ThemeToggle theme={theme} onToggle={toggleTheme} />
             <button
               className="app__shortcuts-btn"
               onClick={toggleHelp}
