@@ -1,0 +1,96 @@
+.tag-input {
+  width: 100%;
+}
+
+.tag-input__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  align-items: center;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid var(--border-input);
+  border-radius: 0.25rem;
+  background: var(--bg-input);
+  min-height: 2.25rem;
+  cursor: text;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.tag-input__tags:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.25);
+}
+
+.tag-input__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.1875rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: lowercase;
+  letter-spacing: 0.03em;
+  background: rgba(var(--accent-secondary-rgb), 0.12);
+  color: var(--accent-secondary);
+  border: 1px solid rgba(var(--accent-secondary-rgb), 0.35);
+  text-shadow: 0 0 6px rgba(var(--accent-secondary-rgb), 0.5);
+  box-shadow: 0 0 4px rgba(var(--accent-secondary-rgb), 0.1);
+  transition: box-shadow 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+
+.tag-input__tag:hover {
+  box-shadow: 0 0 8px rgba(var(--accent-secondary-rgb), 0.3);
+  background: rgba(var(--accent-secondary-rgb), 0.18);
+}
+
+.tag-input__tag-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--accent-secondary);
+  font-size: 0.5rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s, transform 0.15s;
+  line-height: 1;
+}
+
+.tag-input__tag-remove:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.tag-input__field {
+  flex: 1;
+  min-width: 4rem;
+  padding: 0.125rem 0;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.8125rem;
+  font-family: var(--font-family);
+  outline: none;
+}
+
+.tag-input__field::placeholder {
+  color: var(--text-muted);
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .tag-input__tag {
+    font-size: 0.625rem;
+    padding: 0.125rem 0.375rem;
+  }
+
+  .tag-input__field {
+    font-size: 0.75rem;
+  }
+}

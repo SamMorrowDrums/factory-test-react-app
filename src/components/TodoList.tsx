@@ -13,15 +13,18 @@ interface TodoListProps {
   toggleTodo?: (id: string) => void;
   deleteTodo?: (id: string) => void;
   updateNotes?: (id: string, notes: string) => void;
+  updateTags?: (id: string, tags: string[]) => void;
   clearCompleted?: () => void;
   reorderTodos?: (draggedId: string, targetId: string) => void;
   focusedTodoId?: string | null;
   filter?: TodoFilterType;
   categoryFilter?: TodoCategory | 'all';
   priorityFilter?: TodoPriority | 'all';
+  tagFilter?: string | 'all';
   onFilterChange?: (filter: TodoFilterType) => void;
   onCategoryChange?: (category: TodoCategory | 'all') => void;
   onPriorityChange?: (priority: TodoPriority | 'all') => void;
+  onTagFilterChange?: (tag: string | 'all') => void;
 }
 
 export function TodoList(props: TodoListProps) {
@@ -30,19 +33,23 @@ export function TodoList(props: TodoListProps) {
   const toggleTodo = props.toggleTodo ?? internal.toggleTodo;
   const deleteTodo = props.deleteTodo ?? internal.deleteTodo;
   const updateNotes = props.updateNotes ?? internal.updateNotes;
+  const updateTags = props.updateTags ?? internal.updateTags;
   const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
   const reorderTodos = props.reorderTodos ?? internal.reorderTodos;
 
   const [internalFilter, setInternalFilter] = useState<TodoFilterType>('all');
   const [internalCategoryFilter, setInternalCategoryFilter] = useState<TodoCategory | 'all'>('all');
   const [internalPriorityFilter, setInternalPriorityFilter] = useState<TodoPriority | 'all'>('all');
+  const [internalTagFilter, setInternalTagFilter] = useState<string | 'all'>('all');
 
   const filter = props.filter ?? internalFilter;
   const categoryFilter = props.categoryFilter ?? internalCategoryFilter;
   const priorityFilter = props.priorityFilter ?? internalPriorityFilter;
+  const tagFilter = props.tagFilter ?? internalTagFilter;
   const onFilterChange = props.onFilterChange ?? setInternalFilter;
   const onCategoryChange = props.onCategoryChange ?? setInternalCategoryFilter;
   const onPriorityChange = props.onPriorityChange ?? setInternalPriorityFilter;
+  const onTagFilterChange = props.onTagFilterChange ?? setInternalTagFilter;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [dragOverId, setDragOverId] = useState<string | null>(null);
@@ -55,14 +62,21 @@ export function TodoList(props: TodoListProps) {
       if (filter === 'completed' && !todo.completed) return false;
       if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
       if (priorityFilter !== 'all' && todo.priority !== priorityFilter) return false;
-      if (query && !todo.title.toLowerCase().includes(query) && !(todo.notes?.toLowerCase().includes(query))) return false;
+      if (tagFilter !== 'all' && !(todo.tags ?? []).includes(tagFilter)) return false;
+      if (query && !todo.title.toLowerCase().includes(query) && !(todo.notes?.toLowerCase().includes(query)) && !(todo.tags ?? []).some((tag) => tag.toLowerCase().includes(query))) return false;
       return true;
     });
-  }, [todos, filter, categoryFilter, priorityFilter, searchQuery]);
+  }, [todos, filter, categoryFilter, priorityFilter, tagFilter, searchQuery]);
 
   const activeCount = useMemo(() => todos.filter((todo) => !todo.completed).length, [todos]);
   const completedCount = useMemo(() => todos.filter((todo) => todo.completed).length, [todos]);
   const hasCompleted = completedCount > 0;
+
+  const allTags = useMemo(() => {
+    const tagSet = new Set<string>();
+    todos.forEach((todo) => (todo.tags ?? []).forEach((tag) => tagSet.add(tag)));
+    return Array.from(tagSet).sort();
+  }, [todos]);
 
   const handleDragStart = useCallback((todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
     draggedIdRef.current = todoId;
@@ -97,9 +111,12 @@ export function TodoList(props: TodoListProps) {
         currentFilter={filter}
         currentCategory={categoryFilter}
         currentPriority={priorityFilter}
+        currentTag={tagFilter}
+        availableTags={allTags}
         onFilterChange={onFilterChange}
         onCategoryChange={onCategoryChange}
         onPriorityChange={onPriorityChange}
+        onTagChange={onTagFilterChange}
       />
 
       <SearchBar query={searchQuery} onChange={setSearchQuery} />
@@ -112,6 +129,7 @@ export function TodoList(props: TodoListProps) {
             onToggle={toggleTodo}
             onDelete={deleteTodo}
             onUpdateNotes={updateNotes}
+            onUpdateTags={updateTags}
             searchQuery={searchQuery}
             isFocused={props.focusedTodoId === todo.id}
             isDragging={draggedIdRef.current === todo.id}

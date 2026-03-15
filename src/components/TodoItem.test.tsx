@@ -209,4 +209,21 @@ describe('TodoItem', () => {
     render(<TodoItem {...defaultProps} />);
     expect(screen.queryByText('📅')).not.toBeInTheDocument();
   });
+
+  it('renders tags when todo has tags', () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ tags: ['urgent', 'bug'] })} />);
+    expect(screen.getByText('urgent')).toBeInTheDocument();
+    expect(screen.getByText('bug')).toBeInTheDocument();
+  });
+
+  it('does not render tags section when no tags', () => {
+    const { container } = render(<TodoItem {...defaultProps} />);
+    expect(container.querySelector('.todo-item__tags')).toBeNull();
+  });
+
+  it('shows tag editor in expanded section', async () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ notes: 'Note' })} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Expand notes' }));
+    expect(screen.getByLabelText('Edit tags')).toBeInTheDocument();
+  });
 });

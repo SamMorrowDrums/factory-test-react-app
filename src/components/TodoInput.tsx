@@ -2,6 +2,7 @@ import { memo, useState, useCallback, forwardRef } from 'react';
 import type { TodoCategory, TodoPriority } from '../types/todo';
 import { CyberSelect, type CyberSelectOption } from './CyberSelect';
 import { CyberButton } from './CyberButton';
+import { TagInput } from './TagInput';
 import './TodoInput.css';
 
 const CATEGORY_OPTIONS: CyberSelectOption<TodoCategory>[] = [
@@ -18,7 +19,7 @@ const PRIORITY_OPTIONS: CyberSelectOption<TodoPriority>[] = [
 ];
 
 interface TodoInputProps {
-  onAdd: (title: string, category: TodoCategory, options?: { notes?: string; priority?: TodoPriority; dueDate?: number }) => void;
+  onAdd: (title: string, category: TodoCategory, options?: { notes?: string; priority?: TodoPriority; dueDate?: number; tags?: string[] }) => void;
 }
 
 export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(function TodoInput({ onAdd }, ref) {
@@ -28,6 +29,7 @@ export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(funct
   const [dueDate, setDueDate] = useState('');
   const [notes, setNotes] = useState('');
   const [showNotes, setShowNotes] = useState(false);
+  const [tags, setTags] = useState<string[]>([]);
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -39,12 +41,14 @@ export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(funct
       notes: trimmedNotes || undefined,
       priority,
       dueDate: dueDateTimestamp,
+      tags: tags.length > 0 ? tags : undefined,
     });
     setTitle('');
     setNotes('');
     setDueDate('');
+    setTags([]);
     setShowNotes(false);
-  }, [title, category, priority, dueDate, notes, onAdd]);
+  }, [title, category, priority, dueDate, notes, tags, onAdd]);
 
   const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value), []);
   const handleCategoryChange = useCallback((value: TodoCategory) => setCategory(value), []);
@@ -105,6 +109,7 @@ export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(funct
           onChange={handleDueDateChange}
           aria-label="Due date"
         />
+        <TagInput tags={tags} onChange={setTags} aria-label="Todo tags" />
       </div>
 
       {showNotes && (

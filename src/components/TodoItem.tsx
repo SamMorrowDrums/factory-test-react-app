@@ -2,6 +2,7 @@ import { memo, useState, useCallback, useRef, useEffect } from 'react';
 import type { Todo } from '../types/todo';
 import { CyberToggle } from './CyberToggle';
 import { CyberButton } from './CyberButton';
+import { TagInput } from './TagInput';
 import './TodoItem.css';
 
 interface TodoItemProps {
@@ -9,6 +10,7 @@ interface TodoItemProps {
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
   onUpdateNotes?: (id: string, notes: string) => void;
+  onUpdateTags?: (id: string, tags: string[]) => void;
   searchQuery?: string;
   isFocused?: boolean;
   isDragging?: boolean;
@@ -44,6 +46,7 @@ export const TodoItem = memo(function TodoItem({
   onToggle,
   onDelete,
   onUpdateNotes,
+  onUpdateTags,
   searchQuery = '',
   isFocused = false,
   isDragging = false,
@@ -60,6 +63,11 @@ export const TodoItem = memo(function TodoItem({
   const itemRef = useRef<HTMLLIElement>(null);
 
   const hasNotes = Boolean(todo.notes);
+  const hasTags = Boolean(todo.tags && todo.tags.length > 0);
+
+  const handleTagsChange = useCallback((tags: string[]) => {
+    onUpdateTags?.(todo.id, tags);
+  }, [onUpdateTags, todo.id]);
 
   useEffect(() => {
     setNotesValue(todo.notes ?? '');
@@ -161,6 +169,14 @@ export const TodoItem = memo(function TodoItem({
           {todo.priority === 'high' ? '⚡' : todo.priority === 'medium' ? '●' : '○'} {todo.priority}
         </span>
 
+        {hasTags && (
+          <span className="todo-item__tags">
+            {todo.tags!.map((tag) => (
+              <span key={tag} className="todo-item__tag">{tag}</span>
+            ))}
+          </span>
+        )}
+
         {todo.dueDate && (
           <span className={`todo-item__due-date${todo.dueDate < Date.now() && !todo.completed ? ' todo-item__due-date--overdue' : ''}`}>
             📅 {new Date(todo.dueDate).toLocaleDateString()}
@@ -231,6 +247,14 @@ export const TodoItem = memo(function TodoItem({
               {todo.notes || 'Click to add notes…'}
             </div>
           )}
+          <div className="todo-item__tags-editor">
+            <TagInput
+              tags={todo.tags ?? []}
+              onChange={handleTagsChange}
+              placeholder="Add tag…"
+              aria-label="Edit tags"
+            />
+          </div>
         </div>
       )}
     </li>
