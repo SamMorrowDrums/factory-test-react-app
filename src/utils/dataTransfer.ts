@@ -22,7 +22,8 @@ function isValidTodo(obj: unknown): obj is Todo {
     isValidPriority(t.priority) &&
     typeof t.createdAt === 'number' &&
     (t.dueDate === undefined || typeof t.dueDate === 'number') &&
-    (t.notes === undefined || typeof t.notes === 'string')
+    (t.notes === undefined || typeof t.notes === 'string') &&
+    (t.tags === undefined || (Array.isArray(t.tags) && t.tags.every((tag: unknown) => typeof tag === 'string')))
   );
 }
 
@@ -57,7 +58,7 @@ export function importFromJSON(text: string): Todo[] {
 
 // ── CSV ─────────────────────────────────────────────────────────────────
 
-const CSV_HEADER = 'id,title,completed,category,priority,createdAt,dueDate,notes';
+const CSV_HEADER = 'id,title,completed,category,priority,createdAt,dueDate,notes,tags';
 
 function escapeCSVField(value: string): string {
   if (value.includes(',') || value.includes('"') || value.includes('\n')) {
@@ -69,7 +70,7 @@ function escapeCSVField(value: string): string {
 export function exportToCSV(todos: Todo[]): string {
   const rows = todos.map(
     (t) =>
-      `${escapeCSVField(t.id)},${escapeCSVField(t.title)},${t.completed},${t.category},${t.priority},${t.createdAt},${t.dueDate ?? ''},${escapeCSVField(t.notes ?? '')}`,
+      `${escapeCSVField(t.id)},${escapeCSVField(t.title)},${t.completed},${t.category},${t.priority},${t.createdAt},${t.dueDate ?? ''},${escapeCSVField(t.notes ?? '')},${escapeCSVField((t.tags ?? []).join(';'))}`,
   );
   return [CSV_HEADER, ...rows].join('\n');
 }
@@ -129,6 +130,7 @@ export function importFromCSV(text: string): Todo[] {
     const [id, title, completedStr, category, priority, createdAtStr, ...rest] = fields;
     const dueDateStr = rest.length > 0 ? rest[0] : undefined;
     const notes = rest.length > 1 ? rest[1] : undefined;
+    const tagsStr = rest.length > 2 ? rest[2] : undefined;
     const completed = completedStr === 'true';
     if (completedStr !== 'true' && completedStr !== 'false') {
       throw new Error(`Invalid completed value at line ${i + 1}: "${completedStr}"`);
@@ -154,6 +156,9 @@ export function importFromCSV(text: string): Todo[] {
     }
     if (notes) {
       todo.notes = notes;
+    }
+    if (tagsStr && tagsStr.trim() !== '') {
+      todo.tags = tagsStr.split(';').map((t) => t.trim()).filter(Boolean);
     }
     todos.push(todo);
   }

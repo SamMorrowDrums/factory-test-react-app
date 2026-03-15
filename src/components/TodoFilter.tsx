@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { type TodoCategory, type TodoPriority, type TodoFilter as TodoFilterType } from '../types/todo';
 import { CyberSelect, type CyberSelectOption } from './CyberSelect';
 import { CyberButton } from './CyberButton';
@@ -29,18 +29,24 @@ interface TodoFilterProps {
   currentFilter: TodoFilterType;
   currentCategory: TodoCategory | 'all';
   currentPriority?: TodoPriority | 'all';
+  currentTag?: string | 'all';
+  availableTags?: string[];
   onFilterChange: (filter: TodoFilterType) => void;
   onCategoryChange: (category: TodoCategory | 'all') => void;
   onPriorityChange?: (priority: TodoPriority | 'all') => void;
+  onTagChange?: (tag: string | 'all') => void;
 }
 
 export const TodoFilter = memo(function TodoFilter({
   currentFilter,
   currentCategory,
   currentPriority = 'all',
+  currentTag = 'all',
+  availableTags = [],
   onFilterChange,
   onCategoryChange,
   onPriorityChange,
+  onTagChange,
 }: TodoFilterProps) {
   const handleCategoryChange = useCallback(
     (value: TodoCategory | 'all') => onCategoryChange(value),
@@ -50,6 +56,19 @@ export const TodoFilter = memo(function TodoFilter({
   const handlePriorityChange = useCallback(
     (value: TodoPriority | 'all') => onPriorityChange?.(value),
     [onPriorityChange],
+  );
+
+  const handleTagChange = useCallback(
+    (value: string) => onTagChange?.(value),
+    [onTagChange],
+  );
+
+  const tagOptions: CyberSelectOption<string>[] = useMemo(
+    () => [
+      { value: 'all', label: 'All Tags' },
+      ...availableTags.map((tag) => ({ value: tag, label: `# ${tag}` })),
+    ],
+    [availableTags],
   );
 
   return (
@@ -82,6 +101,15 @@ export const TodoFilter = memo(function TodoFilter({
           onChange={handlePriorityChange}
           aria-label="Filter by priority"
         />
+
+        {availableTags.length > 0 && (
+          <CyberSelect
+            options={tagOptions}
+            value={currentTag}
+            onChange={handleTagChange}
+            aria-label="Filter by tag"
+          />
+        )}
       </div>
     </div>
   );

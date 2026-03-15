@@ -51,12 +51,12 @@ describe('exportToCSV', () => {
   it('produces a header row and data rows', () => {
     const csv = exportToCSV(sampleTodos);
     const lines = csv.split('\n');
-    expect(lines[0]).toBe('id,title,completed,category,priority,createdAt,dueDate,notes');
+    expect(lines[0]).toBe('id,title,completed,category,priority,createdAt,dueDate,notes,tags');
   });
 
   it('handles empty array', () => {
     const csv = exportToCSV([]);
-    expect(csv).toBe('id,title,completed,category,priority,createdAt,dueDate,notes');
+    expect(csv).toBe('id,title,completed,category,priority,createdAt,dueDate,notes,tags');
   });
 
   it('escapes titles with commas', () => {
@@ -163,5 +163,37 @@ describe('importFromCSV', () => {
     ]);
     const result = importFromJSON(json);
     expect(result[0].notes).toBe('My note');
+  });
+
+  it('round-trips todos with tags through CSV', () => {
+    const todosWithTags: Todo[] = [
+      { id: 'a1', title: 'Task', completed: false, category: 'work', priority: 'medium', createdAt: 1, tags: ['urgent', 'bug'] },
+    ];
+    const csv = exportToCSV(todosWithTags);
+    const result = importFromCSV(csv);
+    expect(result).toEqual(todosWithTags);
+  });
+
+  it('round-trips todos with tags through JSON', () => {
+    const todosWithTags: Todo[] = [
+      { id: 'a1', title: 'Task', completed: false, category: 'work', priority: 'medium', createdAt: 1, tags: ['feature', 'v2'] },
+    ];
+    const json = exportToJSON(todosWithTags);
+    const result = importFromJSON(json);
+    expect(result).toEqual(todosWithTags);
+  });
+
+  it('imports JSON with tags field', () => {
+    const json = JSON.stringify([
+      { id: '1', title: 'Test', completed: false, category: 'work', priority: 'medium', createdAt: 1, tags: ['urgent'] },
+    ]);
+    const result = importFromJSON(json);
+    expect(result[0].tags).toEqual(['urgent']);
+  });
+
+  it('imports CSV without tags column', () => {
+    const csv = 'a1,Buy milk,false,shopping,medium,1700000000000';
+    const result = importFromCSV(csv);
+    expect(result[0].tags).toBeUndefined();
   });
 });

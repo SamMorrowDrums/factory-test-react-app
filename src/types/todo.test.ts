@@ -85,6 +85,21 @@ describe('createTodo', () => {
     expect(todo.priority).toBe('low');
     expect(todo.dueDate).toBe(due);
   });
+
+  it('sets tags when provided', () => {
+    const todo = createTodo('Task', 'work', { tags: ['urgent', 'bug'] });
+    expect(todo.tags).toEqual(['urgent', 'bug']);
+  });
+
+  it('leaves tags undefined when not provided', () => {
+    const todo = createTodo('Task', 'work');
+    expect(todo.tags).toBeUndefined();
+  });
+
+  it('leaves tags undefined when empty array is provided', () => {
+    const todo = createTodo('Task', 'work', { tags: [] });
+    expect(todo.tags).toBeUndefined();
+  });
 });
 
 describe('TodoCategory', () => {
