@@ -8,6 +8,8 @@ describe('TodoInput', () => {
     render(<TodoInput onAdd={vi.fn()} />);
     expect(screen.getByLabelText('Todo title')).toBeInTheDocument();
     expect(screen.getByLabelText('Todo category')).toBeInTheDocument();
+    expect(screen.getByLabelText('Todo priority')).toBeInTheDocument();
+    expect(screen.getByLabelText('Due date')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Add' })).toBeInTheDocument();
   });
 
@@ -18,7 +20,7 @@ describe('TodoInput', () => {
     await userEvent.type(screen.getByLabelText('Todo title'), 'Buy milk');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', undefined);
+    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', { notes: undefined, priority: 'medium', dueDate: undefined });
   });
 
   it('clears the input after submission', async () => {
@@ -57,7 +59,7 @@ describe('TodoInput', () => {
     await userEvent.selectOptions(screen.getByLabelText('Todo category'), 'health');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Go running', 'health', undefined);
+    expect(onAdd).toHaveBeenCalledWith('Go running', 'health', { notes: undefined, priority: 'medium', dueDate: undefined });
   });
 
   it('renders all four category options', () => {
@@ -101,7 +103,7 @@ describe('TodoInput', () => {
     await userEvent.type(screen.getByLabelText('Todo notes'), 'Some details');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Task with notes', 'work', 'Some details');
+    expect(onAdd).toHaveBeenCalledWith('Task with notes', 'work', { notes: 'Some details', priority: 'medium', dueDate: undefined });
   });
 
   it('clears notes and hides textarea after submission', async () => {
@@ -122,6 +124,6 @@ describe('TodoInput', () => {
     await userEvent.type(screen.getByLabelText('Todo title'), '  Buy milk  ');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', undefined);
+    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', { notes: undefined, priority: 'medium', dueDate: undefined });
   });
 });

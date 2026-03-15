@@ -9,6 +9,7 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Test todo',
   completed: false,
   category: 'work',
+  priority: 'medium',
   createdAt: Date.now(),
   ...overrides,
 });
@@ -191,5 +192,21 @@ describe('TodoList', () => {
     const list = screen.getByRole('list');
     const items = within(list).queryAllByRole('listitem');
     expect(items).toHaveLength(0);
+  });
+
+  it('filters todos by priority', async () => {
+    mockReturnValue = createMockReturn([
+      makeTodo({ id: '1', title: 'High priority', completed: false, priority: 'high' }),
+      makeTodo({ id: '2', title: 'Low priority', completed: false, priority: 'low' }),
+      makeTodo({ id: '3', title: 'Medium priority', completed: false, priority: 'medium' }),
+    ]);
+
+    render(<TodoList />);
+    const prioritySelect = screen.getByLabelText('Filter by priority');
+    await userEvent.selectOptions(prioritySelect, 'high');
+
+    expect(screen.getByText('High priority')).toBeInTheDocument();
+    expect(screen.queryByText('Low priority')).not.toBeInTheDocument();
+    expect(screen.queryByText('Medium priority')).not.toBeInTheDocument();
   });
 });

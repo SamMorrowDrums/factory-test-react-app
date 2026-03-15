@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Todo, TodoCategory, createTodo } from '../types/todo';
+import { Todo, TodoCategory, TodoPriority, createTodo } from '../types/todo';
 import { useLocalStorage } from './useLocalStorage';
 import { useUndoRedo } from './useUndoRedo';
 
@@ -25,8 +25,8 @@ export function useTodos(initialTodos: Todo[] = []) {
     [setTodos, pushUndo],
   );
 
-  const addTodo = useCallback((title: string, category: TodoCategory, notes?: string) => {
-    mutate((prev) => [...prev, createTodo(title, category, notes)]);
+  const addTodo = useCallback((title: string, category: TodoCategory, options?: { notes?: string; priority?: TodoPriority; dueDate?: number }) => {
+    mutate((prev) => [...prev, createTodo(title, category, options)]);
   }, [mutate]);
 
   const toggleTodo = useCallback((id: string) => {

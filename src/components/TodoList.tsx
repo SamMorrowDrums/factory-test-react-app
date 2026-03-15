@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
-import { type Todo, type TodoCategory, type TodoFilter as TodoFilterType } from '../types/todo';
+import { type Todo, type TodoCategory, type TodoPriority, type TodoFilter as TodoFilterType } from '../types/todo';
 import { useTodos } from '../hooks/useTodos';
 import { TodoFilter } from './TodoFilter';
 import { SearchBar } from './SearchBar';
@@ -16,8 +16,10 @@ interface TodoListProps {
   focusedTodoId?: string | null;
   filter?: TodoFilterType;
   categoryFilter?: TodoCategory | 'all';
+  priorityFilter?: TodoPriority | 'all';
   onFilterChange?: (filter: TodoFilterType) => void;
   onCategoryChange?: (category: TodoCategory | 'all') => void;
+  onPriorityChange?: (priority: TodoPriority | 'all') => void;
 }
 
 export function TodoList(props: TodoListProps) {
@@ -31,11 +33,14 @@ export function TodoList(props: TodoListProps) {
 
   const [internalFilter, setInternalFilter] = useState<TodoFilterType>('all');
   const [internalCategoryFilter, setInternalCategoryFilter] = useState<TodoCategory | 'all'>('all');
+  const [internalPriorityFilter, setInternalPriorityFilter] = useState<TodoPriority | 'all'>('all');
 
   const filter = props.filter ?? internalFilter;
   const categoryFilter = props.categoryFilter ?? internalCategoryFilter;
+  const priorityFilter = props.priorityFilter ?? internalPriorityFilter;
   const onFilterChange = props.onFilterChange ?? setInternalFilter;
   const onCategoryChange = props.onCategoryChange ?? setInternalCategoryFilter;
+  const onPriorityChange = props.onPriorityChange ?? setInternalPriorityFilter;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [dragOverId, setDragOverId] = useState<string | null>(null);
@@ -47,10 +52,11 @@ export function TodoList(props: TodoListProps) {
       if (filter === 'active' && todo.completed) return false;
       if (filter === 'completed' && !todo.completed) return false;
       if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
+      if (priorityFilter !== 'all' && todo.priority !== priorityFilter) return false;
       if (query && !todo.title.toLowerCase().includes(query) && !(todo.notes?.toLowerCase().includes(query))) return false;
       return true;
     });
-  }, [todos, filter, categoryFilter, searchQuery]);
+  }, [todos, filter, categoryFilter, priorityFilter, searchQuery]);
 
   const activeCount = useMemo(() => todos.filter((todo) => !todo.completed).length, [todos]);
   const hasCompleted = useMemo(() => todos.some((todo) => todo.completed), [todos]);
@@ -87,8 +93,10 @@ export function TodoList(props: TodoListProps) {
       <TodoFilter
         currentFilter={filter}
         currentCategory={categoryFilter}
+        currentPriority={priorityFilter}
         onFilterChange={onFilterChange}
         onCategoryChange={onCategoryChange}
+        onPriorityChange={onPriorityChange}
       />
 
       <SearchBar query={searchQuery} onChange={setSearchQuery} />

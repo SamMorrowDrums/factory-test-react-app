@@ -3,8 +3,8 @@ import { exportToJSON, importFromJSON, exportToCSV, importFromCSV } from './data
 import type { Todo } from '../types/todo';
 
 const sampleTodos: Todo[] = [
-  { id: 'a1', title: 'Buy milk', completed: false, category: 'shopping', createdAt: 1700000000000 },
-  { id: 'b2', title: 'Finish report', completed: true, category: 'work', createdAt: 1700000001000 },
+  { id: 'a1', title: 'Buy milk', completed: false, category: 'shopping', priority: 'medium', createdAt: 1700000000000 },
+  { id: 'b2', title: 'Finish report', completed: true, category: 'work', priority: 'medium', createdAt: 1700000001000 },
 ];
 
 // ── JSON ────────────────────────────────────────────────────────────────
@@ -40,7 +40,7 @@ describe('importFromJSON', () => {
   });
 
   it('throws on invalid category', () => {
-    const bad = JSON.stringify([{ id: '1', title: 'x', completed: false, category: 'invalid', createdAt: 1 }]);
+    const bad = JSON.stringify([{ id: '1', title: 'x', completed: false, category: 'invalid', priority: 'medium', createdAt: 1 }]);
     expect(() => importFromJSON(bad)).toThrow('Invalid todo at index 0');
   });
 });
@@ -51,17 +51,17 @@ describe('exportToCSV', () => {
   it('produces a header row and data rows', () => {
     const csv = exportToCSV(sampleTodos);
     const lines = csv.split('\n');
-    expect(lines[0]).toBe('id,title,completed,category,createdAt,notes');
+    expect(lines[0]).toBe('id,title,completed,category,priority,createdAt,dueDate,notes');
   });
 
   it('handles empty array', () => {
     const csv = exportToCSV([]);
-    expect(csv).toBe('id,title,completed,category,createdAt,notes');
+    expect(csv).toBe('id,title,completed,category,priority,createdAt,dueDate,notes');
   });
 
   it('escapes titles with commas', () => {
     const todos: Todo[] = [
-      { id: '1', title: 'Buy eggs, milk', completed: false, category: 'shopping', createdAt: 1 },
+      { id: '1', title: 'Buy eggs, milk', completed: false, category: 'shopping', priority: 'medium', createdAt: 1 },
     ];
     const csv = exportToCSV(todos);
     expect(csv).toContain('"Buy eggs, milk"');
@@ -69,7 +69,7 @@ describe('exportToCSV', () => {
 
   it('escapes titles with double quotes', () => {
     const todos: Todo[] = [
-      { id: '1', title: 'Read "War and Peace"', completed: false, category: 'personal', createdAt: 1 },
+      { id: '1', title: 'Read "War and Peace"', completed: false, category: 'personal', priority: 'medium', createdAt: 1 },
     ];
     const csv = exportToCSV(todos);
     expect(csv).toContain('"Read ""War and Peace"""');
@@ -84,16 +84,16 @@ describe('importFromCSV', () => {
   });
 
   it('handles CSV without header row', () => {
-    const csv = 'a1,Buy milk,false,shopping,1700000000000';
+    const csv = 'a1,Buy milk,false,shopping,medium,1700000000000';
     const result = importFromCSV(csv);
     expect(result).toEqual([
-      { id: 'a1', title: 'Buy milk', completed: false, category: 'shopping', createdAt: 1700000000000 },
+      { id: 'a1', title: 'Buy milk', completed: false, category: 'shopping', priority: 'medium', createdAt: 1700000000000 },
     ]);
   });
 
   it('handles titles with commas', () => {
     const todos: Todo[] = [
-      { id: '1', title: 'Buy eggs, milk', completed: false, category: 'shopping', createdAt: 1 },
+      { id: '1', title: 'Buy eggs, milk', completed: false, category: 'shopping', priority: 'medium', createdAt: 1 },
     ];
     const csv = exportToCSV(todos);
     expect(importFromCSV(csv)).toEqual(todos);
@@ -104,38 +104,38 @@ describe('importFromCSV', () => {
   });
 
   it('throws on row with too few fields', () => {
-    expect(() => importFromCSV('id,title,completed,category,createdAt\na1,Buy milk')).toThrow(
-      'expected at least 5 fields',
+    expect(() => importFromCSV('id,title,completed,category,priority,createdAt,dueDate,notes\na1,Buy milk')).toThrow(
+      'expected at least 6 fields',
     );
   });
 
   it('throws on invalid completed value', () => {
     expect(() =>
-      importFromCSV('id,title,completed,category,createdAt\na1,Buy milk,yes,shopping,1'),
+      importFromCSV('id,title,completed,category,priority,createdAt,dueDate,notes\na1,Buy milk,yes,shopping,medium,1'),
     ).toThrow('Invalid completed value');
   });
 
   it('throws on invalid category', () => {
     expect(() =>
-      importFromCSV('id,title,completed,category,createdAt\na1,Buy milk,false,badcat,1'),
+      importFromCSV('id,title,completed,category,priority,createdAt,dueDate,notes\na1,Buy milk,false,badcat,medium,1'),
     ).toThrow('Invalid category');
   });
 
   it('throws on invalid createdAt', () => {
     expect(() =>
-      importFromCSV('id,title,completed,category,createdAt\na1,Buy milk,false,shopping,abc'),
+      importFromCSV('id,title,completed,category,priority,createdAt,dueDate,notes\na1,Buy milk,false,shopping,medium,abc'),
     ).toThrow('Invalid createdAt');
   });
 
   it('skips blank lines', () => {
-    const csv = 'id,title,completed,category,createdAt\na1,Buy milk,false,shopping,1\n\nb2,Work,true,work,2';
+    const csv = 'id,title,completed,category,priority,createdAt,dueDate,notes\na1,Buy milk,false,shopping,medium,1,,\n\nb2,Work,true,work,medium,2,,';
     const result = importFromCSV(csv);
     expect(result).toHaveLength(2);
   });
 
   it('round-trips todos with notes through CSV', () => {
     const todosWithNotes: Todo[] = [
-      { id: 'a1', title: 'Task', completed: false, category: 'work', createdAt: 1, notes: 'Some notes' },
+      { id: 'a1', title: 'Task', completed: false, category: 'work', priority: 'medium', createdAt: 1, notes: 'Some notes' },
     ];
     const csv = exportToCSV(todosWithNotes);
     const result = importFromCSV(csv);
@@ -143,14 +143,14 @@ describe('importFromCSV', () => {
   });
 
   it('imports CSV without notes column', () => {
-    const csv = 'a1,Buy milk,false,shopping,1700000000000';
+    const csv = 'a1,Buy milk,false,shopping,medium,1700000000000';
     const result = importFromCSV(csv);
     expect(result[0].notes).toBeUndefined();
   });
 
   it('round-trips todos with notes through JSON', () => {
     const todosWithNotes: Todo[] = [
-      { id: 'a1', title: 'Task', completed: false, category: 'work', createdAt: 1, notes: 'Details here' },
+      { id: 'a1', title: 'Task', completed: false, category: 'work', priority: 'medium', createdAt: 1, notes: 'Details here' },
     ];
     const json = exportToJSON(todosWithNotes);
     const result = importFromJSON(json);
@@ -159,7 +159,7 @@ describe('importFromCSV', () => {
 
   it('imports JSON with notes field', () => {
     const json = JSON.stringify([
-      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1, notes: 'My note' },
+      { id: '1', title: 'Test', completed: false, category: 'work', priority: 'medium', createdAt: 1, notes: 'My note' },
     ]);
     const result = importFromJSON(json);
     expect(result[0].notes).toBe('My note');
