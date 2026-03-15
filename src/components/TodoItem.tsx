@@ -75,9 +75,12 @@ export const TodoItem = memo(function TodoItem({
     }
   }, [isFocused]);
 
+  const [exiting, setExiting] = useState(false);
+
   const classNames = [
     'todo-item',
     todo.completed ? 'todo-item--completed' : '',
+    exiting ? 'todo-item--exiting' : '',
     isDragging ? 'todo-item--dragging' : '',
     isDragOver ? 'todo-item--drag-over' : '',
     isFocused ? 'todo-item--focused' : '',
@@ -86,7 +89,11 @@ export const TodoItem = memo(function TodoItem({
     .join(' ');
 
   const handleToggle = useCallback(() => onToggle(todo.id), [onToggle, todo.id]);
-  const handleDelete = useCallback(() => onDelete(todo.id), [onDelete, todo.id]);
+  const handleDelete = useCallback(() => {
+    if (exiting) return;
+    setExiting(true);
+    setTimeout(() => onDelete(todo.id), 200);
+  }, [exiting, onDelete, todo.id]);
 
   const toggleExpanded = useCallback(() => {
     setExpanded((prev) => !prev);

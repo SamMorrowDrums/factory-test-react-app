@@ -12,11 +12,16 @@
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.8rem;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.15s;
 }
 
 .data-transfer__btn:hover {
   background: #475569;
+  transform: scale(1.05);
+}
+
+.data-transfer__btn:active {
+  transform: scale(0.95);
 }
 
 .data-transfer__file-input {

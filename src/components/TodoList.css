@@ -37,12 +37,17 @@
   cursor: pointer;
   font-size: 0.75rem;
   font-family: 'Courier New', Courier, monospace;
-  transition: background 0.15s, box-shadow 0.15s;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 
 .todo-list__clear-completed:hover {
   background: #475569;
   box-shadow: 0 0 6px rgba(0, 255, 255, 0.15);
+  transform: scale(1.03);
+}
+
+.todo-list__clear-completed:active {
+  transform: scale(0.97);
 }
 
 /* ── Mobile ── */
