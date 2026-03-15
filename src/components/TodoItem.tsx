@@ -9,6 +9,8 @@ interface TodoItemProps {
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
   onUpdateNotes?: (id: string, notes: string) => void;
+  onAddSubtask?: (parentId: string, title: string) => void;
+  subtasks?: Todo[];
   searchQuery?: string;
   isFocused?: boolean;
   isDragging?: boolean;
@@ -44,6 +46,8 @@ export const TodoItem = memo(function TodoItem({
   onToggle,
   onDelete,
   onUpdateNotes,
+  onAddSubtask,
+  subtasks = [],
   searchQuery = '',
   isFocused = false,
   isDragging = false,
@@ -56,10 +60,17 @@ export const TodoItem = memo(function TodoItem({
   const [expanded, setExpanded] = useState(false);
   const [editingNotes, setEditingNotes] = useState(false);
   const [notesValue, setNotesValue] = useState(todo.notes ?? '');
+  const [subtasksExpanded, setSubtasksExpanded] = useState(true);
+  const [addingSubtask, setAddingSubtask] = useState(false);
+  const [subtaskTitle, setSubtaskTitle] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const subtaskInputRef = useRef<HTMLInputElement>(null);
   const itemRef = useRef<HTMLLIElement>(null);
 
   const hasNotes = Boolean(todo.notes);
+  const hasSubtasks = subtasks.length > 0;
+  const completedSubtasks = subtasks.filter((s) => s.completed).length;
+  const isSubtask = Boolean(todo.parentId);
 
   useEffect(() => {
     setNotesValue(todo.notes ?? '');
@@ -86,6 +97,7 @@ export const TodoItem = memo(function TodoItem({
     isDragging ? 'todo-item--dragging' : '',
     isDragOver ? 'todo-item--drag-over' : '',
     isFocused ? 'todo-item--focused' : '',
+    isSubtask ? 'todo-item--subtask' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -127,20 +139,52 @@ export const TodoItem = memo(function TodoItem({
     }
   }, [cancelEditing]);
 
+  const toggleSubtasks = useCallback(() => {
+    setSubtasksExpanded((prev) => !prev);
+  }, []);
+
+  const startAddingSubtask = useCallback(() => {
+    setAddingSubtask(true);
+    setSubtasksExpanded(true);
+  }, []);
+
+  const handleSubtaskSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = subtaskTitle.trim();
+    if (!trimmed || !onAddSubtask) return;
+    onAddSubtask(todo.id, trimmed);
+    setSubtaskTitle('');
+  }, [subtaskTitle, onAddSubtask, todo.id]);
+
+  const handleSubtaskKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      setAddingSubtask(false);
+      setSubtaskTitle('');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (addingSubtask && subtaskInputRef.current) {
+      subtaskInputRef.current.focus();
+    }
+  }, [addingSubtask]);
+
   return (
     <li
       ref={itemRef}
       className={classNames}
-      draggable
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
-      onDragEnd={onDragEnd}
+      draggable={!isSubtask}
+      onDragStart={isSubtask ? undefined : onDragStart}
+      onDragOver={isSubtask ? undefined : onDragOver}
+      onDrop={isSubtask ? undefined : onDrop}
+      onDragEnd={isSubtask ? undefined : onDragEnd}
     >
       <div className="todo-item__main">
-        <span className="todo-item__drag-handle" aria-label="Drag to reorder">
-          ⠿
-        </span>
+        {!isSubtask && (
+          <span className="todo-item__drag-handle" aria-label="Drag to reorder">
+            ⠿
+          </span>
+        )}
 
         <span className="todo-item__label">
           <CyberToggle
@@ -152,6 +196,12 @@ export const TodoItem = memo(function TodoItem({
             <HighlightedText text={todo.title} query={searchQuery} />
           </span>
         </span>
+
+        {hasSubtasks && (
+          <span className="todo-item__subtask-count" aria-label="Subtask progress">
+            {completedSubtasks}/{subtasks.length}
+          </span>
+        )}
 
         <span className={`todo-item__category todo-item__category--${todo.category}`}>
           {todo.category}
@@ -175,6 +225,18 @@ export const TodoItem = memo(function TodoItem({
         >
           {hasNotes ? (expanded ? '▾' : '▸') : '+'}
         </button>
+
+        {!isSubtask && onAddSubtask && (
+          <CyberButton
+            variant="secondary"
+            size="sm"
+            onClick={hasSubtasks ? toggleSubtasks : startAddingSubtask}
+            aria-label={hasSubtasks ? (subtasksExpanded ? 'Collapse subtasks' : 'Expand subtasks') : 'Add subtask'}
+            aria-expanded={hasSubtasks ? subtasksExpanded : undefined}
+          >
+            {hasSubtasks ? `◆ ${subtasksExpanded ? '▾' : '▸'}` : '◆+'}
+          </CyberButton>
+        )}
 
         <CyberButton
           variant="danger"
@@ -230,6 +292,57 @@ export const TodoItem = memo(function TodoItem({
             >
               {todo.notes || 'Click to add notes…'}
             </div>
+          )}
+        </div>
+      )}
+
+      {!isSubtask && subtasksExpanded && (hasSubtasks || addingSubtask) && (
+        <div className="todo-item__subtasks">
+          <ul className="todo-item__subtask-list">
+            {subtasks.map((subtask) => (
+              <TodoItem
+                key={subtask.id}
+                todo={subtask}
+                onToggle={onToggle}
+                onDelete={onDelete}
+                onUpdateNotes={onUpdateNotes}
+                searchQuery={searchQuery}
+              />
+            ))}
+          </ul>
+
+          {addingSubtask ? (
+            <form className="todo-item__subtask-form" onSubmit={handleSubtaskSubmit}>
+              <input
+                ref={subtaskInputRef}
+                className="todo-item__subtask-input"
+                type="text"
+                value={subtaskTitle}
+                onChange={(e) => setSubtaskTitle(e.target.value)}
+                onKeyDown={handleSubtaskKeyDown}
+                placeholder="Add a subtask…"
+                aria-label="Subtask title"
+              />
+              <CyberButton variant="primary" size="sm" type="submit">
+                Add
+              </CyberButton>
+              <CyberButton
+                variant="secondary"
+                size="sm"
+                type="button"
+                onClick={() => { setAddingSubtask(false); setSubtaskTitle(''); }}
+              >
+                Cancel
+              </CyberButton>
+            </form>
+          ) : (
+            <button
+              className="todo-item__add-subtask"
+              onClick={startAddingSubtask}
+              aria-label="Add subtask"
+            >
+              + Add subtask
+            </button>
           )}
         </div>
       )}

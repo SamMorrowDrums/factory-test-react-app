@@ -13,12 +13,13 @@ export interface Todo {
   createdAt: number;
   dueDate?: number;
   notes?: string;
+  parentId?: string;
 }
 
 export function createTodo(
   title: string,
   category: TodoCategory,
-  options?: { notes?: string; priority?: TodoPriority; dueDate?: number },
+  options?: { notes?: string; priority?: TodoPriority; dueDate?: number; parentId?: string },
 ): Todo {
   const todo: Todo = {
     id: crypto.randomUUID(),
@@ -33,6 +34,9 @@ export function createTodo(
   }
   if (options?.dueDate) {
     todo.dueDate = options.dueDate;
+  }
+  if (options?.parentId) {
+    todo.parentId = options.parentId;
   }
   return todo;
 }
