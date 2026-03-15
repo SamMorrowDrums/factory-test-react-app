@@ -24,7 +24,7 @@ export const Toast = memo(function Toast({ toast, onDismiss, duration = 3000 }: 
   const handleDismiss = useCallback(() => onDismiss(toast.id), [onDismiss, toast.id]);
 
   return (
-    <div className="toast" role="status" aria-live="polite">
+    <div className="toast" role="status" aria-live="polite" aria-atomic="true">
       <span className="toast__message">{toast.message}</span>
       <button
         className="toast__dismiss"

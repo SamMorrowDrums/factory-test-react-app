@@ -52,7 +52,7 @@ export const TodoFilter = memo(function TodoFilter({
 
   return (
     <div className="todo-filter">
-      <div className="todo-filter__status-buttons">
+      <div className="todo-filter__status-buttons" role="group" aria-label="Filter by status">
         {STATUS_OPTIONS.map(({ value, label }) => (
           <button
             key={value}

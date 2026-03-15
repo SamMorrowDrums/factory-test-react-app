@@ -20,7 +20,7 @@
   padding: 0.75rem 0;
   font-size: 0.8rem;
   font-family: 'Courier New', Courier, monospace;
-  color: #555568;
+  color: #8888a0;
 }
 
 .todo-list__count {
@@ -48,6 +48,13 @@
 
 .todo-list__clear-completed:active {
   transform: scale(0.97);
+}
+
+/* ── Focus indicators ── */
+.todo-list__clear-completed:focus-visible {
+  outline: 2px solid #0ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
 }
 
 /* ── Mobile ── */

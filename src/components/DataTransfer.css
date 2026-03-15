@@ -28,6 +28,13 @@
   display: none;
 }
 
+/* ── Focus indicators ── */
+.data-transfer__btn:focus-visible {
+  outline: 2px solid #0ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+}
+
 /* ── Mobile ── */
 @media (max-width: 480px) {
   .data-transfer {

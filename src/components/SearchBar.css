@@ -15,7 +15,7 @@
 }
 
 .search-bar__icon {
-  color: #555568;
+  color: #8888a0;
   font-size: 1rem;
   line-height: 1;
   flex-shrink: 0;
@@ -32,7 +32,7 @@
 }
 
 .search-bar__input::placeholder {
-  color: #555568;
+  color: #71718a;
 }
 
 /* Hide default search cancel button */
@@ -43,7 +43,7 @@
 .search-bar__clear {
   background: none;
   border: none;
-  color: #555568;
+  color: #8888a0;
   cursor: pointer;
   font-size: 0.875rem;
   padding: 0.125rem 0.25rem;
@@ -58,6 +58,13 @@
 
 .search-bar__clear:active {
   transform: scale(0.9);
+}
+
+/* ── Focus indicators ── */
+.search-bar__clear:focus-visible {
+  outline: 2px solid #0ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
 }
 
 /* ── Mobile ── */

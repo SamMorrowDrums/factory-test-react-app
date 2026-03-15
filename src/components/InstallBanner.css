@@ -100,6 +100,21 @@
   color: #e2e8f0;
 }
 
+/* ── Focus indicators ── */
+.install-banner__install:focus-visible,
+.install-banner__dismiss:focus-visible {
+  outline: 2px solid #0ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .install-banner {
+    animation: none;
+  }
+}
+
 /* ── Mobile ── */
 @media (max-width: 480px) {
   .install-banner {

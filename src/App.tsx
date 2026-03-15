@@ -214,11 +214,12 @@ function App() {
 
   return (
     <div className="app">
+      <a href="#main-content" className="app__skip-link">Skip to main content</a>
       <header className="app__header">
         <GlitchText as="h1" className="app__title">GLITCH_DO</GlitchText>
       </header>
 
-      <main className="app__main">
+      <main id="main-content" className="app__main">
         <div className="app__toolbar">
           <div className="app__toolbar-left">
             <button

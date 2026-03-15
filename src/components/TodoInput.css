@@ -24,7 +24,7 @@
 }
 
 .todo-input__text::placeholder {
-  color: #555568;
+  color: #71718a;
 }
 
 .todo-input__text:focus {
@@ -54,7 +54,7 @@
 .todo-input__notes-toggle {
   padding: 0.5rem 0.75rem;
   background: transparent;
-  color: #555568;
+  color: #8888a0;
   border: 1px solid #475569;
   border-radius: 0.25rem;
   font-size: 0.8125rem;
@@ -89,7 +89,7 @@
 }
 
 .todo-input__notes::placeholder {
-  color: #555568;
+  color: #71718a;
 }
 
 .todo-input__notes:focus {
@@ -162,6 +162,14 @@
   outline: none;
   border-color: #0ff;
   box-shadow: 0 0 8px rgba(0, 255, 255, 0.25);
+}
+
+/* ── Focus indicators ── */
+.todo-input__add:focus-visible,
+.todo-input__notes-toggle:focus-visible {
+  outline: 2px solid #0ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
 }
 
 /* ── Mobile ── */

@@ -84,7 +84,7 @@
 }
 
 .shortcuts-modal__section-title {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: #94a3b8;
   text-transform: uppercase;
@@ -123,7 +123,7 @@
 }
 
 .shortcuts-modal__separator {
-  color: #555568;
+  color: #8888a0;
   font-size: 0.75rem;
 }
 
@@ -131,4 +131,19 @@
   color: #94a3b8;
   font-size: 0.875rem;
   text-align: right;
+}
+
+/* ── Focus indicators ── */
+.shortcuts-modal__close:focus-visible {
+  outline: 2px solid #0ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .shortcuts-overlay,
+  .shortcuts-modal {
+    animation: none;
+  }
 }

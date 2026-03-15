@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import type { KeyboardShortcut } from '../hooks/useKeyboardShortcuts';
 import './KeyboardShortcutsHelp.css';
 
@@ -18,6 +18,47 @@ export const KeyboardShortcutsHelp = memo(function KeyboardShortcutsHelp({
   shortcuts,
   onClose,
 }: KeyboardShortcutsHelpProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement;
+
+    // Focus the modal on open
+    const closeBtn = modalRef.current?.querySelector<HTMLElement>('.shortcuts-modal__close');
+    closeBtn?.focus();
+
+    return () => {
+      previousFocusRef.current?.focus();
+    };
+  }, []);
+
+  // Focus trap
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key !== 'Tab') return;
+
+      const focusable = modalRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusable || focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const grouped = shortcuts.reduce<Record<string, KeyboardShortcut[]>>(
     (acc, shortcut) => {
       (acc[shortcut.category] ??= []).push(shortcut);
@@ -31,9 +72,11 @@ export const KeyboardShortcutsHelp = memo(function KeyboardShortcutsHelp({
       className="shortcuts-overlay"
       onClick={onClose}
       role="dialog"
+      aria-modal="true"
       aria-label="Keyboard shortcuts"
     >
       <div
+        ref={modalRef}
         className="shortcuts-modal"
         onClick={(e) => e.stopPropagation()}
       >

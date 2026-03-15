@@ -122,7 +122,7 @@ export function TodoList(props: TodoListProps) {
       </ul>
 
       <div className="todo-list__footer">
-        <span className="todo-list__count">
+        <span className="todo-list__count" role="status" aria-live="polite">
           {activeCount} {activeCount === 1 ? 'item' : 'items'} left
         </span>
 
