@@ -11,6 +11,7 @@ interface TodoListProps {
   toggleTodo?: (id: string) => void;
   deleteTodo?: (id: string) => void;
   updateNotes?: (id: string, notes: string) => void;
+  addSubTodo?: (parentId: string, title: string, category: TodoCategory) => void;
   clearCompleted?: () => void;
   reorderTodos?: (draggedId: string, targetId: string) => void;
   focusedTodoId?: string | null;
@@ -26,6 +27,7 @@ export function TodoList(props: TodoListProps) {
   const toggleTodo = props.toggleTodo ?? internal.toggleTodo;
   const deleteTodo = props.deleteTodo ?? internal.deleteTodo;
   const updateNotes = props.updateNotes ?? internal.updateNotes;
+  const addSubTodo = props.addSubTodo ?? internal.addSubTodo;
   const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
   const reorderTodos = props.reorderTodos ?? internal.reorderTodos;
 
@@ -43,16 +45,50 @@ export function TodoList(props: TodoListProps) {
 
   const filteredTodos = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
-    return todos.filter((todo) => {
+
+    // First pass: determine which todos match filters
+    const matchesFilter = (todo: Todo) => {
       if (filter === 'active' && todo.completed) return false;
       if (filter === 'completed' && !todo.completed) return false;
       if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
       if (query && !todo.title.toLowerCase().includes(query) && !(todo.notes?.toLowerCase().includes(query))) return false;
       return true;
+    };
+
+    // Only filter top-level todos; children are handled by TodoItem
+    const topLevel = todos.filter((t) => !t.parentId);
+    const childrenMap = new Map<string, Todo[]>();
+    for (const t of todos) {
+      if (t.parentId) {
+        const siblings = childrenMap.get(t.parentId) ?? [];
+        siblings.push(t);
+        childrenMap.set(t.parentId, siblings);
+      }
+    }
+
+    // A parent is visible if it matches OR any of its children match
+    return topLevel.filter((parent) => {
+      const children = childrenMap.get(parent.id) ?? [];
+      const parentMatches = matchesFilter(parent);
+      const anyChildMatches = children.some(matchesFilter);
+      return parentMatches || anyChildMatches;
     });
   }, [todos, filter, categoryFilter, searchQuery]);
 
-  const activeCount = useMemo(() => todos.filter((todo) => !todo.completed).length, [todos]);
+  // Build a map of children for each parent (for rendering)
+  const childrenMap = useMemo(() => {
+    const map = new Map<string, Todo[]>();
+    for (const t of todos) {
+      if (t.parentId) {
+        const siblings = map.get(t.parentId) ?? [];
+        siblings.push(t);
+        map.set(t.parentId, siblings);
+      }
+    }
+    return map;
+  }, [todos]);
+
+  const activeCount = useMemo(() => todos.filter((todo) => !todo.completed && !todo.parentId).length, [todos]);
   const hasCompleted = useMemo(() => todos.some((todo) => todo.completed), [todos]);
 
   const handleDragStart = useCallback((todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
@@ -101,6 +137,8 @@ export function TodoList(props: TodoListProps) {
             onToggle={toggleTodo}
             onDelete={deleteTodo}
             onUpdateNotes={updateNotes}
+            onAddSubTodo={addSubTodo}
+            subTasks={childrenMap.get(todo.id) ?? []}
             searchQuery={searchQuery}
             isFocused={props.focusedTodoId === todo.id}
             isDragging={draggedIdRef.current === todo.id}

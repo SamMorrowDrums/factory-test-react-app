@@ -17,6 +17,7 @@ function App() {
   const {
     todos,
     addTodo,
+    addSubTodo,
     toggleTodo,
     deleteTodo,
     updateNotes,
@@ -259,6 +260,7 @@ function App() {
           toggleTodo={toggleTodo}
           deleteTodo={deleteTodo}
           updateNotes={updateNotes}
+          addSubTodo={addSubTodo}
           clearCompleted={clearCompleted}
           reorderTodos={reorderTodos}
           focusedTodoId={focusedTodoId}

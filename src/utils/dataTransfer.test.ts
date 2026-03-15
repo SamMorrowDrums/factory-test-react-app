@@ -51,12 +51,12 @@ describe('exportToCSV', () => {
   it('produces a header row and data rows', () => {
     const csv = exportToCSV(sampleTodos);
     const lines = csv.split('\n');
-    expect(lines[0]).toBe('id,title,completed,category,createdAt,notes');
+    expect(lines[0]).toBe('id,title,completed,category,createdAt,notes,parentId');
   });
 
   it('handles empty array', () => {
     const csv = exportToCSV([]);
-    expect(csv).toBe('id,title,completed,category,createdAt,notes');
+    expect(csv).toBe('id,title,completed,category,createdAt,notes,parentId');
   });
 
   it('escapes titles with commas', () => {
@@ -163,5 +163,32 @@ describe('importFromCSV', () => {
     ]);
     const result = importFromJSON(json);
     expect(result[0].notes).toBe('My note');
+  });
+
+  it('round-trips todos with parentId through JSON', () => {
+    const todosWithParent: Todo[] = [
+      { id: 'p1', title: 'Parent', completed: false, category: 'work', createdAt: 1 },
+      { id: 'c1', title: 'Child', completed: false, category: 'work', createdAt: 2, parentId: 'p1' },
+    ];
+    const json = exportToJSON(todosWithParent);
+    const result = importFromJSON(json);
+    expect(result).toEqual(todosWithParent);
+  });
+
+  it('round-trips todos with parentId through CSV', () => {
+    const todosWithParent: Todo[] = [
+      { id: 'p1', title: 'Parent', completed: false, category: 'work', createdAt: 1 },
+      { id: 'c1', title: 'Child', completed: false, category: 'work', createdAt: 2, parentId: 'p1' },
+    ];
+    const csv = exportToCSV(todosWithParent);
+    const result = importFromCSV(csv);
+    expect(result[0].parentId).toBeUndefined();
+    expect(result[1].parentId).toBe('p1');
+  });
+
+  it('imports CSV without parentId column', () => {
+    const csv = 'a1,Buy milk,false,shopping,1700000000000';
+    const result = importFromCSV(csv);
+    expect(result[0].parentId).toBeUndefined();
   });
 });

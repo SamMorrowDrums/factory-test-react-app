@@ -176,4 +176,60 @@ describe('TodoItem', () => {
     expect(onUpdateNotes).not.toHaveBeenCalled();
     expect(screen.getByText('Original')).toBeInTheDocument();
   });
+
+  it('renders an add sub-task button when onAddSubTodo is provided', () => {
+    render(<TodoItem {...defaultProps} onAddSubTodo={vi.fn()} />);
+    expect(screen.getByRole('button', { name: 'Add sub-task' })).toBeInTheDocument();
+  });
+
+  it('does not render add sub-task button for nested items', () => {
+    render(<TodoItem {...defaultProps} onAddSubTodo={vi.fn()} depth={1} />);
+    expect(screen.queryByRole('button', { name: 'Add sub-task' })).not.toBeInTheDocument();
+  });
+
+  it('shows sub-task input form when add sub-task button is clicked', async () => {
+    render(<TodoItem {...defaultProps} onAddSubTodo={vi.fn()} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Add sub-task' }));
+    expect(screen.getByLabelText('Sub-task title')).toBeInTheDocument();
+  });
+
+  it('calls onAddSubTodo with parent id and title when sub-task form is submitted', async () => {
+    const onAddSubTodo = vi.fn();
+    render(<TodoItem {...defaultProps} onAddSubTodo={onAddSubTodo} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Add sub-task' }));
+    await userEvent.type(screen.getByLabelText('Sub-task title'), 'My subtask');
+    await userEvent.click(screen.getByRole('button', { name: 'Add' }));
+    expect(onAddSubTodo).toHaveBeenCalledWith('test-1', 'My subtask', 'shopping');
+  });
+
+  it('renders sub-tasks when provided', () => {
+    const subTasks = [
+      makeTodo({ id: 'sub-1', title: 'Sub task 1', parentId: 'test-1' }),
+      makeTodo({ id: 'sub-2', title: 'Sub task 2', parentId: 'test-1' }),
+    ];
+    render(<TodoItem {...defaultProps} subTasks={subTasks} />);
+    expect(screen.getByText('Sub task 1')).toBeInTheDocument();
+    expect(screen.getByText('Sub task 2')).toBeInTheDocument();
+  });
+
+  it('shows sub-task progress count', () => {
+    const subTasks = [
+      makeTodo({ id: 'sub-1', title: 'Sub 1', completed: true, parentId: 'test-1' }),
+      makeTodo({ id: 'sub-2', title: 'Sub 2', completed: false, parentId: 'test-1' }),
+      makeTodo({ id: 'sub-3', title: 'Sub 3', completed: true, parentId: 'test-1' }),
+    ];
+    render(<TodoItem {...defaultProps} subTasks={subTasks} />);
+    expect(screen.getByText('2/3')).toBeInTheDocument();
+  });
+
+  it('does not render drag handle for nested items', () => {
+    render(<TodoItem {...defaultProps} depth={1} />);
+    expect(screen.queryByLabelText('Drag to reorder')).not.toBeInTheDocument();
+  });
+
+  it('is not draggable when nested', () => {
+    render(<TodoItem {...defaultProps} depth={1} />);
+    const item = screen.getByRole('listitem');
+    expect(item).not.toHaveAttribute('draggable', 'true');
+  });
 });

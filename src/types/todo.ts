@@ -9,9 +9,10 @@ export interface Todo {
   category: TodoCategory;
   createdAt: number;
   notes?: string;
+  parentId?: string;
 }
 
-export function createTodo(title: string, category: TodoCategory, notes?: string): Todo {
+export function createTodo(title: string, category: TodoCategory, notes?: string, parentId?: string): Todo {
   const todo: Todo = {
     id: crypto.randomUUID(),
     title,
@@ -21,6 +22,9 @@ export function createTodo(title: string, category: TodoCategory, notes?: string
   };
   if (notes) {
     todo.notes = notes;
+  }
+  if (parentId) {
+    todo.parentId = parentId;
   }
   return todo;
 }

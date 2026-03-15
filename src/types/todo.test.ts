@@ -55,6 +55,22 @@ describe('createTodo', () => {
     const todo = createTodo('Task', 'work', '');
     expect(todo.notes).toBeUndefined();
   });
+
+  it('creates a todo with parentId when provided', () => {
+    const todo = createTodo('Sub-task', 'work', undefined, 'parent-123');
+    expect(todo.parentId).toBe('parent-123');
+  });
+
+  it('creates a todo without parentId when not provided', () => {
+    const todo = createTodo('Task', 'work');
+    expect(todo.parentId).toBeUndefined();
+  });
+
+  it('creates a todo with both notes and parentId', () => {
+    const todo = createTodo('Sub-task', 'work', 'Some notes', 'parent-123');
+    expect(todo.notes).toBe('Some notes');
+    expect(todo.parentId).toBe('parent-123');
+  });
 });
 
 describe('TodoCategory', () => {

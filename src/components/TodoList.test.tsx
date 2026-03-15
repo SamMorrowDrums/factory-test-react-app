@@ -25,6 +25,7 @@ function createMockReturn(todos: Todo[] = defaultTodos, overrides: Record<string
   return {
     todos,
     addTodo: vi.fn(),
+    addSubTodo: vi.fn(),
     toggleTodo: vi.fn(),
     deleteTodo: vi.fn(),
     clearCompleted: vi.fn(),
@@ -191,5 +192,46 @@ describe('TodoList', () => {
     const list = screen.getByRole('list');
     const items = within(list).queryAllByRole('listitem');
     expect(items).toHaveLength(0);
+  });
+
+  it('renders sub-tasks nested under their parent', () => {
+    const todosWithChildren: Todo[] = [
+      makeTodo({ id: '1', title: 'Parent task', completed: false, category: 'work' }),
+      makeTodo({ id: '2', title: 'Sub-task A', completed: false, category: 'work', parentId: '1' }),
+      makeTodo({ id: '3', title: 'Sub-task B', completed: false, category: 'work', parentId: '1' }),
+    ];
+    mockReturnValue = createMockReturn(todosWithChildren);
+
+    render(<TodoList />);
+    expect(screen.getByText('Parent task')).toBeInTheDocument();
+    expect(screen.getByText('Sub-task A')).toBeInTheDocument();
+    expect(screen.getByText('Sub-task B')).toBeInTheDocument();
+  });
+
+  it('only counts top-level active todos in footer', () => {
+    const todosWithChildren: Todo[] = [
+      makeTodo({ id: '1', title: 'Parent', completed: false, category: 'work' }),
+      makeTodo({ id: '2', title: 'Sub-task', completed: false, category: 'work', parentId: '1' }),
+    ];
+    mockReturnValue = createMockReturn(todosWithChildren);
+
+    render(<TodoList />);
+    expect(screen.getByText('1 item left')).toBeInTheDocument();
+  });
+
+  it('does not show sub-tasks as top-level items', () => {
+    const todosWithChildren: Todo[] = [
+      makeTodo({ id: '1', title: 'Parent task', completed: false, category: 'work' }),
+      makeTodo({ id: '2', title: 'Sub-task only', completed: false, category: 'work', parentId: '1' }),
+    ];
+    mockReturnValue = createMockReturn(todosWithChildren);
+
+    const { container } = render(<TodoList />);
+    expect(screen.getByText('Parent task')).toBeInTheDocument();
+    expect(screen.getByText('Sub-task only')).toBeInTheDocument();
+    // The top-level list should only have 1 direct child item (the parent)
+    const topLevelList = container.querySelector('.todo-list__items');
+    const directChildren = topLevelList?.querySelectorAll(':scope > li');
+    expect(directChildren?.length).toBe(1);
   });
 });

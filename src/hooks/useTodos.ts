@@ -29,16 +29,39 @@ export function useTodos(initialTodos: Todo[] = []) {
     mutate((prev) => [...prev, createTodo(title, category, notes)]);
   }, [mutate]);
 
+  const addSubTodo = useCallback((parentId: string, title: string, category: TodoCategory, notes?: string) => {
+    mutate((prev) => [...prev, createTodo(title, category, notes, parentId)]);
+  }, [mutate]);
+
   const toggleTodo = useCallback((id: string) => {
-    mutate((prev) =>
-      prev.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
-      ),
-    );
+    mutate((prev) => {
+      const target = prev.find((t) => t.id === id);
+      if (!target) return prev;
+      const newCompleted = !target.completed;
+      // When completing a parent, also complete all children
+      if (newCompleted) {
+        const childIds = new Set(
+          prev.filter((t) => t.parentId === id).map((t) => t.id),
+        );
+        return prev.map((todo) =>
+          todo.id === id || childIds.has(todo.id)
+            ? { ...todo, completed: true }
+            : todo,
+        );
+      }
+      return prev.map((todo) =>
+        todo.id === id ? { ...todo, completed: false } : todo,
+      );
+    });
   }, [mutate]);
 
   const deleteTodo = useCallback((id: string) => {
-    mutate((prev) => prev.filter((todo) => todo.id !== id));
+    mutate((prev) => {
+      const childIds = new Set(
+        prev.filter((t) => t.parentId === id).map((t) => t.id),
+      );
+      return prev.filter((todo) => todo.id !== id && !childIds.has(todo.id));
+    });
   }, [mutate]);
 
   const updateNotes = useCallback((id: string, notes: string) => {
@@ -50,7 +73,13 @@ export function useTodos(initialTodos: Todo[] = []) {
   }, [mutate]);
 
   const clearCompleted = useCallback(() => {
-    mutate((prev) => prev.filter((todo) => !todo.completed));
+    mutate((prev) => {
+      const completedIds = new Set(
+        prev.filter((t) => t.completed).map((t) => t.id),
+      );
+      // Also remove children whose parent is being cleared
+      return prev.filter((todo) => !todo.completed && (!todo.parentId || !completedIds.has(todo.parentId)));
+    });
   }, [mutate]);
 
   const importTodos = useCallback((imported: Todo[]) => {
@@ -97,6 +126,7 @@ export function useTodos(initialTodos: Todo[] = []) {
   return {
     todos,
     addTodo,
+    addSubTodo,
     toggleTodo,
     deleteTodo,
     updateNotes,

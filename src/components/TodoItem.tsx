@@ -1,5 +1,5 @@
 import { memo, useState, useCallback, useRef, useEffect } from 'react';
-import type { Todo } from '../types/todo';
+import type { Todo, TodoCategory } from '../types/todo';
 import './TodoItem.css';
 
 interface TodoItemProps {
@@ -7,6 +7,9 @@ interface TodoItemProps {
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
   onUpdateNotes?: (id: string, notes: string) => void;
+  onAddSubTodo?: (parentId: string, title: string, category: TodoCategory) => void;
+  subTasks?: Todo[];
+  depth?: number;
   searchQuery?: string;
   isFocused?: boolean;
   isDragging?: boolean;
@@ -42,6 +45,9 @@ export const TodoItem = memo(function TodoItem({
   onToggle,
   onDelete,
   onUpdateNotes,
+  onAddSubTodo,
+  subTasks = [],
+  depth = 0,
   searchQuery = '',
   isFocused = false,
   isDragging = false,
@@ -54,10 +60,15 @@ export const TodoItem = memo(function TodoItem({
   const [expanded, setExpanded] = useState(false);
   const [editingNotes, setEditingNotes] = useState(false);
   const [notesValue, setNotesValue] = useState(todo.notes ?? '');
+  const [showSubTaskInput, setShowSubTaskInput] = useState(false);
+  const [subTaskTitle, setSubTaskTitle] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const subTaskInputRef = useRef<HTMLInputElement>(null);
   const itemRef = useRef<HTMLLIElement>(null);
 
   const hasNotes = Boolean(todo.notes);
+  const hasSubTasks = subTasks.length > 0;
+  const completedSubTasks = subTasks.filter((t) => t.completed).length;
 
   useEffect(() => {
     setNotesValue(todo.notes ?? '');
@@ -75,12 +86,19 @@ export const TodoItem = memo(function TodoItem({
     }
   }, [isFocused]);
 
+  useEffect(() => {
+    if (showSubTaskInput && subTaskInputRef.current) {
+      subTaskInputRef.current.focus();
+    }
+  }, [showSubTaskInput]);
+
   const classNames = [
     'todo-item',
     todo.completed ? 'todo-item--completed' : '',
     isDragging ? 'todo-item--dragging' : '',
     isDragOver ? 'todo-item--drag-over' : '',
     isFocused ? 'todo-item--focused' : '',
+    depth > 0 ? 'todo-item--nested' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -118,20 +136,53 @@ export const TodoItem = memo(function TodoItem({
     }
   }, [cancelEditing]);
 
+  const toggleSubTaskInput = useCallback(() => {
+    setShowSubTaskInput((prev) => !prev);
+    setSubTaskTitle('');
+  }, []);
+
+  const handleSubTaskSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = subTaskTitle.trim();
+    if (!trimmed || !onAddSubTodo) return;
+    onAddSubTodo(todo.id, trimmed, todo.category);
+    setSubTaskTitle('');
+    setShowSubTaskInput(false);
+  }, [subTaskTitle, onAddSubTodo, todo.id, todo.category]);
+
+  const handleSubTaskTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSubTaskTitle(e.target.value);
+  }, []);
+
+  const handleSubTaskKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      setShowSubTaskInput(false);
+      setSubTaskTitle('');
+    }
+  }, []);
+
+  const indentStyle = depth > 0 ? { marginLeft: `${depth * 1.5}rem` } : undefined;
+
   return (
     <li
       ref={itemRef}
       className={classNames}
-      draggable
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
-      onDragEnd={onDragEnd}
+      style={indentStyle}
+      draggable={depth === 0}
+      onDragStart={depth === 0 ? onDragStart : undefined}
+      onDragOver={depth === 0 ? onDragOver : undefined}
+      onDrop={depth === 0 ? onDrop : undefined}
+      onDragEnd={depth === 0 ? onDragEnd : undefined}
     >
       <div className="todo-item__main">
-        <span className="todo-item__drag-handle" aria-label="Drag to reorder">
-          ⠿
-        </span>
+        {depth === 0 && (
+          <span className="todo-item__drag-handle" aria-label="Drag to reorder">
+            ⠿
+          </span>
+        )}
+        {depth > 0 && (
+          <span className="todo-item__nest-indicator" aria-hidden="true">└</span>
+        )}
 
         <label className="todo-item__label">
           <input
@@ -150,6 +201,12 @@ export const TodoItem = memo(function TodoItem({
           {todo.category}
         </span>
 
+        {hasSubTasks && (
+          <span className="todo-item__subtask-count" aria-label={`${completedSubTasks} of ${subTasks.length} sub-tasks done`}>
+            {completedSubTasks}/{subTasks.length}
+          </span>
+        )}
+
         <button
           className={`todo-item__expand ${hasNotes ? 'todo-item__expand--has-notes' : ''} ${expanded ? 'todo-item__expand--open' : ''}`}
           onClick={hasNotes ? toggleExpanded : startEditing}
@@ -158,6 +215,17 @@ export const TodoItem = memo(function TodoItem({
         >
           {hasNotes ? (expanded ? '▾' : '▸') : '+'}
         </button>
+
+        {depth === 0 && onAddSubTodo && (
+          <button
+            className={`todo-item__add-subtask ${showSubTaskInput ? 'todo-item__add-subtask--active' : ''}`}
+            onClick={toggleSubTaskInput}
+            aria-label="Add sub-task"
+            title="Add sub-task"
+          >
+            ⊕
+          </button>
+        )}
 
         <button
           className="todo-item__delete"
@@ -212,6 +280,40 @@ export const TodoItem = memo(function TodoItem({
             </div>
           )}
         </div>
+      )}
+
+      {showSubTaskInput && (
+        <form className="todo-item__subtask-form" onSubmit={handleSubTaskSubmit}>
+          <input
+            ref={subTaskInputRef}
+            className="todo-item__subtask-input"
+            type="text"
+            value={subTaskTitle}
+            onChange={handleSubTaskTitleChange}
+            onKeyDown={handleSubTaskKeyDown}
+            placeholder="Add a sub-task…"
+            aria-label="Sub-task title"
+          />
+          <button className="todo-item__subtask-submit" type="submit">
+            Add
+          </button>
+        </form>
+      )}
+
+      {hasSubTasks && (
+        <ul className="todo-item__subtasks">
+          {subTasks.map((sub) => (
+            <TodoItem
+              key={sub.id}
+              todo={sub}
+              onToggle={onToggle}
+              onDelete={onDelete}
+              onUpdateNotes={onUpdateNotes}
+              searchQuery={searchQuery}
+              depth={depth + 1}
+            />
+          ))}
+        </ul>
       )}
     </li>
   );

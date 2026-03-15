@@ -221,4 +221,98 @@ describe('useTodos', () => {
 
     expect(result.current.todos[0].notes).toBeUndefined();
   });
+
+  it('adds a sub-task under a parent todo', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Parent', completed: false, category: 'work', createdAt: 1 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.addSubTodo('1', 'Child task', 'work');
+    });
+
+    expect(result.current.todos).toHaveLength(2);
+    expect(result.current.todos[1].title).toBe('Child task');
+    expect(result.current.todos[1].parentId).toBe('1');
+  });
+
+  it('cascade-deletes children when deleting a parent', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Parent', completed: false, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Child', completed: false, category: 'work', createdAt: 2, parentId: '1' },
+      { id: '3', title: 'Other', completed: false, category: 'personal', createdAt: 3 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.deleteTodo('1');
+    });
+
+    expect(result.current.todos).toHaveLength(1);
+    expect(result.current.todos[0].id).toBe('3');
+  });
+
+  it('deletes only the sub-task when deleting a child', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Parent', completed: false, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Child', completed: false, category: 'work', createdAt: 2, parentId: '1' },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.deleteTodo('2');
+    });
+
+    expect(result.current.todos).toHaveLength(1);
+    expect(result.current.todos[0].id).toBe('1');
+  });
+
+  it('cascade-completes children when completing a parent', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Parent', completed: false, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Child 1', completed: false, category: 'work', createdAt: 2, parentId: '1' },
+      { id: '3', title: 'Child 2', completed: false, category: 'work', createdAt: 3, parentId: '1' },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.toggleTodo('1');
+    });
+
+    expect(result.current.todos[0].completed).toBe(true);
+    expect(result.current.todos[1].completed).toBe(true);
+    expect(result.current.todos[2].completed).toBe(true);
+  });
+
+  it('does not cascade when uncompleting a parent', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Parent', completed: true, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Child 1', completed: true, category: 'work', createdAt: 2, parentId: '1' },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.toggleTodo('1');
+    });
+
+    expect(result.current.todos[0].completed).toBe(false);
+    expect(result.current.todos[1].completed).toBe(true);
+  });
+
+  it('clears completed parent and its children', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Parent', completed: true, category: 'work', createdAt: 1 },
+      { id: '2', title: 'Child', completed: false, category: 'work', createdAt: 2, parentId: '1' },
+      { id: '3', title: 'Other', completed: false, category: 'personal', createdAt: 3 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.clearCompleted();
+    });
+
+    expect(result.current.todos).toHaveLength(1);
+    expect(result.current.todos[0].id).toBe('3');
+  });
 });

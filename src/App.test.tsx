@@ -21,6 +21,7 @@ const defaultTodos: Todo[] = [
 let mockReturnValue: {
   todos: Todo[];
   addTodo: ReturnType<typeof vi.fn>;
+  addSubTodo: ReturnType<typeof vi.fn>;
   toggleTodo: ReturnType<typeof vi.fn>;
   deleteTodo: ReturnType<typeof vi.fn>;
   updateNotes: ReturnType<typeof vi.fn>;
@@ -42,6 +43,7 @@ describe('App', () => {
     mockReturnValue = {
       todos: defaultTodos,
       addTodo: vi.fn(),
+      addSubTodo: vi.fn(),
       toggleTodo: vi.fn(),
       deleteTodo: vi.fn(),
       updateNotes: vi.fn(),
