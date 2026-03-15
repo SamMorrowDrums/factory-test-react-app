@@ -4,6 +4,8 @@ import { useTodos } from '../hooks/useTodos';
 import { TodoFilter } from './TodoFilter';
 import { SearchBar } from './SearchBar';
 import { TodoItem } from './TodoItem';
+import { CyberProgress } from './CyberProgress';
+import { CyberButton } from './CyberButton';
 import './TodoList.css';
 
 interface TodoListProps {
@@ -59,7 +61,8 @@ export function TodoList(props: TodoListProps) {
   }, [todos, filter, categoryFilter, priorityFilter, searchQuery]);
 
   const activeCount = useMemo(() => todos.filter((todo) => !todo.completed).length, [todos]);
-  const hasCompleted = useMemo(() => todos.some((todo) => todo.completed), [todos]);
+  const completedCount = useMemo(() => todos.filter((todo) => todo.completed).length, [todos]);
+  const hasCompleted = completedCount > 0;
 
   const handleDragStart = useCallback((todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
     draggedIdRef.current = todoId;
@@ -126,13 +129,22 @@ export function TodoList(props: TodoListProps) {
           {activeCount} {activeCount === 1 ? 'item' : 'items'} left
         </span>
 
+        {todos.length > 0 && (
+          <CyberProgress
+            value={completedCount}
+            max={todos.length}
+            label="Completion progress"
+          />
+        )}
+
         {hasCompleted && (
-          <button
-            className="todo-list__clear-completed"
+          <CyberButton
+            variant="secondary"
+            size="sm"
             onClick={clearCompleted}
           >
             Clear completed
-          </button>
+          </CyberButton>
         )}
       </div>
     </div>

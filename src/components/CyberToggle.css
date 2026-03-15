@@ -1,0 +1,71 @@
+.cyber-toggle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.cyber-toggle:focus-visible .cyber-toggle__track {
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.5);
+}
+
+.cyber-toggle--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Track ── */
+.cyber-toggle__track {
+  position: relative;
+  width: 2.25rem;
+  height: 1.25rem;
+  background: #1a1a2e;
+  border: 1px solid #2a2a3e;
+  border-radius: 0.625rem;
+  transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+  overflow: hidden;
+}
+
+.cyber-toggle--on .cyber-toggle__track {
+  background: rgba(0, 255, 255, 0.12);
+  border-color: #0ff;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3), inset 0 0 6px rgba(0, 255, 255, 0.1);
+}
+
+/* Scanline on track */
+.cyber-toggle__track::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 255, 0.03) 2px,
+    rgba(0, 255, 255, 0.03) 4px
+  );
+  pointer-events: none;
+}
+
+/* ── Knob ── */
+.cyber-toggle__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 0.875rem;
+  height: 0.875rem;
+  background: #555568;
+  border-radius: 50%;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s, box-shadow 0.25s;
+}
+
+.cyber-toggle--on .cyber-toggle__knob {
+  transform: translateX(1rem);
+  background: #0ff;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.6), 0 0 2px rgba(0, 255, 255, 0.8);
+}

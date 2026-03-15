@@ -1,5 +1,7 @@
 import { memo, useCallback } from 'react';
 import { type TodoCategory, type TodoPriority, type TodoFilter as TodoFilterType } from '../types/todo';
+import { CyberSelect, type CyberSelectOption } from './CyberSelect';
+import { CyberButton } from './CyberButton';
 import './TodoFilter.css';
 
 const STATUS_OPTIONS: { value: TodoFilterType; label: string }[] = [
@@ -8,7 +10,7 @@ const STATUS_OPTIONS: { value: TodoFilterType; label: string }[] = [
   { value: 'completed', label: 'Completed' },
 ];
 
-const CATEGORY_OPTIONS: { value: TodoCategory | 'all'; label: string }[] = [
+const CATEGORY_OPTIONS: CyberSelectOption<TodoCategory | 'all'>[] = [
   { value: 'all', label: 'All Categories' },
   { value: 'work', label: 'Work' },
   { value: 'personal', label: 'Personal' },
@@ -16,7 +18,7 @@ const CATEGORY_OPTIONS: { value: TodoCategory | 'all'; label: string }[] = [
   { value: 'health', label: 'Health' },
 ];
 
-const PRIORITY_OPTIONS: { value: TodoPriority | 'all'; label: string }[] = [
+const PRIORITY_OPTIONS: CyberSelectOption<TodoPriority | 'all'>[] = [
   { value: 'all', label: 'All Priorities' },
   { value: 'high', label: '⚡ High' },
   { value: 'medium', label: '● Medium' },
@@ -41,12 +43,12 @@ export const TodoFilter = memo(function TodoFilter({
   onPriorityChange,
 }: TodoFilterProps) {
   const handleCategoryChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => onCategoryChange(e.target.value as TodoCategory | 'all'),
+    (value: TodoCategory | 'all') => onCategoryChange(value),
     [onCategoryChange],
   );
 
   const handlePriorityChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => onPriorityChange?.(e.target.value as TodoPriority | 'all'),
+    (value: TodoPriority | 'all') => onPriorityChange?.(value),
     [onPriorityChange],
   );
 
@@ -54,45 +56,32 @@ export const TodoFilter = memo(function TodoFilter({
     <div className="todo-filter">
       <div className="todo-filter__status-buttons">
         {STATUS_OPTIONS.map(({ value, label }) => (
-          <button
+          <CyberButton
             key={value}
-            className={`todo-filter__button${
-              currentFilter === value ? ' todo-filter__button--active' : ''
-            }`}
+            variant={currentFilter === value ? 'primary' : 'secondary'}
+            size="sm"
             onClick={() => onFilterChange(value)}
             aria-pressed={currentFilter === value}
           >
             {label}
-          </button>
+          </CyberButton>
         ))}
       </div>
 
       <div className="todo-filter__selects">
-        <select
-          className="todo-filter__category-select"
+        <CyberSelect
+          options={CATEGORY_OPTIONS}
           value={currentCategory}
           onChange={handleCategoryChange}
           aria-label="Filter by category"
-        >
-          {CATEGORY_OPTIONS.map(({ value, label }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
+        />
 
-        <select
-          className="todo-filter__priority-select"
+        <CyberSelect
+          options={PRIORITY_OPTIONS}
           value={currentPriority}
           onChange={handlePriorityChange}
           aria-label="Filter by priority"
-        >
-          {PRIORITY_OPTIONS.map(({ value, label }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
+        />
       </div>
     </div>
   );
