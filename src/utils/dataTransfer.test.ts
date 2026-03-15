@@ -51,12 +51,12 @@ describe('exportToCSV', () => {
   it('produces a header row and data rows', () => {
     const csv = exportToCSV(sampleTodos);
     const lines = csv.split('\n');
-    expect(lines[0]).toBe('id,title,completed,category,priority,createdAt,dueDate,notes');
+    expect(lines[0]).toBe('id,title,completed,category,priority,createdAt,dueDate,notes,parentId');
   });
 
   it('handles empty array', () => {
     const csv = exportToCSV([]);
-    expect(csv).toBe('id,title,completed,category,priority,createdAt,dueDate,notes');
+    expect(csv).toBe('id,title,completed,category,priority,createdAt,dueDate,notes,parentId');
   });
 
   it('escapes titles with commas', () => {

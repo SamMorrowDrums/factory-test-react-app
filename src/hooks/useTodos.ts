@@ -29,6 +29,23 @@ export function useTodos(initialTodos: Todo[] = []) {
     mutate((prev) => [...prev, createTodo(title, category, options)]);
   }, [mutate]);
 
+  const addSubtask = useCallback((parentId: string, title: string) => {
+    mutate((prev) => {
+      const parent = prev.find((t) => t.id === parentId);
+      if (!parent) return prev;
+      const subtask = createTodo(title, parent.category, { parentId, priority: parent.priority });
+      // Insert subtask right after parent and its existing subtasks
+      const parentIndex = prev.indexOf(parent);
+      let insertIndex = parentIndex + 1;
+      while (insertIndex < prev.length && prev[insertIndex].parentId === parentId) {
+        insertIndex++;
+      }
+      const next = [...prev];
+      next.splice(insertIndex, 0, subtask);
+      return next;
+    });
+  }, [mutate]);
+
   const toggleTodo = useCallback((id: string) => {
     mutate((prev) =>
       prev.map((todo) =>
@@ -38,7 +55,7 @@ export function useTodos(initialTodos: Todo[] = []) {
   }, [mutate]);
 
   const deleteTodo = useCallback((id: string) => {
-    mutate((prev) => prev.filter((todo) => todo.id !== id));
+    mutate((prev) => prev.filter((todo) => todo.id !== id && todo.parentId !== id));
   }, [mutate]);
 
   const updateNotes = useCallback((id: string, notes: string) => {
@@ -50,7 +67,15 @@ export function useTodos(initialTodos: Todo[] = []) {
   }, [mutate]);
 
   const clearCompleted = useCallback(() => {
-    mutate((prev) => prev.filter((todo) => !todo.completed));
+    mutate((prev) => {
+      const completedIds = new Set(prev.filter((t) => t.completed).map((t) => t.id));
+      return prev.filter((todo) => {
+        if (todo.completed) return false;
+        // Remove orphaned subtasks whose parent was completed
+        if (todo.parentId && completedIds.has(todo.parentId)) return false;
+        return true;
+      });
+    });
   }, [mutate]);
 
   const importTodos = useCallback((imported: Todo[]) => {
@@ -97,6 +122,7 @@ export function useTodos(initialTodos: Todo[] = []) {
   return {
     todos,
     addTodo,
+    addSubtask,
     toggleTodo,
     deleteTodo,
     updateNotes,

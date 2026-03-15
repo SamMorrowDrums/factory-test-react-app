@@ -85,6 +85,16 @@ describe('createTodo', () => {
     expect(todo.priority).toBe('low');
     expect(todo.dueDate).toBe(due);
   });
+
+  it('sets parentId when provided', () => {
+    const todo = createTodo('Sub-task', 'work', { parentId: 'parent-1' });
+    expect(todo.parentId).toBe('parent-1');
+  });
+
+  it('leaves parentId undefined when not provided', () => {
+    const todo = createTodo('Task', 'work');
+    expect(todo.parentId).toBeUndefined();
+  });
 });
 
 describe('TodoCategory', () => {

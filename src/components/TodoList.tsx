@@ -13,6 +13,7 @@ interface TodoListProps {
   toggleTodo?: (id: string) => void;
   deleteTodo?: (id: string) => void;
   updateNotes?: (id: string, notes: string) => void;
+  addSubtask?: (parentId: string, title: string) => void;
   clearCompleted?: () => void;
   reorderTodos?: (draggedId: string, targetId: string) => void;
   focusedTodoId?: string | null;
@@ -30,6 +31,7 @@ export function TodoList(props: TodoListProps) {
   const toggleTodo = props.toggleTodo ?? internal.toggleTodo;
   const deleteTodo = props.deleteTodo ?? internal.deleteTodo;
   const updateNotes = props.updateNotes ?? internal.updateNotes;
+  const addSubtask = props.addSubtask ?? internal.addSubtask;
   const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
   const reorderTodos = props.reorderTodos ?? internal.reorderTodos;
 
@@ -51,6 +53,8 @@ export function TodoList(props: TodoListProps) {
   const filteredTodos = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
     return todos.filter((todo) => {
+      // Skip subtasks — they're rendered inside their parent
+      if (todo.parentId) return false;
       if (filter === 'active' && todo.completed) return false;
       if (filter === 'completed' && !todo.completed) return false;
       if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
@@ -60,8 +64,22 @@ export function TodoList(props: TodoListProps) {
     });
   }, [todos, filter, categoryFilter, priorityFilter, searchQuery]);
 
-  const activeCount = useMemo(() => todos.filter((todo) => !todo.completed).length, [todos]);
-  const completedCount = useMemo(() => todos.filter((todo) => todo.completed).length, [todos]);
+  const subtaskMap = useMemo(() => {
+    const map = new Map<string, Todo[]>();
+    const query = searchQuery.toLowerCase().trim();
+    for (const todo of todos) {
+      if (!todo.parentId) continue;
+      if (query && !todo.title.toLowerCase().includes(query) && !(todo.notes?.toLowerCase().includes(query))) continue;
+      const list = map.get(todo.parentId) ?? [];
+      list.push(todo);
+      map.set(todo.parentId, list);
+    }
+    return map;
+  }, [todos, searchQuery]);
+
+  const activeCount = useMemo(() => todos.filter((todo) => !todo.completed && !todo.parentId).length, [todos]);
+  const completedCount = useMemo(() => todos.filter((todo) => todo.completed && !todo.parentId).length, [todos]);
+  const rootCount = useMemo(() => todos.filter((todo) => !todo.parentId).length, [todos]);
   const hasCompleted = completedCount > 0;
 
   const handleDragStart = useCallback((todoId: string) => (e: React.DragEvent<HTMLLIElement>) => {
@@ -112,6 +130,8 @@ export function TodoList(props: TodoListProps) {
             onToggle={toggleTodo}
             onDelete={deleteTodo}
             onUpdateNotes={updateNotes}
+            onAddSubtask={addSubtask}
+            subtasks={subtaskMap.get(todo.id) ?? []}
             searchQuery={searchQuery}
             isFocused={props.focusedTodoId === todo.id}
             isDragging={draggedIdRef.current === todo.id}
@@ -129,10 +149,10 @@ export function TodoList(props: TodoListProps) {
           {activeCount} {activeCount === 1 ? 'item' : 'items'} left
         </span>
 
-        {todos.length > 0 && (
+        {rootCount > 0 && (
           <CyberProgress
             value={completedCount}
-            max={todos.length}
+            max={rootCount}
             label="Completion progress"
           />
         )}

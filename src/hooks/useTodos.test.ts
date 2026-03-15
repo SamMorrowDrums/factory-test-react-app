@@ -234,4 +234,85 @@ describe('useTodos', () => {
     expect(result.current.todos[0].priority).toBe('high');
     expect(result.current.todos[0].dueDate).toBe(due);
   });
+
+  it('adds a subtask under a parent todo', () => {
+    const initial: Todo[] = [
+      { id: 'parent-1', title: 'Parent', completed: false, category: 'work', priority: 'high', createdAt: 1 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.addSubtask('parent-1', 'Child task');
+    });
+
+    expect(result.current.todos).toHaveLength(2);
+    const subtask = result.current.todos[1];
+    expect(subtask.title).toBe('Child task');
+    expect(subtask.parentId).toBe('parent-1');
+    expect(subtask.category).toBe('work');
+    expect(subtask.priority).toBe('high');
+  });
+
+  it('does not add a subtask if parent does not exist', () => {
+    const { result } = renderHook(() => useTodos());
+
+    act(() => {
+      result.current.addSubtask('nonexistent', 'Orphan task');
+    });
+
+    expect(result.current.todos).toHaveLength(0);
+  });
+
+  it('inserts subtask after parent and existing subtasks', () => {
+    const initial: Todo[] = [
+      { id: 'p1', title: 'Parent', completed: false, category: 'work', priority: 'medium', createdAt: 1 },
+      { id: 's1', title: 'Sub 1', completed: false, category: 'work', priority: 'medium', createdAt: 2, parentId: 'p1' },
+      { id: 'p2', title: 'Other', completed: false, category: 'personal', priority: 'medium', createdAt: 3 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.addSubtask('p1', 'Sub 2');
+    });
+
+    const ids = result.current.todos.map((t) => t.id);
+    expect(ids[0]).toBe('p1');
+    expect(ids[1]).toBe('s1');
+    expect(ids[3]).toBe('p2');
+    expect(result.current.todos[2].title).toBe('Sub 2');
+    expect(result.current.todos[2].parentId).toBe('p1');
+  });
+
+  it('deletes a parent todo and its subtasks', () => {
+    const initial: Todo[] = [
+      { id: 'p1', title: 'Parent', completed: false, category: 'work', priority: 'medium', createdAt: 1 },
+      { id: 's1', title: 'Sub 1', completed: false, category: 'work', priority: 'medium', createdAt: 2, parentId: 'p1' },
+      { id: 's2', title: 'Sub 2', completed: false, category: 'work', priority: 'medium', createdAt: 3, parentId: 'p1' },
+      { id: 'p2', title: 'Other', completed: false, category: 'personal', priority: 'medium', createdAt: 4 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.deleteTodo('p1');
+    });
+
+    expect(result.current.todos).toHaveLength(1);
+    expect(result.current.todos[0].id).toBe('p2');
+  });
+
+  it('clearCompleted removes orphaned subtasks of completed parents', () => {
+    const initial: Todo[] = [
+      { id: 'p1', title: 'Parent', completed: true, category: 'work', priority: 'medium', createdAt: 1 },
+      { id: 's1', title: 'Sub 1', completed: false, category: 'work', priority: 'medium', createdAt: 2, parentId: 'p1' },
+      { id: 'p2', title: 'Active', completed: false, category: 'personal', priority: 'medium', createdAt: 3 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.clearCompleted();
+    });
+
+    expect(result.current.todos).toHaveLength(1);
+    expect(result.current.todos[0].id).toBe('p2');
+  });
 });

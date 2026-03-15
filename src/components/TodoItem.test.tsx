@@ -209,4 +209,59 @@ describe('TodoItem', () => {
     render(<TodoItem {...defaultProps} />);
     expect(screen.queryByText('📅')).not.toBeInTheDocument();
   });
+
+  it('renders subtask count when subtasks are provided', () => {
+    const subtasks = [
+      makeTodo({ id: 'sub-1', title: 'Sub 1', parentId: 'test-1', completed: true }),
+      makeTodo({ id: 'sub-2', title: 'Sub 2', parentId: 'test-1', completed: false }),
+    ];
+    render(<TodoItem {...defaultProps} subtasks={subtasks} onAddSubtask={vi.fn()} />);
+    expect(screen.getByText('1/2')).toBeInTheDocument();
+  });
+
+  it('renders subtasks nested under the parent', () => {
+    const subtasks = [
+      makeTodo({ id: 'sub-1', title: 'Sub task one', parentId: 'test-1' }),
+    ];
+    render(<TodoItem {...defaultProps} subtasks={subtasks} onAddSubtask={vi.fn()} />);
+    expect(screen.getByText('Sub task one')).toBeInTheDocument();
+  });
+
+  it('shows add subtask button when onAddSubtask is provided', () => {
+    render(<TodoItem {...defaultProps} onAddSubtask={vi.fn()} />);
+    expect(screen.getByRole('button', { name: 'Add subtask' })).toBeInTheDocument();
+  });
+
+  it('does not show add subtask button for subtask items', () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ parentId: 'parent-1' })} onAddSubtask={vi.fn()} />);
+    expect(screen.queryByRole('button', { name: 'Add subtask' })).not.toBeInTheDocument();
+  });
+
+  it('opens subtask input when add subtask button is clicked', async () => {
+    render(<TodoItem {...defaultProps} onAddSubtask={vi.fn()} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Add subtask' }));
+    expect(screen.getByLabelText('Subtask title')).toBeInTheDocument();
+  });
+
+  it('calls onAddSubtask when subtask form is submitted', async () => {
+    const onAddSubtask = vi.fn();
+    render(<TodoItem {...defaultProps} onAddSubtask={onAddSubtask} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Add subtask' }));
+    await userEvent.type(screen.getByLabelText('Subtask title'), 'New sub');
+    await userEvent.click(screen.getByRole('button', { name: 'Add' }));
+    expect(onAddSubtask).toHaveBeenCalledWith('test-1', 'New sub');
+  });
+
+  it('applies subtask class for items with parentId', () => {
+    const { container } = render(
+      <TodoItem {...defaultProps} todo={makeTodo({ parentId: 'parent-1' })} />
+    );
+    const li = container.querySelector('.todo-item');
+    expect(li).toHaveClass('todo-item--subtask');
+  });
+
+  it('does not show drag handle for subtask items', () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ parentId: 'parent-1' })} />);
+    expect(screen.queryByLabelText('Drag to reorder')).not.toBeInTheDocument();
+  });
 });
