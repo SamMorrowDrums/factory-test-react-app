@@ -1,5 +1,5 @@
 import { memo, useState, useCallback, forwardRef } from 'react';
-import type { TodoCategory } from '../types/todo';
+import type { TodoCategory, TodoPriority } from '../types/todo';
 import './TodoInput.css';
 
 const CATEGORY_OPTIONS: { value: TodoCategory; label: string }[] = [
@@ -9,13 +9,21 @@ const CATEGORY_OPTIONS: { value: TodoCategory; label: string }[] = [
   { value: 'health', label: 'Health' },
 ];
 
+const PRIORITY_OPTIONS: { value: TodoPriority; label: string }[] = [
+  { value: 'high', label: '⚡ High' },
+  { value: 'medium', label: '● Medium' },
+  { value: 'low', label: '○ Low' },
+];
+
 interface TodoInputProps {
-  onAdd: (title: string, category: TodoCategory, notes?: string) => void;
+  onAdd: (title: string, category: TodoCategory, options?: { notes?: string; priority?: TodoPriority; dueDate?: number }) => void;
 }
 
 export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(function TodoInput({ onAdd }, ref) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState<TodoCategory>('work');
+  const [priority, setPriority] = useState<TodoPriority>('medium');
+  const [dueDate, setDueDate] = useState('');
   const [notes, setNotes] = useState('');
   const [showNotes, setShowNotes] = useState(false);
 
@@ -24,14 +32,22 @@ export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(funct
     const trimmed = title.trim();
     if (!trimmed) return;
     const trimmedNotes = notes.trim();
-    onAdd(trimmed, category, trimmedNotes || undefined);
+    const dueDateTimestamp = dueDate ? new Date(dueDate + 'T00:00:00').getTime() : undefined;
+    onAdd(trimmed, category, {
+      notes: trimmedNotes || undefined,
+      priority,
+      dueDate: dueDateTimestamp,
+    });
     setTitle('');
     setNotes('');
+    setDueDate('');
     setShowNotes(false);
-  }, [title, category, notes, onAdd]);
+  }, [title, category, priority, dueDate, notes, onAdd]);
 
   const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value), []);
   const handleCategoryChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value as TodoCategory), []);
+  const handlePriorityChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => setPriority(e.target.value as TodoPriority), []);
+  const handleDueDateChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setDueDate(e.target.value), []);
   const handleNotesChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => setNotes(e.target.value), []);
   const toggleNotes = useCallback(() => setShowNotes((prev) => !prev), []);
 
@@ -61,6 +77,19 @@ export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(funct
           ))}
         </select>
 
+        <select
+          className="todo-input__priority"
+          value={priority}
+          onChange={handlePriorityChange}
+          aria-label="Todo priority"
+        >
+          {PRIORITY_OPTIONS.map(({ value, label }) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+
         <button
           className={`todo-input__notes-toggle ${showNotes ? 'todo-input__notes-toggle--active' : ''}`}
           type="button"
@@ -74,6 +103,16 @@ export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(funct
         <button className="todo-input__add" type="submit">
           Add
         </button>
+      </div>
+
+      <div className="todo-input__extras">
+        <input
+          className="todo-input__due-date"
+          type="date"
+          value={dueDate}
+          onChange={handleDueDateChange}
+          aria-label="Due date"
+        />
       </div>
 
       {showNotes && (

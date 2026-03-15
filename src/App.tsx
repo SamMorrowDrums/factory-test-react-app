@@ -10,7 +10,7 @@ import { ToastContainer } from './components/Toast';
 import { DataTransfer } from './components/DataTransfer';
 import { InstallBanner } from './components/InstallBanner';
 import { KeyboardShortcutsHelp } from './components/KeyboardShortcutsHelp';
-import type { TodoFilter, TodoCategory } from './types/todo';
+import type { TodoFilter, TodoCategory, TodoPriority } from './types/todo';
 import './App.css';
 
 function App() {
@@ -34,6 +34,7 @@ function App() {
 
   const [filter, setFilter] = useState<TodoFilter>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
+  const [priorityFilter, setPriorityFilter] = useState<TodoPriority | 'all'>('all');
   const [focusedTodoId, setFocusedTodoId] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,8 +43,9 @@ function App() {
     if (filter === 'active' && todo.completed) return false;
     if (filter === 'completed' && !todo.completed) return false;
     if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
+    if (priorityFilter !== 'all' && todo.priority !== priorityFilter) return false;
     return true;
-  }), [todos, filter, categoryFilter]);
+  }), [todos, filter, categoryFilter, priorityFilter]);
 
   const handleUndo = useCallback(() => {
     const desc = undo();
@@ -264,8 +266,10 @@ function App() {
           focusedTodoId={focusedTodoId}
           filter={filter}
           categoryFilter={categoryFilter}
+          priorityFilter={priorityFilter}
           onFilterChange={setFilter}
           onCategoryChange={setCategoryFilter}
+          onPriorityChange={setPriorityFilter}
         />
       </main>
 

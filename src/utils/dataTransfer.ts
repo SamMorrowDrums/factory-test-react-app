@@ -1,9 +1,14 @@
-import type { Todo, TodoCategory } from '../types/todo';
+import type { Todo, TodoCategory, TodoPriority } from '../types/todo';
 
 const VALID_CATEGORIES: TodoCategory[] = ['work', 'personal', 'shopping', 'health'];
+const VALID_PRIORITIES: TodoPriority[] = ['low', 'medium', 'high'];
 
 function isValidCategory(value: unknown): value is TodoCategory {
   return typeof value === 'string' && VALID_CATEGORIES.includes(value as TodoCategory);
+}
+
+function isValidPriority(value: unknown): value is TodoPriority {
+  return typeof value === 'string' && VALID_PRIORITIES.includes(value as TodoPriority);
 }
 
 function isValidTodo(obj: unknown): obj is Todo {
@@ -14,7 +19,9 @@ function isValidTodo(obj: unknown): obj is Todo {
     typeof t.title === 'string' &&
     typeof t.completed === 'boolean' &&
     isValidCategory(t.category) &&
+    isValidPriority(t.priority) &&
     typeof t.createdAt === 'number' &&
+    (t.dueDate === undefined || typeof t.dueDate === 'number') &&
     (t.notes === undefined || typeof t.notes === 'string')
   );
 }
@@ -50,7 +57,7 @@ export function importFromJSON(text: string): Todo[] {
 
 // ── CSV ─────────────────────────────────────────────────────────────────
 
-const CSV_HEADER = 'id,title,completed,category,createdAt,notes';
+const CSV_HEADER = 'id,title,completed,category,priority,createdAt,dueDate,notes';
 
 function escapeCSVField(value: string): string {
   if (value.includes(',') || value.includes('"') || value.includes('\n')) {
@@ -62,7 +69,7 @@ function escapeCSVField(value: string): string {
 export function exportToCSV(todos: Todo[]): string {
   const rows = todos.map(
     (t) =>
-      `${escapeCSVField(t.id)},${escapeCSVField(t.title)},${t.completed},${t.category},${t.createdAt},${escapeCSVField(t.notes ?? '')}`,
+      `${escapeCSVField(t.id)},${escapeCSVField(t.title)},${t.completed},${t.category},${t.priority},${t.createdAt},${t.dueDate ?? ''},${escapeCSVField(t.notes ?? '')}`,
   );
   return [CSV_HEADER, ...rows].join('\n');
 }
@@ -115,12 +122,13 @@ export function importFromCSV(text: string): Todo[] {
     const line = lines[i].trim();
     if (!line) continue;
     const fields = parseCSVRow(line);
-    if (fields.length < 5) {
-      throw new Error(`Invalid CSV row at line ${i + 1}: expected at least 5 fields, got ${fields.length}`);
+    if (fields.length < 6) {
+      throw new Error(`Invalid CSV row at line ${i + 1}: expected at least 6 fields, got ${fields.length}`);
     }
 
-    const [id, title, completedStr, category, createdAtStr, ...rest] = fields;
-    const notes = rest.length > 0 ? rest[0] : undefined;
+    const [id, title, completedStr, category, priority, createdAtStr, ...rest] = fields;
+    const dueDateStr = rest.length > 0 ? rest[0] : undefined;
+    const notes = rest.length > 1 ? rest[1] : undefined;
     const completed = completedStr === 'true';
     if (completedStr !== 'true' && completedStr !== 'false') {
       throw new Error(`Invalid completed value at line ${i + 1}: "${completedStr}"`);
@@ -128,12 +136,22 @@ export function importFromCSV(text: string): Todo[] {
     if (!isValidCategory(category)) {
       throw new Error(`Invalid category at line ${i + 1}: "${category}"`);
     }
+    if (!isValidPriority(priority)) {
+      throw new Error(`Invalid priority at line ${i + 1}: "${priority}"`);
+    }
     const createdAt = Number(createdAtStr);
     if (isNaN(createdAt)) {
       throw new Error(`Invalid createdAt at line ${i + 1}: "${createdAtStr}"`);
     }
 
-    const todo: Todo = { id, title, completed, category, createdAt };
+    const todo: Todo = { id, title, completed, category, priority, createdAt };
+    if (dueDateStr && dueDateStr.trim() !== '') {
+      const dueDate = Number(dueDateStr);
+      if (isNaN(dueDate)) {
+        throw new Error(`Invalid dueDate at line ${i + 1}: "${dueDateStr}"`);
+      }
+      todo.dueDate = dueDate;
+    }
     if (notes) {
       todo.notes = notes;
     }

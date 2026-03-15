@@ -150,6 +150,16 @@ export const TodoItem = memo(function TodoItem({
           {todo.category}
         </span>
 
+        <span className={`todo-item__priority todo-item__priority--${todo.priority}`}>
+          {todo.priority === 'high' ? '⚡' : todo.priority === 'medium' ? '●' : '○'} {todo.priority}
+        </span>
+
+        {todo.dueDate && (
+          <span className={`todo-item__due-date${todo.dueDate < Date.now() && !todo.completed ? ' todo-item__due-date--overdue' : ''}`}>
+            📅 {new Date(todo.dueDate).toLocaleDateString()}
+          </span>
+        )}
+
         <button
           className={`todo-item__expand ${hasNotes ? 'todo-item__expand--has-notes' : ''} ${expanded ? 'todo-item__expand--open' : ''}`}
           onClick={hasNotes ? toggleExpanded : startEditing}
