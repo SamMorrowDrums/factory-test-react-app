@@ -1,3 +1,102 @@
+/* ── Theme Variables ── */
+:root {
+  /* Backgrounds */
+  --bg-body: #0f172a;
+  --bg-main: #1e293b;
+  --bg-input: #12121a;
+  --bg-button: #334155;
+  --bg-card: #12121a;
+  --bg-overlay: rgba(15, 23, 42, 0.85);
+
+  /* Borders */
+  --border-main: #334155;
+  --border-subtle: #2a2a3e;
+  --border-input: #475569;
+
+  /* Text */
+  --text-primary: #e2e8f0;
+  --text-secondary: #e0e0e8;
+  --text-muted: #555568;
+  --text-counter: #94a3b8;
+
+  /* Accent */
+  --accent: #00ffff;
+  --accent-rgb: 0, 255, 255;
+  --accent-secondary: #ff00ff;
+  --accent-secondary-rgb: 255, 0, 255;
+
+  /* Danger */
+  --danger: #ff3250;
+  --danger-rgb: 255, 50, 80;
+
+  /* Category colors */
+  --cat-work: #00ffff;
+  --cat-work-rgb: 0, 255, 255;
+  --cat-personal: #ff00ff;
+  --cat-personal-rgb: 255, 0, 255;
+  --cat-shopping: #e0d800;
+  --cat-shopping-rgb: 255, 240, 0;
+  --cat-health: #00ff64;
+  --cat-health-rgb: 0, 255, 100;
+
+  /* Font */
+  --font-family: 'Courier New', Courier, monospace;
+
+  /* Effects */
+  --shadow-glow: 0 0 15px rgba(var(--accent-rgb), 0.05);
+  --shadow-focus: 0 0 8px rgba(var(--accent-rgb), 0.25);
+  --glitch-enabled: 1;
+}
+
+[data-theme="clean"] {
+  /* Backgrounds */
+  --bg-body: #f8fafc;
+  --bg-main: #ffffff;
+  --bg-input: #f1f5f9;
+  --bg-button: #e2e8f0;
+  --bg-card: #f8fafc;
+  --bg-overlay: rgba(0, 0, 0, 0.4);
+
+  /* Borders */
+  --border-main: #e2e8f0;
+  --border-subtle: #e2e8f0;
+  --border-input: #cbd5e1;
+
+  /* Text */
+  --text-primary: #1e293b;
+  --text-secondary: #334155;
+  --text-muted: #94a3b8;
+  --text-counter: #64748b;
+
+  /* Accent */
+  --accent: #6366f1;
+  --accent-rgb: 99, 102, 241;
+  --accent-secondary: #a855f7;
+  --accent-secondary-rgb: 168, 85, 247;
+
+  /* Danger */
+  --danger: #ef4444;
+  --danger-rgb: 239, 68, 68;
+
+  /* Category colors */
+  --cat-work: #3b82f6;
+  --cat-work-rgb: 59, 130, 246;
+  --cat-personal: #a855f7;
+  --cat-personal-rgb: 168, 85, 247;
+  --cat-shopping: #f59e0b;
+  --cat-shopping-rgb: 245, 158, 11;
+  --cat-health: #10b981;
+  --cat-health-rgb: 16, 185, 129;
+
+  /* Font */
+  --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Effects */
+  --shadow-glow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-focus: 0 0 0 3px rgba(var(--accent-rgb), 0.2);
+  --glitch-enabled: 0;
+}
+
 *,
 *::before,
 *::after {
@@ -7,12 +106,13 @@
 }
 
 body {
-  font-family: 'Courier New', Courier, monospace;
-  background: #0f172a;
-  color: #e2e8f0;
+  font-family: var(--font-family);
+  background: var(--bg-body);
+  color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   min-height: 100dvh;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .app {
@@ -29,18 +129,19 @@ body {
 .app__title {
   font-size: 2rem;
   font-weight: 700;
-  color: #e2e8f0;
+  color: var(--text-primary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
 .app__main {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-main);
+  border: 1px solid var(--border-main);
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.05);
+  box-shadow: var(--shadow-glow);
   animation: app-main-enter 0.4s ease-out;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 @keyframes app-main-enter {
@@ -70,12 +171,12 @@ body {
 
 .app__undo-btn,
 .app__redo-btn {
-  background: #334155;
-  color: #e2e8f0;
-  border: 1px solid #475569;
+  background: var(--bg-button);
+  color: var(--text-primary);
+  border: 1px solid var(--border-input);
   border-radius: 0.25rem;
   padding: 0.25rem 0.625rem;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-family);
   font-size: 0.8rem;
   cursor: pointer;
   transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
@@ -83,7 +184,7 @@ body {
 
 .app__undo-btn:hover:not(:disabled),
 .app__redo-btn:hover:not(:disabled) {
-  background: #475569;
+  background: var(--border-input);
   transform: scale(1.05);
 }
 
@@ -105,9 +206,9 @@ body {
 }
 
 .app__shortcuts-btn {
-  background: #334155;
-  color: #e2e8f0;
-  border: 1px solid #475569;
+  background: var(--bg-button);
+  color: var(--text-primary);
+  border: 1px solid var(--border-input);
   border-radius: 0.25rem;
   padding: 0.25rem 0.5rem;
   font-size: 1rem;
@@ -117,7 +218,7 @@ body {
 }
 
 .app__shortcuts-btn:hover {
-  background: #475569;
+  background: var(--border-input);
   transform: scale(1.1);
 }
 
@@ -160,6 +261,28 @@ body {
     padding: 0.5rem 0.625rem;
     font-size: 0.75rem;
   }
+}
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  background: var(--bg-button);
+  color: var(--text-primary);
+  border: 1px solid var(--border-input);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+  line-height: 1;
+}
+
+.theme-toggle:hover {
+  background: var(--border-input);
+  transform: scale(1.1);
+}
+
+.theme-toggle:active {
+  transform: scale(0.9);
 }
 
 /* ── Reduced motion ── */

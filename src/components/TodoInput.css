@@ -15,97 +15,97 @@
   flex: 1;
   min-width: 0;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #475569;
+  border: 1px solid var(--border-input);
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family: 'Courier New', Courier, monospace;
-  color: #e2e8f0;
-  background: #12121a;
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background: var(--bg-input);
 }
 
 .todo-input__text::placeholder {
-  color: #555568;
+  color: var(--text-muted);
 }
 
 .todo-input__text:focus {
   outline: none;
-  border-color: #0ff;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.25);
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.25);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .todo-input__category {
   padding: 0.5rem 0.75rem;
-  border: 1px solid #475569;
+  border: 1px solid var(--border-input);
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family: 'Courier New', Courier, monospace;
-  color: #e2e8f0;
-  background: #334155;
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background: var(--bg-button);
   cursor: pointer;
 }
 
 .todo-input__category:focus {
   outline: none;
-  border-color: #0ff;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.25);
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.25);
 }
 
 .todo-input__notes-toggle {
   padding: 0.5rem 0.75rem;
   background: transparent;
-  color: #555568;
-  border: 1px solid #475569;
+  color: var(--text-muted);
+  border: 1px solid var(--border-input);
   border-radius: 0.25rem;
   font-size: 0.8125rem;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-family);
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
   white-space: nowrap;
 }
 
 .todo-input__notes-toggle:hover {
-  color: #e2e8f0;
-  border-color: #e2e8f0;
+  color: var(--text-primary);
+  border-color: var(--text-primary);
 }
 
 .todo-input__notes-toggle--active {
-  color: #0ff;
-  border-color: #0ff;
-  box-shadow: 0 0 6px rgba(0, 255, 255, 0.2);
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 6px rgba(var(--accent-rgb), 0.2);
 }
 
 .todo-input__notes {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #475569;
+  border: 1px solid var(--border-input);
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family: 'Courier New', Courier, monospace;
-  color: #e2e8f0;
-  background: #12121a;
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background: var(--bg-input);
   resize: vertical;
   min-height: 3rem;
 }
 
 .todo-input__notes::placeholder {
-  color: #555568;
+  color: var(--text-muted);
 }
 
 .todo-input__notes:focus {
   outline: none;
-  border-color: #0ff;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.25);
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.25);
 }
 
 .todo-input__add {
   padding: 0.5rem 1.25rem;
   background: transparent;
-  color: #0ff;
-  border: 1px solid #0ff;
+  color: var(--accent);
+  border: 1px solid var(--accent);
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-family);
   font-weight: 700;
   letter-spacing: 0.05em;
   cursor: pointer;
@@ -113,14 +113,14 @@
 }
 
 .todo-input__add:hover {
-  background: rgba(0, 255, 255, 0.1);
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  background: rgba(var(--accent-rgb), 0.1);
+  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.3);
   transform: scale(1.05);
 }
 
 .todo-input__add:active {
   transform: scale(0.95);
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.5);
 }
 
 .todo-input__extras {
