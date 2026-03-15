@@ -1,5 +1,6 @@
 import { memo, useState, useCallback, useRef, useEffect } from 'react';
 import type { Todo } from '../types/todo';
+import { TagInput } from './TagInput';
 import './TodoItem.css';
 
 interface TodoItemProps {
@@ -7,6 +8,7 @@ interface TodoItemProps {
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
   onUpdateNotes?: (id: string, notes: string) => void;
+  onUpdateTags?: (id: string, tags: string[]) => void;
   searchQuery?: string;
   isFocused?: boolean;
   isDragging?: boolean;
@@ -42,6 +44,7 @@ export const TodoItem = memo(function TodoItem({
   onToggle,
   onDelete,
   onUpdateNotes,
+  onUpdateTags,
   searchQuery = '',
   isFocused = false,
   isDragging = false,
@@ -54,10 +57,12 @@ export const TodoItem = memo(function TodoItem({
   const [expanded, setExpanded] = useState(false);
   const [editingNotes, setEditingNotes] = useState(false);
   const [notesValue, setNotesValue] = useState(todo.notes ?? '');
+  const [editingTags, setEditingTags] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const itemRef = useRef<HTMLLIElement>(null);
 
   const hasNotes = Boolean(todo.notes);
+  const hasTags = Boolean(todo.tags && todo.tags.length > 0);
 
   useEffect(() => {
     setNotesValue(todo.notes ?? '');
@@ -118,6 +123,14 @@ export const TodoItem = memo(function TodoItem({
     }
   }, [cancelEditing]);
 
+  const handleTagsChange = useCallback((newTags: string[]) => {
+    onUpdateTags?.(todo.id, newTags);
+  }, [onUpdateTags, todo.id]);
+
+  const toggleEditTags = useCallback(() => {
+    setEditingTags((prev) => !prev);
+  }, []);
+
   return (
     <li
       ref={itemRef}
@@ -150,6 +163,23 @@ export const TodoItem = memo(function TodoItem({
           {todo.category}
         </span>
 
+        {hasTags && !editingTags && (
+          <span className="todo-item__tags">
+            {todo.tags!.map((tag) => (
+              <span key={tag} className="todo-item__tag">{tag}</span>
+            ))}
+          </span>
+        )}
+
+        <button
+          className={`todo-item__tag-btn ${editingTags ? 'todo-item__tag-btn--active' : ''}`}
+          onClick={toggleEditTags}
+          aria-label={editingTags ? 'Close tag editor' : 'Edit tags'}
+          type="button"
+        >
+          🏷
+        </button>
+
         <button
           className={`todo-item__expand ${hasNotes ? 'todo-item__expand--has-notes' : ''} ${expanded ? 'todo-item__expand--open' : ''}`}
           onClick={hasNotes ? toggleExpanded : startEditing}
@@ -167,6 +197,16 @@ export const TodoItem = memo(function TodoItem({
           Delete
         </button>
       </div>
+
+      {editingTags && (
+        <div className="todo-item__tag-editor">
+          <TagInput
+            tags={todo.tags ?? []}
+            onChange={handleTagsChange}
+            placeholder="Add tags…"
+          />
+        </div>
+      )}
 
       {expanded && (
         <div className="todo-item__notes">

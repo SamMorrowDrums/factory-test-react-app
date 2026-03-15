@@ -51,12 +51,12 @@ describe('exportToCSV', () => {
   it('produces a header row and data rows', () => {
     const csv = exportToCSV(sampleTodos);
     const lines = csv.split('\n');
-    expect(lines[0]).toBe('id,title,completed,category,createdAt,notes');
+    expect(lines[0]).toBe('id,title,completed,category,createdAt,notes,tags');
   });
 
   it('handles empty array', () => {
     const csv = exportToCSV([]);
-    expect(csv).toBe('id,title,completed,category,createdAt,notes');
+    expect(csv).toBe('id,title,completed,category,createdAt,notes,tags');
   });
 
   it('escapes titles with commas', () => {
@@ -163,5 +163,50 @@ describe('importFromCSV', () => {
     ]);
     const result = importFromJSON(json);
     expect(result[0].notes).toBe('My note');
+  });
+
+  it('round-trips todos with tags through JSON', () => {
+    const todosWithTags: Todo[] = [
+      { id: 'a1', title: 'Task', completed: false, category: 'work', createdAt: 1, tags: ['urgent', 'frontend'] },
+    ];
+    const json = exportToJSON(todosWithTags);
+    const result = importFromJSON(json);
+    expect(result).toEqual(todosWithTags);
+  });
+
+  it('round-trips todos with tags through CSV', () => {
+    const todosWithTags: Todo[] = [
+      { id: 'a1', title: 'Task', completed: false, category: 'work', createdAt: 1, tags: ['urgent', 'frontend'] },
+    ];
+    const csv = exportToCSV(todosWithTags);
+    const result = importFromCSV(csv);
+    expect(result).toEqual(todosWithTags);
+  });
+
+  it('imports CSV without tags column', () => {
+    const csv = 'a1,Buy milk,false,shopping,1700000000000,notes';
+    const result = importFromCSV(csv);
+    expect(result[0].tags).toBeUndefined();
+  });
+
+  it('validates JSON with valid tags array', () => {
+    const json = JSON.stringify([
+      { id: '1', title: 'x', completed: false, category: 'work', createdAt: 1, tags: ['a', 'b'] },
+    ]);
+    expect(() => importFromJSON(json)).not.toThrow();
+  });
+
+  it('rejects JSON with invalid tags (non-array)', () => {
+    const json = JSON.stringify([
+      { id: '1', title: 'x', completed: false, category: 'work', createdAt: 1, tags: 'not-array' },
+    ]);
+    expect(() => importFromJSON(json)).toThrow('Invalid todo at index 0');
+  });
+
+  it('rejects JSON with invalid tags (non-string elements)', () => {
+    const json = JSON.stringify([
+      { id: '1', title: 'x', completed: false, category: 'work', createdAt: 1, tags: [1, 2] },
+    ]);
+    expect(() => importFromJSON(json)).toThrow('Invalid todo at index 0');
   });
 });

@@ -221,4 +221,51 @@ describe('useTodos', () => {
 
     expect(result.current.todos[0].notes).toBeUndefined();
   });
+
+  it('adds a todo with tags', () => {
+    const { result } = renderHook(() => useTodos());
+
+    act(() => {
+      result.current.addTodo('Tagged task', 'work', undefined, ['urgent', 'frontend']);
+    });
+
+    expect(result.current.todos).toHaveLength(1);
+    expect(result.current.todos[0].tags).toEqual(['urgent', 'frontend']);
+  });
+
+  it('adds a todo without tags when tags are undefined', () => {
+    const { result } = renderHook(() => useTodos());
+
+    act(() => {
+      result.current.addTodo('No tags', 'work');
+    });
+
+    expect(result.current.todos[0].tags).toBeUndefined();
+  });
+
+  it('updates tags on a todo', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1 },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.updateTags('1', ['important', 'backend']);
+    });
+
+    expect(result.current.todos[0].tags).toEqual(['important', 'backend']);
+  });
+
+  it('removes tags when setting empty array', () => {
+    const initial: Todo[] = [
+      { id: '1', title: 'Test', completed: false, category: 'work', createdAt: 1, tags: ['old'] },
+    ];
+    const { result } = renderHook(() => useTodos(initial));
+
+    act(() => {
+      result.current.updateTags('1', []);
+    });
+
+    expect(result.current.todos[0].tags).toBeUndefined();
+  });
 });

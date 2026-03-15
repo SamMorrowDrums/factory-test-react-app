@@ -18,7 +18,7 @@ describe('TodoInput', () => {
     await userEvent.type(screen.getByLabelText('Todo title'), 'Buy milk');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', undefined);
+    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', undefined, undefined);
   });
 
   it('clears the input after submission', async () => {
@@ -57,7 +57,7 @@ describe('TodoInput', () => {
     await userEvent.selectOptions(screen.getByLabelText('Todo category'), 'health');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Go running', 'health', undefined);
+    expect(onAdd).toHaveBeenCalledWith('Go running', 'health', undefined, undefined);
   });
 
   it('renders all four category options', () => {
@@ -101,7 +101,7 @@ describe('TodoInput', () => {
     await userEvent.type(screen.getByLabelText('Todo notes'), 'Some details');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Task with notes', 'work', 'Some details');
+    expect(onAdd).toHaveBeenCalledWith('Task with notes', 'work', 'Some details', undefined);
   });
 
   it('clears notes and hides textarea after submission', async () => {
@@ -122,6 +122,30 @@ describe('TodoInput', () => {
     await userEvent.type(screen.getByLabelText('Todo title'), '  Buy milk  ');
     await userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
-    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', undefined);
+    expect(onAdd).toHaveBeenCalledWith('Buy milk', 'work', undefined, undefined);
+  });
+
+  it('renders a tags toggle button', () => {
+    render(<TodoInput onAdd={vi.fn()} />);
+    expect(screen.getByRole('button', { name: 'Toggle tags' })).toBeInTheDocument();
+  });
+
+  it('shows tag input when tags toggle is clicked', async () => {
+    render(<TodoInput onAdd={vi.fn()} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Toggle tags' }));
+    expect(screen.getByLabelText('Add tag')).toBeInTheDocument();
+  });
+
+  it('calls onAdd with tags when provided', async () => {
+    const onAdd = vi.fn();
+    render(<TodoInput onAdd={onAdd} />);
+
+    await userEvent.type(screen.getByLabelText('Todo title'), 'Tagged task');
+    await userEvent.click(screen.getByRole('button', { name: 'Toggle tags' }));
+    const tagInput = screen.getByLabelText('Add tag');
+    await userEvent.type(tagInput, 'urgent{Enter}');
+    await userEvent.click(screen.getByRole('button', { name: 'Add' }));
+
+    expect(onAdd).toHaveBeenCalledWith('Tagged task', 'work', undefined, ['urgent']);
   });
 });

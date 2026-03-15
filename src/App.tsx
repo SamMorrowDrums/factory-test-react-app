@@ -20,6 +20,7 @@ function App() {
     toggleTodo,
     deleteTodo,
     updateNotes,
+    updateTags,
     clearCompleted,
     reorderTodos,
     importTodos,
@@ -34,6 +35,7 @@ function App() {
 
   const [filter, setFilter] = useState<TodoFilter>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
+  const [tagFilter, setTagFilter] = useState<string | null>(null);
   const [focusedTodoId, setFocusedTodoId] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,8 +44,9 @@ function App() {
     if (filter === 'active' && todo.completed) return false;
     if (filter === 'completed' && !todo.completed) return false;
     if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
+    if (tagFilter && !(todo.tags ?? []).includes(tagFilter)) return false;
     return true;
-  }), [todos, filter, categoryFilter]);
+  }), [todos, filter, categoryFilter, tagFilter]);
 
   const handleUndo = useCallback(() => {
     const desc = undo();
@@ -259,13 +262,16 @@ function App() {
           toggleTodo={toggleTodo}
           deleteTodo={deleteTodo}
           updateNotes={updateNotes}
+          updateTags={updateTags}
           clearCompleted={clearCompleted}
           reorderTodos={reorderTodos}
           focusedTodoId={focusedTodoId}
           filter={filter}
           categoryFilter={categoryFilter}
+          tagFilter={tagFilter}
           onFilterChange={setFilter}
           onCategoryChange={setCategoryFilter}
+          onTagFilterChange={setTagFilter}
         />
       </main>
 

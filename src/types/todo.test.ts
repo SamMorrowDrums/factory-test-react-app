@@ -55,6 +55,21 @@ describe('createTodo', () => {
     const todo = createTodo('Task', 'work', '');
     expect(todo.notes).toBeUndefined();
   });
+
+  it('creates a todo with tags when provided', () => {
+    const todo = createTodo('Task', 'work', undefined, ['urgent', 'frontend']);
+    expect(todo.tags).toEqual(['urgent', 'frontend']);
+  });
+
+  it('creates a todo without tags when not provided', () => {
+    const todo = createTodo('Task', 'work');
+    expect(todo.tags).toBeUndefined();
+  });
+
+  it('omits tags property when tags is empty array', () => {
+    const todo = createTodo('Task', 'work', undefined, []);
+    expect(todo.tags).toBeUndefined();
+  });
 });
 
 describe('TodoCategory', () => {

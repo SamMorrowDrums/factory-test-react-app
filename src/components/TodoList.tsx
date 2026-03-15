@@ -11,13 +11,16 @@ interface TodoListProps {
   toggleTodo?: (id: string) => void;
   deleteTodo?: (id: string) => void;
   updateNotes?: (id: string, notes: string) => void;
+  updateTags?: (id: string, tags: string[]) => void;
   clearCompleted?: () => void;
   reorderTodos?: (draggedId: string, targetId: string) => void;
   focusedTodoId?: string | null;
   filter?: TodoFilterType;
   categoryFilter?: TodoCategory | 'all';
+  tagFilter?: string | null;
   onFilterChange?: (filter: TodoFilterType) => void;
   onCategoryChange?: (category: TodoCategory | 'all') => void;
+  onTagFilterChange?: (tag: string | null) => void;
 }
 
 export function TodoList(props: TodoListProps) {
@@ -26,16 +29,20 @@ export function TodoList(props: TodoListProps) {
   const toggleTodo = props.toggleTodo ?? internal.toggleTodo;
   const deleteTodo = props.deleteTodo ?? internal.deleteTodo;
   const updateNotes = props.updateNotes ?? internal.updateNotes;
+  const updateTags = props.updateTags ?? internal.updateTags;
   const clearCompleted = props.clearCompleted ?? internal.clearCompleted;
   const reorderTodos = props.reorderTodos ?? internal.reorderTodos;
 
   const [internalFilter, setInternalFilter] = useState<TodoFilterType>('all');
   const [internalCategoryFilter, setInternalCategoryFilter] = useState<TodoCategory | 'all'>('all');
+  const [internalTagFilter, setInternalTagFilter] = useState<string | null>(null);
 
   const filter = props.filter ?? internalFilter;
   const categoryFilter = props.categoryFilter ?? internalCategoryFilter;
+  const tagFilter = props.tagFilter ?? internalTagFilter;
   const onFilterChange = props.onFilterChange ?? setInternalFilter;
   const onCategoryChange = props.onCategoryChange ?? setInternalCategoryFilter;
+  const onTagFilterChange = props.onTagFilterChange ?? setInternalTagFilter;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [dragOverId, setDragOverId] = useState<string | null>(null);
@@ -47,10 +54,24 @@ export function TodoList(props: TodoListProps) {
       if (filter === 'active' && todo.completed) return false;
       if (filter === 'completed' && !todo.completed) return false;
       if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
-      if (query && !todo.title.toLowerCase().includes(query) && !(todo.notes?.toLowerCase().includes(query))) return false;
+      if (tagFilter && !(todo.tags ?? []).includes(tagFilter)) return false;
+      if (query) {
+        const titleMatch = todo.title.toLowerCase().includes(query);
+        const notesMatch = todo.notes?.toLowerCase().includes(query);
+        const tagsMatch = (todo.tags ?? []).some((tag) => tag.toLowerCase().includes(query));
+        if (!titleMatch && !notesMatch && !tagsMatch) return false;
+      }
       return true;
     });
-  }, [todos, filter, categoryFilter, searchQuery]);
+  }, [todos, filter, categoryFilter, tagFilter, searchQuery]);
+
+  const availableTags = useMemo(() => {
+    const tagSet = new Set<string>();
+    todos.forEach((todo) => {
+      (todo.tags ?? []).forEach((tag) => tagSet.add(tag));
+    });
+    return Array.from(tagSet).sort();
+  }, [todos]);
 
   const activeCount = useMemo(() => todos.filter((todo) => !todo.completed).length, [todos]);
   const hasCompleted = useMemo(() => todos.some((todo) => todo.completed), [todos]);
@@ -89,6 +110,9 @@ export function TodoList(props: TodoListProps) {
         currentCategory={categoryFilter}
         onFilterChange={onFilterChange}
         onCategoryChange={onCategoryChange}
+        availableTags={availableTags}
+        selectedTag={tagFilter}
+        onTagFilterChange={onTagFilterChange}
       />
 
       <SearchBar query={searchQuery} onChange={setSearchQuery} />
@@ -101,6 +125,7 @@ export function TodoList(props: TodoListProps) {
             onToggle={toggleTodo}
             onDelete={deleteTodo}
             onUpdateNotes={updateNotes}
+            onUpdateTags={updateTags}
             searchQuery={searchQuery}
             isFocused={props.focusedTodoId === todo.id}
             isDragging={draggedIdRef.current === todo.id}

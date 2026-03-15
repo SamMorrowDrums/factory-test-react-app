@@ -15,7 +15,8 @@ function isValidTodo(obj: unknown): obj is Todo {
     typeof t.completed === 'boolean' &&
     isValidCategory(t.category) &&
     typeof t.createdAt === 'number' &&
-    (t.notes === undefined || typeof t.notes === 'string')
+    (t.notes === undefined || typeof t.notes === 'string') &&
+    (t.tags === undefined || (Array.isArray(t.tags) && t.tags.every((tag: unknown) => typeof tag === 'string')))
   );
 }
 
@@ -50,7 +51,7 @@ export function importFromJSON(text: string): Todo[] {
 
 // ── CSV ─────────────────────────────────────────────────────────────────
 
-const CSV_HEADER = 'id,title,completed,category,createdAt,notes';
+const CSV_HEADER = 'id,title,completed,category,createdAt,notes,tags';
 
 function escapeCSVField(value: string): string {
   if (value.includes(',') || value.includes('"') || value.includes('\n')) {
@@ -62,7 +63,7 @@ function escapeCSVField(value: string): string {
 export function exportToCSV(todos: Todo[]): string {
   const rows = todos.map(
     (t) =>
-      `${escapeCSVField(t.id)},${escapeCSVField(t.title)},${t.completed},${t.category},${t.createdAt},${escapeCSVField(t.notes ?? '')}`,
+      `${escapeCSVField(t.id)},${escapeCSVField(t.title)},${t.completed},${t.category},${t.createdAt},${escapeCSVField(t.notes ?? '')},${escapeCSVField((t.tags ?? []).join('|'))}`,
   );
   return [CSV_HEADER, ...rows].join('\n');
 }
@@ -121,6 +122,7 @@ export function importFromCSV(text: string): Todo[] {
 
     const [id, title, completedStr, category, createdAtStr, ...rest] = fields;
     const notes = rest.length > 0 ? rest[0] : undefined;
+    const tagsField = rest.length > 1 ? rest[1] : undefined;
     const completed = completedStr === 'true';
     if (completedStr !== 'true' && completedStr !== 'false') {
       throw new Error(`Invalid completed value at line ${i + 1}: "${completedStr}"`);
@@ -136,6 +138,12 @@ export function importFromCSV(text: string): Todo[] {
     const todo: Todo = { id, title, completed, category, createdAt };
     if (notes) {
       todo.notes = notes;
+    }
+    if (tagsField) {
+      const tags = tagsField.split('|').map((t) => t.trim()).filter(Boolean);
+      if (tags.length > 0) {
+        todo.tags = tags;
+      }
     }
     todos.push(todo);
   }
