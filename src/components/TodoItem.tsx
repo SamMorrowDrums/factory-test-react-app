@@ -1,5 +1,7 @@
 import { memo, useState, useCallback, useRef, useEffect } from 'react';
 import type { Todo } from '../types/todo';
+import { CyberToggle } from './CyberToggle';
+import { CyberButton } from './CyberButton';
 import './TodoItem.css';
 
 interface TodoItemProps {
@@ -140,18 +142,16 @@ export const TodoItem = memo(function TodoItem({
           ⠿
         </span>
 
-        <label className="todo-item__label">
-          <input
-            type="checkbox"
-            className="todo-item__checkbox"
+        <span className="todo-item__label">
+          <CyberToggle
             checked={todo.completed}
             onChange={handleToggle}
             aria-label={`Mark "${todo.title}" as ${todo.completed ? 'incomplete' : 'complete'}`}
           />
-          <span className="todo-item__title">
+          <span className="todo-item__title" onClick={handleToggle} role="button" tabIndex={-1}>
             <HighlightedText text={todo.title} query={searchQuery} />
           </span>
-        </label>
+        </span>
 
         <span className={`todo-item__category todo-item__category--${todo.category}`}>
           {todo.category}
@@ -176,13 +176,14 @@ export const TodoItem = memo(function TodoItem({
           {hasNotes ? (expanded ? '▾' : '▸') : '+'}
         </button>
 
-        <button
-          className="todo-item__delete"
+        <CyberButton
+          variant="danger"
+          size="sm"
           onClick={handleDelete}
           aria-label={`Delete "${todo.title}"`}
         >
           Delete
-        </button>
+        </CyberButton>
       </div>
 
       {expanded && (
@@ -200,20 +201,22 @@ export const TodoItem = memo(function TodoItem({
                 rows={3}
               />
               <div className="todo-item__notes-actions">
-                <button
-                  className="todo-item__notes-save"
+                <CyberButton
+                  variant="primary"
+                  size="sm"
                   onClick={saveNotes}
                   aria-label="Save notes"
                 >
                   Save
-                </button>
-                <button
-                  className="todo-item__notes-cancel"
+                </CyberButton>
+                <CyberButton
+                  variant="secondary"
+                  size="sm"
                   onClick={cancelEditing}
                   aria-label="Cancel editing"
                 >
                   Cancel
-                </button>
+                </CyberButton>
               </div>
             </div>
           ) : (

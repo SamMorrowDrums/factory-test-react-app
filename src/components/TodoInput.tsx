@@ -1,15 +1,17 @@
 import { memo, useState, useCallback, forwardRef } from 'react';
 import type { TodoCategory, TodoPriority } from '../types/todo';
+import { CyberSelect, type CyberSelectOption } from './CyberSelect';
+import { CyberButton } from './CyberButton';
 import './TodoInput.css';
 
-const CATEGORY_OPTIONS: { value: TodoCategory; label: string }[] = [
+const CATEGORY_OPTIONS: CyberSelectOption<TodoCategory>[] = [
   { value: 'work', label: 'Work' },
   { value: 'personal', label: 'Personal' },
   { value: 'shopping', label: 'Shopping' },
   { value: 'health', label: 'Health' },
 ];
 
-const PRIORITY_OPTIONS: { value: TodoPriority; label: string }[] = [
+const PRIORITY_OPTIONS: CyberSelectOption<TodoPriority>[] = [
   { value: 'high', label: '⚡ High' },
   { value: 'medium', label: '● Medium' },
   { value: 'low', label: '○ Low' },
@@ -45,8 +47,8 @@ export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(funct
   }, [title, category, priority, dueDate, notes, onAdd]);
 
   const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value), []);
-  const handleCategoryChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value as TodoCategory), []);
-  const handlePriorityChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => setPriority(e.target.value as TodoPriority), []);
+  const handleCategoryChange = useCallback((value: TodoCategory) => setCategory(value), []);
+  const handlePriorityChange = useCallback((value: TodoPriority) => setPriority(value), []);
   const handleDueDateChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setDueDate(e.target.value), []);
   const handleNotesChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => setNotes(e.target.value), []);
   const toggleNotes = useCallback(() => setShowNotes((prev) => !prev), []);
@@ -64,45 +66,35 @@ export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(funct
           aria-label="Todo title"
         />
 
-        <select
-          className="todo-input__category"
+        <CyberSelect
+          options={CATEGORY_OPTIONS}
           value={category}
           onChange={handleCategoryChange}
           aria-label="Todo category"
-        >
-          {CATEGORY_OPTIONS.map(({ value, label }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
+        />
 
-        <select
-          className="todo-input__priority"
+        <CyberSelect
+          options={PRIORITY_OPTIONS}
           value={priority}
           onChange={handlePriorityChange}
           aria-label="Todo priority"
-        >
-          {PRIORITY_OPTIONS.map(({ value, label }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
+        />
 
-        <button
-          className={`todo-input__notes-toggle ${showNotes ? 'todo-input__notes-toggle--active' : ''}`}
+        <CyberButton
+          variant="secondary"
+          size="md"
           type="button"
           onClick={toggleNotes}
           aria-label="Toggle notes"
           aria-expanded={showNotes}
+          className={showNotes ? 'todo-input__notes-toggle--active' : ''}
         >
           ✎ Notes
-        </button>
+        </CyberButton>
 
-        <button className="todo-input__add" type="submit">
+        <CyberButton variant="primary" size="md" type="submit">
           Add
-        </button>
+        </CyberButton>
       </div>
 
       <div className="todo-input__extras">

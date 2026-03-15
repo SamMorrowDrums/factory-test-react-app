@@ -10,6 +10,7 @@ import { ToastContainer } from './components/Toast';
 import { DataTransfer } from './components/DataTransfer';
 import { InstallBanner } from './components/InstallBanner';
 import { KeyboardShortcutsHelp } from './components/KeyboardShortcutsHelp';
+import { CyberButton } from './components/CyberButton';
 import type { TodoFilter, TodoCategory, TodoPriority } from './types/todo';
 import './App.css';
 
@@ -221,22 +222,24 @@ function App() {
       <main className="app__main">
         <div className="app__toolbar">
           <div className="app__toolbar-left">
-            <button
-              className="app__undo-btn"
+            <CyberButton
+              variant="secondary"
+              size="sm"
               onClick={handleUndo}
               disabled={!canUndo()}
               aria-label="Undo"
             >
               ↩ Undo
-            </button>
-            <button
-              className="app__redo-btn"
+            </CyberButton>
+            <CyberButton
+              variant="secondary"
+              size="sm"
               onClick={handleRedo}
               disabled={!canRedo()}
               aria-label="Redo"
             >
               Redo ↪
-            </button>
+            </CyberButton>
           </div>
           <div className="app__toolbar-right">
             <DataTransfer
@@ -245,14 +248,15 @@ function App() {
               onError={showToast}
               onSuccess={showToast}
             />
-            <button
-              className="app__shortcuts-btn"
+            <CyberButton
+              variant="secondary"
+              size="sm"
               onClick={toggleHelp}
               aria-label="Keyboard shortcuts"
               title="Keyboard shortcuts (?)"
             >
               ⌨
-            </button>
+            </CyberButton>
           </div>
         </div>
         <TodoInput ref={inputRef} onAdd={addTodo} />
