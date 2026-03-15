@@ -20,11 +20,16 @@
   cursor: pointer;
   font-size: 0.8rem;
   font-family: 'Courier New', Courier, monospace;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.2s, transform 0.15s;
 }
 
 .todo-filter__button:hover {
   background: #475569;
+  transform: scale(1.03);
+}
+
+.todo-filter__button:active {
+  transform: scale(0.97);
 }
 
 .todo-filter__button--active {
@@ -32,6 +37,7 @@
   color: #0ff;
   border-color: #0ff;
   box-shadow: 0 0 6px rgba(0, 255, 255, 0.2);
+  transform: scale(1);
 }
 
 .todo-filter__button--active:hover {

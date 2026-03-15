@@ -48,11 +48,16 @@
   font-size: 0.875rem;
   padding: 0.125rem 0.25rem;
   line-height: 1;
-  transition: color 0.15s;
+  transition: color 0.15s, transform 0.15s;
 }
 
 .search-bar__clear:hover {
   color: #0ff;
+  transform: scale(1.2);
+}
+
+.search-bar__clear:active {
+  transform: scale(0.9);
 }
 
 /* ── Mobile ── */

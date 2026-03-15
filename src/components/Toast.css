@@ -49,10 +49,12 @@
   font-size: 0.875rem;
   padding: 0.125rem 0.25rem;
   line-height: 1;
+  transition: color 0.15s, transform 0.15s;
 }
 
 .toast__dismiss:hover {
   color: #e2e8f0;
+  transform: scale(1.2);
 }
 
 /* ── Mobile ── */
