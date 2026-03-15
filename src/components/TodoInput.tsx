@@ -1,21 +1,31 @@
 import { memo, useState, useCallback, forwardRef } from 'react';
-import type { TodoCategory } from '../types/todo';
+import type { TodoCategory, TodoPriority } from '../types/todo';
+import { CyberSelect, type CyberSelectOption } from './CyberSelect';
+import { CyberButton } from './CyberButton';
 import './TodoInput.css';
 
-const CATEGORY_OPTIONS: { value: TodoCategory; label: string }[] = [
+const CATEGORY_OPTIONS: CyberSelectOption<TodoCategory>[] = [
   { value: 'work', label: 'Work' },
   { value: 'personal', label: 'Personal' },
   { value: 'shopping', label: 'Shopping' },
   { value: 'health', label: 'Health' },
 ];
 
+const PRIORITY_OPTIONS: CyberSelectOption<TodoPriority>[] = [
+  { value: 'high', label: '⚡ High' },
+  { value: 'medium', label: '● Medium' },
+  { value: 'low', label: '○ Low' },
+];
+
 interface TodoInputProps {
-  onAdd: (title: string, category: TodoCategory, notes?: string) => void;
+  onAdd: (title: string, category: TodoCategory, options?: { notes?: string; priority?: TodoPriority; dueDate?: number }) => void;
 }
 
 export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(function TodoInput({ onAdd }, ref) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState<TodoCategory>('work');
+  const [priority, setPriority] = useState<TodoPriority>('medium');
+  const [dueDate, setDueDate] = useState('');
   const [notes, setNotes] = useState('');
   const [showNotes, setShowNotes] = useState(false);
 
@@ -24,14 +34,22 @@ export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(funct
     const trimmed = title.trim();
     if (!trimmed) return;
     const trimmedNotes = notes.trim();
-    onAdd(trimmed, category, trimmedNotes || undefined);
+    const dueDateTimestamp = dueDate ? new Date(dueDate + 'T00:00:00').getTime() : undefined;
+    onAdd(trimmed, category, {
+      notes: trimmedNotes || undefined,
+      priority,
+      dueDate: dueDateTimestamp,
+    });
     setTitle('');
     setNotes('');
+    setDueDate('');
     setShowNotes(false);
-  }, [title, category, notes, onAdd]);
+  }, [title, category, priority, dueDate, notes, onAdd]);
 
   const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value), []);
-  const handleCategoryChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value as TodoCategory), []);
+  const handleCategoryChange = useCallback((value: TodoCategory) => setCategory(value), []);
+  const handlePriorityChange = useCallback((value: TodoPriority) => setPriority(value), []);
+  const handleDueDateChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setDueDate(e.target.value), []);
   const handleNotesChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => setNotes(e.target.value), []);
   const toggleNotes = useCallback(() => setShowNotes((prev) => !prev), []);
 
@@ -48,32 +66,45 @@ export const TodoInput = memo(forwardRef<HTMLInputElement, TodoInputProps>(funct
           aria-label="Todo title"
         />
 
-        <select
-          className="todo-input__category"
+        <CyberSelect
+          options={CATEGORY_OPTIONS}
           value={category}
           onChange={handleCategoryChange}
           aria-label="Todo category"
-        >
-          {CATEGORY_OPTIONS.map(({ value, label }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
+        />
 
-        <button
-          className={`todo-input__notes-toggle ${showNotes ? 'todo-input__notes-toggle--active' : ''}`}
+        <CyberSelect
+          options={PRIORITY_OPTIONS}
+          value={priority}
+          onChange={handlePriorityChange}
+          aria-label="Todo priority"
+        />
+
+        <CyberButton
+          variant="secondary"
+          size="md"
           type="button"
           onClick={toggleNotes}
           aria-label="Toggle notes"
           aria-expanded={showNotes}
+          className={showNotes ? 'todo-input__notes-toggle--active' : ''}
         >
           ✎ Notes
-        </button>
+        </CyberButton>
 
-        <button className="todo-input__add" type="submit">
+        <CyberButton variant="primary" size="md" type="submit">
           Add
-        </button>
+        </CyberButton>
+      </div>
+
+      <div className="todo-input__extras">
+        <input
+          className="todo-input__due-date"
+          type="date"
+          value={dueDate}
+          onChange={handleDueDateChange}
+          aria-label="Due date"
+        />
       </div>
 
       {showNotes && (

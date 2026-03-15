@@ -7,8 +7,10 @@ describe('TodoFilter', () => {
   const defaultProps = {
     currentFilter: 'all' as const,
     currentCategory: 'all' as const,
+    currentPriority: 'all' as const,
     onFilterChange: vi.fn(),
     onCategoryChange: vi.fn(),
+    onPriorityChange: vi.fn(),
   };
 
   it('renders all three status filter buttons', () => {
@@ -20,12 +22,12 @@ describe('TodoFilter', () => {
 
   it('highlights the active filter button', () => {
     render(<TodoFilter {...defaultProps} currentFilter="active" />);
-    const activeBtn = screen.getByText('Active');
-    expect(activeBtn).toHaveClass('todo-filter__button--active');
+    const activeBtn = screen.getByRole('button', { name: 'Active' });
+    expect(activeBtn).toHaveClass('cyber-btn--primary');
     expect(activeBtn).toHaveAttribute('aria-pressed', 'true');
 
-    const allBtn = screen.getByText('All');
-    expect(allBtn).not.toHaveClass('todo-filter__button--active');
+    const allBtn = screen.getByRole('button', { name: 'All' });
+    expect(allBtn).not.toHaveClass('cyber-btn--primary');
     expect(allBtn).toHaveAttribute('aria-pressed', 'false');
   });
 
@@ -37,12 +39,14 @@ describe('TodoFilter', () => {
     expect(onFilterChange).toHaveBeenCalledWith('completed');
   });
 
-  it('renders the category dropdown with all options', () => {
+  it('renders the category dropdown with all options', async () => {
     render(<TodoFilter {...defaultProps} />);
-    const select = screen.getByLabelText('Filter by category');
+    const select = screen.getByRole('combobox', { name: 'Filter by category' });
     expect(select).toBeInTheDocument();
 
-    const options = select.querySelectorAll('option');
+    // Open the dropdown to see options
+    await userEvent.click(select);
+    const options = screen.getAllByRole('option');
     expect(options).toHaveLength(5);
     expect(options[0]).toHaveTextContent('All Categories');
     expect(options[1]).toHaveTextContent('Work');
@@ -55,16 +59,40 @@ describe('TodoFilter', () => {
     const onCategoryChange = vi.fn();
     render(<TodoFilter {...defaultProps} onCategoryChange={onCategoryChange} />);
 
-    await userEvent.selectOptions(
-      screen.getByLabelText('Filter by category'),
-      'work'
-    );
+    const select = screen.getByRole('combobox', { name: 'Filter by category' });
+    await userEvent.click(select);
+    await userEvent.click(screen.getByRole('option', { name: /Work/i }));
     expect(onCategoryChange).toHaveBeenCalledWith('work');
   });
 
   it('reflects the current category in the dropdown', () => {
     render(<TodoFilter {...defaultProps} currentCategory="personal" />);
-    const select = screen.getByLabelText('Filter by category') as HTMLSelectElement;
-    expect(select.value).toBe('personal');
+    expect(screen.getByText('Personal')).toBeInTheDocument();
+  });
+
+  it('renders the priority filter dropdown', async () => {
+    render(<TodoFilter {...defaultProps} />);
+    const select = screen.getByRole('combobox', { name: 'Filter by priority' });
+    expect(select).toBeInTheDocument();
+
+    await userEvent.click(select);
+    const options = screen.getAllByRole('option');
+    expect(options).toHaveLength(4);
+    expect(options[0]).toHaveTextContent('All Priorities');
+  });
+
+  it('calls onPriorityChange when a priority is selected', async () => {
+    const onPriorityChange = vi.fn();
+    render(<TodoFilter {...defaultProps} onPriorityChange={onPriorityChange} />);
+
+    const select = screen.getByRole('combobox', { name: 'Filter by priority' });
+    await userEvent.click(select);
+    await userEvent.click(screen.getByRole('option', { name: /High/i }));
+    expect(onPriorityChange).toHaveBeenCalledWith('high');
+  });
+
+  it('reflects the current priority in the dropdown', () => {
+    render(<TodoFilter {...defaultProps} currentPriority="high" />);
+    expect(screen.getByText('⚡ High')).toBeInTheDocument();
   });
 });

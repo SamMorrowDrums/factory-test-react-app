@@ -123,6 +123,47 @@
   box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.5);
 }
 
+.todo-input__extras {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.todo-input__priority {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #475569;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: 'Courier New', Courier, monospace;
+  color: #e2e8f0;
+  background: #334155;
+  cursor: pointer;
+}
+
+.todo-input__priority:focus {
+  outline: none;
+  border-color: #0ff;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.25);
+}
+
+.todo-input__due-date {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #475569;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: 'Courier New', Courier, monospace;
+  color: #e2e8f0;
+  background: #334155;
+  cursor: pointer;
+  color-scheme: dark;
+}
+
+.todo-input__due-date:focus {
+  outline: none;
+  border-color: #0ff;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.25);
+}
+
 /* ── Mobile ── */
 @media (max-width: 480px) {
   .todo-input__row {
@@ -135,10 +176,16 @@
   }
 
   .todo-input__category,
+  .todo-input__priority,
   .todo-input__notes-toggle,
   .todo-input__add {
     width: 100%;
     padding: 0.625rem 0.75rem;
     text-align: center;
+  }
+
+  .todo-input__due-date {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
   }
 }

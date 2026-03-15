@@ -9,6 +9,7 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Buy groceries',
   completed: false,
   category: 'shopping',
+  priority: 'medium',
   createdAt: Date.now(),
   ...overrides,
 });
@@ -184,5 +185,28 @@ describe('TodoItem', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Cancel editing' }));
     expect(onUpdateNotes).not.toHaveBeenCalled();
     expect(screen.getByText('Original')).toBeInTheDocument();
+  });
+
+  it('renders the priority badge', () => {
+    render(<TodoItem {...defaultProps} todo={makeTodo({ priority: 'high' })} />);
+    expect(screen.getByText(/high/)).toBeInTheDocument();
+  });
+
+  it('renders different priority badges', () => {
+    const { rerender } = render(<TodoItem {...defaultProps} todo={makeTodo({ priority: 'low' })} />);
+    expect(screen.getByText(/low/)).toBeInTheDocument();
+    rerender(<TodoItem {...defaultProps} todo={makeTodo({ priority: 'medium' })} />);
+    expect(screen.getByText(/medium/)).toBeInTheDocument();
+  });
+
+  it('renders a due date when provided', () => {
+    const dueDate = new Date('2025-06-15T00:00:00').getTime();
+    render(<TodoItem {...defaultProps} todo={makeTodo({ dueDate })} />);
+    expect(screen.getByText(/6\/15\/2025|15\/06\/2025/)).toBeInTheDocument();
+  });
+
+  it('does not render due date when not provided', () => {
+    render(<TodoItem {...defaultProps} />);
+    expect(screen.queryByText('📅')).not.toBeInTheDocument();
   });
 });

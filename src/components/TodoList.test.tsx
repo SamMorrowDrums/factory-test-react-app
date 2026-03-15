@@ -9,6 +9,7 @@ const makeTodo = (overrides: Partial<Todo> = {}): Todo => ({
   title: 'Test todo',
   completed: false,
   category: 'work',
+  priority: 'medium',
   createdAt: Date.now(),
   ...overrides,
 });
@@ -107,8 +108,9 @@ describe('TodoList', () => {
 
   it('filters by category', async () => {
     render(<TodoList />);
-    const categorySelect = screen.getByLabelText('Filter by category');
-    await userEvent.selectOptions(categorySelect, 'shopping');
+    const categorySelect = screen.getByRole('combobox', { name: 'Filter by category' });
+    await userEvent.click(categorySelect);
+    await userEvent.click(screen.getByRole('option', { name: /Shopping/i }));
 
     expect(screen.getByText('Done shopping')).toBeInTheDocument();
     expect(screen.queryByText('Active work')).not.toBeInTheDocument();
@@ -119,8 +121,9 @@ describe('TodoList', () => {
     render(<TodoList />);
 
     await userEvent.click(screen.getByRole('button', { name: 'Active' }));
-    const categorySelect = screen.getByLabelText('Filter by category');
-    await userEvent.selectOptions(categorySelect, 'work');
+    const categorySelect = screen.getByRole('combobox', { name: 'Filter by category' });
+    await userEvent.click(categorySelect);
+    await userEvent.click(screen.getByRole('option', { name: /Work/i }));
 
     expect(screen.getByText('Active work')).toBeInTheDocument();
     expect(screen.queryByText('Active personal')).not.toBeInTheDocument();
@@ -191,5 +194,22 @@ describe('TodoList', () => {
     const list = screen.getByRole('list');
     const items = within(list).queryAllByRole('listitem');
     expect(items).toHaveLength(0);
+  });
+
+  it('filters todos by priority', async () => {
+    mockReturnValue = createMockReturn([
+      makeTodo({ id: '1', title: 'High priority', completed: false, priority: 'high' }),
+      makeTodo({ id: '2', title: 'Low priority', completed: false, priority: 'low' }),
+      makeTodo({ id: '3', title: 'Medium priority', completed: false, priority: 'medium' }),
+    ]);
+
+    render(<TodoList />);
+    const prioritySelect = screen.getByRole('combobox', { name: 'Filter by priority' });
+    await userEvent.click(prioritySelect);
+    await userEvent.click(screen.getByRole('option', { name: /High/i }));
+
+    expect(screen.getByText('High priority')).toBeInTheDocument();
+    expect(screen.queryByText('Low priority')).not.toBeInTheDocument();
+    expect(screen.queryByText('Medium priority')).not.toBeInTheDocument();
   });
 });

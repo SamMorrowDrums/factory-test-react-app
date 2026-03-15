@@ -12,7 +12,8 @@ import { DataTransfer } from './components/DataTransfer';
 import { InstallBanner } from './components/InstallBanner';
 import { KeyboardShortcutsHelp } from './components/KeyboardShortcutsHelp';
 import { ThemeToggle } from './components/ThemeToggle';
-import type { TodoFilter, TodoCategory } from './types/todo';
+import { CyberButton } from './components/CyberButton';
+import type { TodoFilter, TodoCategory, TodoPriority } from './types/todo';
 import './App.css';
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
 
   const [filter, setFilter] = useState<TodoFilter>('all');
   const [categoryFilter, setCategoryFilter] = useState<TodoCategory | 'all'>('all');
+  const [priorityFilter, setPriorityFilter] = useState<TodoPriority | 'all'>('all');
   const [focusedTodoId, setFocusedTodoId] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -45,8 +47,9 @@ function App() {
     if (filter === 'active' && todo.completed) return false;
     if (filter === 'completed' && !todo.completed) return false;
     if (categoryFilter !== 'all' && todo.category !== categoryFilter) return false;
+    if (priorityFilter !== 'all' && todo.priority !== priorityFilter) return false;
     return true;
-  }), [todos, filter, categoryFilter]);
+  }), [todos, filter, categoryFilter, priorityFilter]);
 
   const handleUndo = useCallback(() => {
     const desc = undo();
@@ -222,22 +225,24 @@ function App() {
       <main className="app__main">
         <div className="app__toolbar">
           <div className="app__toolbar-left">
-            <button
-              className="app__undo-btn"
+            <CyberButton
+              variant="secondary"
+              size="sm"
               onClick={handleUndo}
               disabled={!canUndo()}
               aria-label="Undo"
             >
               ↩ Undo
-            </button>
-            <button
-              className="app__redo-btn"
+            </CyberButton>
+            <CyberButton
+              variant="secondary"
+              size="sm"
               onClick={handleRedo}
               disabled={!canRedo()}
               aria-label="Redo"
             >
               Redo ↪
-            </button>
+            </CyberButton>
           </div>
           <div className="app__toolbar-right">
             <DataTransfer
@@ -247,14 +252,15 @@ function App() {
               onSuccess={showToast}
             />
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
-            <button
-              className="app__shortcuts-btn"
+            <CyberButton
+              variant="secondary"
+              size="sm"
               onClick={toggleHelp}
               aria-label="Keyboard shortcuts"
               title="Keyboard shortcuts (?)"
             >
               ⌨
-            </button>
+            </CyberButton>
           </div>
         </div>
         <TodoInput ref={inputRef} onAdd={addTodo} />
@@ -268,8 +274,10 @@ function App() {
           focusedTodoId={focusedTodoId}
           filter={filter}
           categoryFilter={categoryFilter}
+          priorityFilter={priorityFilter}
           onFilterChange={setFilter}
           onCategoryChange={setCategoryFilter}
+          onPriorityChange={setPriorityFilter}
         />
       </main>
 
