@@ -60,7 +60,7 @@
 }
 
 .todo-item__drag-handle {
-  color: #555568;
+  color: #8888a0;
   font-size: 1rem;
   cursor: grab;
   user-select: none;
@@ -120,7 +120,7 @@
   border: 1px solid #2a2a3e;
   border-radius: 0.25rem;
   background: transparent;
-  color: #555568;
+  color: #8888a0;
   font-size: 0.75rem;
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.15s;
@@ -156,7 +156,7 @@
   display: inline-block;
   padding: 0.1875rem 0.625rem;
   border-radius: 0.1875rem;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -190,7 +190,7 @@
 
 .todo-item__category--shopping {
   background: rgba(255, 240, 0, 0.1);
-  color: #e0d800;
+  color: #f0e800;
   border-color: rgba(255, 240, 0, 0.4);
   text-shadow: 0 0 6px rgba(255, 240, 0, 0.5);
   box-shadow: 0 0 4px rgba(255, 240, 0, 0.15), inset 0 0 4px rgba(255, 240, 0, 0.05);
@@ -242,7 +242,7 @@
   display: inline-block;
   padding: 0.1875rem 0.625rem;
   border-radius: 0.1875rem;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -277,8 +277,8 @@
 
 /* ── Due Date ── */
 .todo-item__due-date {
-  font-size: 0.6875rem;
-  color: #a0a0b0;
+  font-size: 0.75rem;
+  color: #b0b0c0;
   white-space: nowrap;
 }
 
@@ -307,7 +307,7 @@
 
 .todo-item__notes-content {
   padding: 0.5rem 0.75rem;
-  color: #a0a0b0;
+  color: #b0b0c0;
   font-size: 0.875rem;
   line-height: 1.5;
   white-space: pre-wrap;
@@ -342,7 +342,7 @@
 }
 
 .todo-item__notes-textarea::placeholder {
-  color: #555568;
+  color: #71718a;
 }
 
 .todo-item__notes-textarea:focus {
@@ -384,7 +384,7 @@
   padding: 0.25rem 0.75rem;
   border: 1px solid #475569;
   background: transparent;
-  color: #a0a0b0;
+  color: #b0b0c0;
   border-radius: 0.25rem;
   font-size: 0.75rem;
   font-weight: 600;
@@ -400,6 +400,22 @@
 
 .todo-item__notes-cancel:active {
   transform: scale(0.95);
+}
+
+/* ── Focus indicators ── */
+.todo-item__expand:focus-visible,
+.todo-item__delete:focus-visible,
+.todo-item__notes-save:focus-visible,
+.todo-item__notes-cancel:focus-visible {
+  outline: 2px solid #0ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+}
+
+.todo-item__notes-content:focus-visible {
+  outline: 2px solid #0ff;
+  outline-offset: 2px;
+  border-color: #0ff;
 }
 
 /* ── Mobile ── */
@@ -425,17 +441,17 @@
   }
 
   .todo-item__category {
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     padding: 0.125rem 0.5rem;
   }
 
   .todo-item__priority {
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     padding: 0.125rem 0.5rem;
   }
 
   .todo-item__due-date {
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
   }
 
   .todo-item__delete {

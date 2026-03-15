@@ -12,8 +12,9 @@ export const GlitchText = memo(function GlitchText({ children, as: Tag = 'span',
   const text = typeof children === 'string' ? children : '';
 
   return (
-    <Tag className={`glitch ${className}`.trim()} data-text={text}>
-      {children}
+    <Tag className={`glitch ${className}`.trim()} data-text={text} aria-label={text}>
+      <span aria-hidden="true">{children}</span>
+      {/* Visible text is hidden from AT; aria-label on parent provides accessible name */}
     </Tag>
   );
 });

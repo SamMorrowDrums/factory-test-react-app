@@ -10,12 +10,14 @@ describe('GlitchText', () => {
 
   it('applies the glitch class', () => {
     render(<GlitchText>Glitch</GlitchText>);
-    expect(screen.getByText('Glitch')).toHaveClass('glitch');
+    const el = screen.getByText('Glitch').closest('.glitch') ?? screen.getByText('Glitch').parentElement;
+    expect(el).toHaveClass('glitch');
   });
 
   it('sets data-text attribute for pseudo-element content', () => {
     render(<GlitchText>Glitch</GlitchText>);
-    expect(screen.getByText('Glitch')).toHaveAttribute('data-text', 'Glitch');
+    const el = screen.getByText('Glitch').closest('[data-text]') ?? screen.getByText('Glitch').parentElement;
+    expect(el).toHaveAttribute('data-text', 'Glitch');
   });
 
   it('renders with a custom tag', () => {
@@ -25,8 +27,14 @@ describe('GlitchText', () => {
 
   it('accepts additional className', () => {
     render(<GlitchText className="extra">Text</GlitchText>);
-    const el = screen.getByText('Text');
+    const el = screen.getByText('Text').closest('.glitch') ?? screen.getByText('Text').parentElement;
     expect(el).toHaveClass('glitch');
     expect(el).toHaveClass('extra');
+  });
+
+  it('uses aria-label for accessible name', () => {
+    render(<GlitchText>Glitch</GlitchText>);
+    const el = screen.getByLabelText('Glitch');
+    expect(el).toBeInTheDocument();
   });
 });

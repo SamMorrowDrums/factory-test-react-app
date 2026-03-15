@@ -162,9 +162,49 @@ body {
   }
 }
 
+/* ── Focus indicators ── */
+.app__undo-btn:focus-visible,
+.app__redo-btn:focus-visible {
+  outline: 2px solid #0ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+}
+
+.app__shortcuts-btn:focus-visible {
+  outline: 2px solid #0ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+}
+
+/* ── Skip link ── */
+.app__skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  background: #0ff;
+  color: #0f172a;
+  padding: 0.5rem 1rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  z-index: 2000;
+  text-decoration: none;
+}
+
+.app__skip-link:focus {
+  top: 0;
+}
+
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   .app__main {
     animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
